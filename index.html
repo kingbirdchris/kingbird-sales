@@ -1106,12 +1106,17 @@ function applyAIAdjustments(est, ai) {
   if (thEl) thEl.textContent = newTotH + ' hrs';
   if (tcEl) tcEl.textContent = '$' + newCost.toLocaleString();
 
-  // Update timeline
-  const tlEl = document.getElementById('tl-weeks');
+  // Update timeline (weeks label + detail text)
+  const tlEl     = document.getElementById('tl-weeks');
+  const tlDetail = document.getElementById('tl-detail');
   if (tlEl) {
     const lo = Math.max(2, Math.floor(newTotH / 35 * 0.85));
     const hi = Math.ceil(newTotH / 35 * 1.2);
     tlEl.textContent = lo + ' to ' + hi + ' weeks';
+  }
+  if (tlDetail) {
+    tlDetail.textContent = 'Based on ' + newTotH + ' total hours at standard team velocity. '
+      + 'Exact timeline confirmed at intake call.';
   }
 
   // Optionally boost confidence if Claude says the description clarified scope
