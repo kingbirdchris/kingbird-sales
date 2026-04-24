@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kingbird Solutions: Custom Software for Teams That Have Outgrown Their Stack</title>
+<title>Kingbird Solutions: Custom Software Estimator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -13,1119 +13,993 @@
   --gold:#D4A017;--gold-soft:#E8BE4A;--gold-deep:#A67C00;
   --ink:#0D0E0F;--ink-soft:#1A1C1F;--ink-muted:#4B5159;
   --bone:#F5F1E8;--bone-soft:#FAF7F0;
-  --navy:#0B2447;--navy-soft:#153B6E;
+  --navy:#0B2447;--teal:#19A7CE;
   --font:'Lato',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --r:2px;--track:0.18em;
+  --r:2px;--track:.18em;
 }
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-font-smoothing:antialiased;padding-top:64px}
-body.viewer-mode #step-nav{display:none}
-body.viewer-mode{padding-top:0}
 
-/* NAV */
-#step-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(245,241,232,0.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(13,14,15,.10);display:flex;justify-content:center;align-items:center;height:64px}
-.step-tab{display:flex;align-items:center;gap:10px;padding:0 28px;height:100%;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;user-select:none;background:none;border-left:none;border-right:none;border-top:none}
-.step-tab:hover{background:rgba(13,14,15,.03)}
-.step-tab.active{border-bottom-color:var(--gold)}
-.step-circle{width:28px;height:28px;border-radius:50%;border:2px solid rgba(13,14,15,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:rgba(13,14,15,.35);transition:all .3s;flex-shrink:0}
-.step-tab.active .step-circle{background:var(--gold);border-color:transparent;color:var(--ink)}
-.step-tab.done .step-circle{background:#15803d;border-color:#15803d;color:#fff}
-.step-label{font-size:11px;font-weight:700;color:rgba(13,14,15,.4);letter-spacing:var(--track);text-transform:uppercase}
-.step-tab.active .step-label{color:var(--ink)}
-.step-sep{width:40px;height:1px;background:rgba(13,14,15,.12);flex-shrink:0}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+/* HEADER */
+#site-header{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(245,241,232,.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(13,14,15,.10);height:64px;display:flex;align-items:center}
+.header-inner{max-width:1080px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;justify-content:space-between}
+.header-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.header-logo-mark{width:28px;height:28px;background:var(--ink);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--gold);letter-spacing:-.5px}
+.header-logo-name{font-size:14px;font-weight:900;color:var(--ink);letter-spacing:-.01em}
+.header-cta{display:inline-flex;align-items:center;background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:9px 20px;cursor:pointer;text-decoration:none;transition:background .2s;white-space:nowrap}
+.header-cta:hover{background:var(--navy)}
 
 /* LAYOUT */
-.wrap{max-width:860px;margin:0 auto;padding:60px 24px}
-.section{margin-bottom:72px}
-
-/* BANNER */
-#proposal-banner{display:none;background:var(--navy);color:rgba(245,241,232,.9);padding:14px 24px;font-size:13px;font-weight:700;letter-spacing:.05em;text-align:center}
-#proposal-banner.visible{display:block}
-
-/* HERO */
-.hero{text-align:center;margin-bottom:56px}
-.company-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.3);border-radius:var(--r);padding:5px 14px;font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:var(--gold-deep);margin-bottom:24px}
-.hero h1{font-size:3rem;font-weight:900;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin-bottom:20px}
-.hero h1 .line2{display:block;color:var(--gold)}
-.hero .sub{font-size:1.0625rem;color:rgba(13,14,15,.65);line-height:1.6;max-width:560px;margin:0 auto 28px}
-.pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.pill{background:rgba(13,14,15,.06);border:1px solid rgba(13,14,15,.12);border-radius:var(--r);padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(13,14,15,.6)}
-
-/* DASHBOARD */
-.dash-section{margin-bottom:8px}
-.dash-label{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.4);margin-bottom:10px;text-align:center}
-.dash-svg-wrap{border-radius:6px;overflow:hidden;border:1px solid rgba(13,14,15,.12);box-shadow:0 2px 4px rgba(13,14,15,.06),0 16px 48px rgba(13,14,15,.12)}
-.dash-svg-wrap svg{display:block;width:100%}
-.dash-mobile-features{display:none;flex-direction:column;gap:12px;padding:20px;background:var(--ink);border-radius:6px}
-.dmf-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(245,241,232,.75);line-height:1.5}
-.dmf-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
-
-/* DEMO */
-#demo-zone{position:relative;border-radius:6px;overflow:hidden;margin-bottom:56px}
-#demo-trigger-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 4px 16px}
-.demo-trigger-label{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.4)}
-.demo-start-btn{background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:9px 22px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .2s}
-.demo-start-btn:hover{background:var(--navy)}
-#demo-overlay{display:none;position:absolute;inset:0;z-index:100;border-radius:6px;overflow:hidden;pointer-events:none}
-#demo-backdrop{position:absolute;inset:0;background:transparent;border-radius:6px}
-#demo-spotlight{position:absolute;border-radius:4px;transition:all .6s cubic-bezier(.4,0,.2,1);z-index:5;display:none}
-#demo-card{position:absolute;z-index:10;transition:all .4s ease;width:250px;pointer-events:all}
-.demo-card-inner{background:rgba(11,14,19,.97);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:16px 18px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.demo-step-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
-.demo-step-title{font-size:13px;font-weight:900;color:#f8fafc;margin-bottom:7px;line-height:1.3}
-.demo-step-body{font-size:11px;line-height:1.55;color:#cbd5e1;margin-bottom:10px}
-.demo-contrast{display:none;border-radius:4px;padding:8px 10px;margin-bottom:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}
-.demo-contrast-label{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fca5a5;margin-bottom:3px}
-.demo-contrast-text{font-size:10.5px;color:#fca5a5;font-style:italic;line-height:1.45}
-.demo-progress-bar{background:rgba(255,255,255,.08);border-radius:6px;height:3px;margin-bottom:12px;overflow:hidden}
-.demo-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));border-radius:6px;transition:width .1s linear;width:0%}
-.demo-controls{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.demo-ctrl-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:#94a3b8;font-size:13px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.demo-ctrl-btn:hover{background:rgba(255,255,255,.15);color:#fff}
-#demo-dots{display:flex;gap:5px;align-items:center;flex:1;justify-content:center}
-.demo-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s;cursor:pointer}
-.demo-dot.active{background:var(--gold);width:14px;border-radius:3px}
-.demo-next-btn{background:var(--gold);border:none;border-radius:var(--r);color:var(--ink);font-family:var(--font);font-size:10px;font-weight:700;letter-spacing:.05em;padding:6px 12px;cursor:pointer;white-space:nowrap;transition:background .15s}
-.demo-next-btn:hover{background:var(--gold-soft)}
-.demo-close-btn{display:block;width:100%;margin-top:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:4px;color:rgba(255,255,255,.4);font-family:var(--font);font-size:10px;padding:6px;cursor:pointer;transition:all .15s}
-.demo-close-btn:hover{background:rgba(255,255,255,.1);color:#fff}
-
-/* STAKES TABLE */
-.stakes-section{margin-bottom:72px}
+.page-wrap{max-width:860px;margin:0 auto;padding:0 24px}
+.section{padding:72px 0}
 .section-eyebrow{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:var(--gold-deep);margin-bottom:10px}
 .section-heading{font-size:1.875rem;font-weight:900;color:var(--ink);margin-bottom:28px;line-height:1.15}
-.stakes-table{border:1px solid rgba(13,14,15,.10);border-radius:4px;overflow:hidden}
+
+/* HERO */
+.hero{padding:80px 0 64px;text-align:center}
+.company-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.3);border-radius:var(--r);padding:5px 14px;font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:var(--gold-deep);margin-bottom:24px}
+.hero h1{font-size:3rem;font-weight:900;line-height:1.05;letter-spacing:-.02em;color:var(--ink);margin-bottom:20px}
+.hero h1 .gold{color:var(--gold)}
+.hero .sub{font-size:1.0625rem;color:rgba(13,14,15,.65);line-height:1.6;max-width:560px;margin:0 auto 28px}
+.pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:36px}
+.pill{background:rgba(13,14,15,.06);border:1px solid rgba(13,14,15,.12);border-radius:var(--r);padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(13,14,15,.6)}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:14px 36px;cursor:pointer;transition:background .2s;text-decoration:none}
+.btn-hero:hover{background:var(--navy)}
+
+/* ESTIMATOR SECTION */
+#estimator{padding:0 0 80px;scroll-margin-top:80px}
+.est-label{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.4);margin-bottom:6px}
+.est-title{font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:6px}
+.est-sub{font-size:14px;color:rgba(13,14,15,.6);line-height:1.6;margin-bottom:40px}
+.est-card{background:var(--bone-soft);border:1px solid rgba(13,14,15,.10);border-radius:6px;padding:48px 40px;box-shadow:0 2px 4px rgba(13,14,15,.04),0 16px 48px rgba(13,14,15,.08)}
+
+/* WIZARD PROGRESS */
+.wizard-progress{display:flex;align-items:flex-start;justify-content:center;margin-bottom:48px;gap:0}
+.wp-step{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:64px}
+.wp-circle{width:32px;height:32px;border-radius:50%;border:2px solid rgba(13,14,15,.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:rgba(13,14,15,.3);transition:all .3s;background:transparent}
+.wp-step.active .wp-circle{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.wp-step.done .wp-circle{background:#15803d;border-color:#15803d;color:#fff}
+.wp-label{font-size:9px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.3);white-space:nowrap}
+.wp-step.active .wp-label{color:var(--ink)}.wp-step.done .wp-label{color:#15803d}
+.wp-line{flex:1;height:2px;background:rgba(13,14,15,.10);margin:0 4px;margin-top:15px;transition:background .3s;min-width:32px}
+.wp-line.done{background:#15803d}
+.wizard-step{display:none}.wizard-step.active{display:block}
+.wizard-step h2{font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:6px}
+.wizard-step>p{font-size:13.5px;color:rgba(13,14,15,.6);line-height:1.6;margin-bottom:28px}
+
+/* FORM FIELDS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.form-field{display:flex;flex-direction:column;gap:6px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.6)}
+.optional{font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:rgba(13,14,15,.4);margin-left:6px}
+.form-field input,.form-field select,.form-field textarea{background:#fff;border:1px solid rgba(13,14,15,.15);border-radius:var(--r);color:var(--ink);font-family:var(--font);font-size:13px;padding:10px 12px;outline:none;transition:border-color .2s;width:100%}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--gold)}
+.form-field input::placeholder,.form-field textarea::placeholder{color:rgba(13,14,15,.3)}
+.form-field textarea{resize:vertical;min-height:80px}
+.error-msg{font-size:10px;color:#dc2626;margin-top:2px;display:none}
+.error-msg.visible{display:block}
+
+/* CHECKBOX GRID */
+.checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cb-option{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(13,14,15,.75);cursor:pointer;padding:9px 12px;border:1.5px solid rgba(13,14,15,.12);border-radius:var(--r);background:#fff;transition:all .15s;user-select:none}
+.cb-option:hover{border-color:rgba(212,160,23,.45)}
+.cb-option input[type=checkbox]{width:14px;height:14px;accent-color:var(--gold);flex-shrink:0}
+.cb-option.checked{border-color:var(--gold);background:rgba(212,160,23,.05)}
+
+/* RADIO CARDS */
+.radio-cards{display:grid;gap:12px;margin-bottom:4px}
+.radio-cards.cols-2{grid-template-columns:1fr 1fr}
+.radio-cards.cols-3{grid-template-columns:1fr 1fr 1fr}
+.radio-cards.cols-4{grid-template-columns:1fr 1fr 1fr 1fr}
+.radio-card{border:1.5px solid rgba(13,14,15,.12);border-radius:4px;padding:16px;cursor:pointer;transition:all .15s;background:#fff;position:relative}
+.radio-card:hover{border-color:rgba(212,160,23,.45)}
+.radio-card.selected{border-color:var(--gold);background:rgba(212,160,23,.05)}
+.radio-card input[type=radio]{display:none}
+.rc-label{font-size:13px;font-weight:900;color:var(--ink);margin-bottom:3px}
+.rc-sub{font-size:11px;color:rgba(13,14,15,.55);line-height:1.4}
+.rc-price{font-size:11px;font-weight:700;color:var(--gold-deep);margin-top:6px}
+.rc-check{position:absolute;top:12px;right:12px;width:16px;height:16px;border-radius:50%;background:var(--gold);display:none;align-items:center;justify-content:center;font-size:9px;color:var(--ink);font-weight:900}
+.radio-card.selected .rc-check{display:flex}
+
+/* FILE DROP */
+.file-drop{border:1.5px dashed rgba(13,14,15,.18);border-radius:4px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;font-size:13px;color:rgba(13,14,15,.5)}
+.file-drop:hover,.file-drop.dragover{border-color:var(--gold);background:rgba(212,160,23,.03)}
+.file-list{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.file-item{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(13,14,15,.6);background:rgba(13,14,15,.04);border-radius:2px;padding:4px 10px}
+.file-item button{background:none;border:none;cursor:pointer;color:rgba(13,14,15,.4);font-size:13px;padding:0 2px}
+.file-item button:hover{color:#dc2626}
+
+/* WIZARD NAV */
+.wizard-nav{display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:24px;border-top:1px solid rgba(13,14,15,.08)}
+.btn-next{background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:12px 28px;cursor:pointer;transition:background .2s}
+.btn-next:hover{background:var(--navy)}
+.btn-back{background:transparent;border:1px solid rgba(13,14,15,.15);border-radius:var(--r);color:rgba(13,14,15,.6);font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:11px 24px;cursor:pointer;transition:all .2s}
+.btn-back:hover{border-color:rgba(13,14,15,.3);color:var(--ink)}
+
+/* LEAD GATE */
+.lead-gate{max-width:480px;margin:0 auto;text-align:center}
+.lead-gate h2{font-size:1.75rem;font-weight:900;color:var(--ink);margin-bottom:8px}
+.lead-gate>p{font-size:14px;color:rgba(13,14,15,.6);margin-bottom:32px}
+.submit-btn{width:100%;background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:15px;cursor:pointer;transition:background .2s;margin-top:8px}
+.submit-btn:hover{background:var(--navy)}
+.gate-note{font-size:11px;color:rgba(13,14,15,.4);margin-top:12px;line-height:1.5}
+
+/* ESTIMATE REVEAL */
+#estimate-reveal{display:none;padding-top:48px;animation:fadeUp .4s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.er-divider{height:1px;background:rgba(13,14,15,.10);margin-bottom:48px}
+.er-header{margin-bottom:32px}
+.er-header h2{font-size:1.75rem;font-weight:900;color:var(--ink);margin-bottom:6px}
+.er-company{font-size:14px;color:rgba(13,14,15,.5)}
+.phase-table{width:100%;border:1px solid rgba(13,14,15,.10);border-radius:4px;overflow:hidden;margin-bottom:32px;border-collapse:collapse}
+.phase-table thead{background:var(--ink)}
+.phase-table th{padding:10px 14px;font-size:9px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(245,241,232,.5);text-align:left}
+.phase-table th:nth-child(2),.phase-table th:last-child{text-align:right}
+.phase-table td{padding:11px 14px;font-size:13px;color:rgba(13,14,15,.75);border-top:1px solid rgba(13,14,15,.06);vertical-align:middle}
+.phase-table td:nth-child(2),.phase-table td:last-child{text-align:right}
+.phase-table tr.total-row td{font-weight:900;border-top:2px solid rgba(13,14,15,.12);background:rgba(13,14,15,.03);color:var(--ink)}
+.hours-input{width:52px;background:transparent;border:1px solid transparent;border-radius:2px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--ink);padding:2px 4px;text-align:right;transition:border-color .15s}
+.hours-input:hover{border-color:rgba(13,14,15,.15)}
+.hours-input:focus{border-color:var(--gold);outline:none;background:#fff}
+.track-chip{display:inline-flex;align-items:center;padding:2px 7px;border-radius:2px;font-size:8.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
+.track-onshore{background:rgba(11,36,71,.08);color:#0b2447}
+.track-offshore{background:rgba(25,167,206,.10);color:#0e6b8a}
+.phase-note{font-size:9px;color:rgba(13,14,15,.35);display:block;margin-top:1px;font-weight:400}
+.cost-scenarios{margin-bottom:32px}
+.cost-primary{background:var(--bone-soft);border:1.5px solid var(--gold);border-radius:4px;padding:28px 28px 24px}
+.cp-rate{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:var(--gold-deep);margin-bottom:10px}
+.cp-total{font-size:2.25rem;font-weight:900;color:var(--ink);margin-bottom:6px;line-height:1}
+.cp-hours{font-size:13px;color:rgba(13,14,15,.5);margin-bottom:10px}
+.cp-range{font-size:13px;color:rgba(13,14,15,.7);margin-bottom:14px;line-height:1.5}
+.cp-conf{font-size:11px;color:rgba(13,14,15,.45)}
+.cp-usnote{font-size:12px;color:rgba(13,14,15,.55);line-height:1.5;padding-top:14px;border-top:1px solid rgba(13,14,15,.08)}
+.cp-usnote strong{color:var(--ink)}
+.timeline-band{display:flex;align-items:center;gap:24px;background:var(--bone-soft);border:1px solid rgba(13,14,15,.10);border-radius:4px;padding:20px 24px;margin-bottom:24px}
+.tl-weeks{font-size:2rem;font-weight:900;color:var(--ink);white-space:nowrap}
+.tl-label{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.4);display:block;margin-bottom:2px}
+.tl-detail{font-size:12px;color:rgba(13,14,15,.55);line-height:1.5}
+.confidence-row{display:flex;align-items:flex-start;gap:12px;background:var(--bone-soft);border:1px solid rgba(13,14,15,.10);border-radius:4px;padding:16px 20px;margin-bottom:24px}
+.conf-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.conf-high{background:rgba(21,128,61,.10);color:#15803d}
+.conf-medium{background:rgba(234,179,8,.10);color:#854d0e}
+.conf-low{background:rgba(220,38,38,.08);color:#991b1b}
+.conf-text{font-size:12px;color:rgba(13,14,15,.6);line-height:1.5}
+.open-questions{margin-bottom:32px}
+.oq-title{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.5);margin-bottom:12px}
+.oq-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.oq-list li{font-size:13px;color:rgba(13,14,15,.7);line-height:1.5;display:flex;align-items:flex-start;gap:8px}
+.oq-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:7px}
+.book-cta{background:var(--ink);border-radius:4px;padding:36px;text-align:center;margin-bottom:24px}
+.book-cta h3{font-size:1.375rem;font-weight:900;color:var(--bone);margin-bottom:8px}
+.book-cta p{font-size:13px;color:rgba(245,241,232,.65);margin-bottom:24px;line-height:1.55}
+.btn-book{display:inline-flex;align-items:center;gap:10px;background:var(--gold);border:none;border-radius:var(--r);color:var(--ink);font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:15px 36px;cursor:pointer;text-decoration:none;transition:background .2s;width:100%;justify-content:center}
+.btn-book:hover{background:var(--gold-soft)}
+.share-row{display:flex;gap:8px;margin-top:12px}
+.share-input{flex:1;background:rgba(245,241,232,.06);border:1px solid rgba(245,241,232,.12);border-radius:var(--r);color:rgba(245,241,232,.7);font-family:var(--font);font-size:11px;padding:9px 12px;outline:none}
+.share-copy-btn{background:rgba(245,241,232,.08);border:1px solid rgba(245,241,232,.15);border-radius:var(--r);color:rgba(245,241,232,.7);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 16px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.share-copy-btn:hover{background:rgba(245,241,232,.15);color:var(--bone)}
+
+/* PAGE SECTIONS */
+.stakes-table{border:1px solid rgba(13,14,15,.10);border-radius:4px;overflow:hidden;margin-bottom:0}
 .stakes-thead{display:grid;grid-template-columns:200px 1fr 1fr;background:var(--ink)}
 .stakes-th{padding:10px 16px;font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase}
-.stakes-th:first-child{color:rgba(245,241,232,.35)}
-.stakes-th.bad{color:#fca5a5}
-.stakes-th.good{color:#86efac}
+.stakes-th:first-child{color:rgba(245,241,232,.35)}.stakes-th.bad{color:#fca5a5}.stakes-th.good{color:#86efac}
 .stakes-tr{display:grid;grid-template-columns:200px 1fr 1fr;border-top:1px solid rgba(13,14,15,.07)}
 .stakes-scenario{padding:16px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(13,14,15,.45);background:rgba(13,14,15,.025);border-right:1px solid rgba(13,14,15,.07);display:flex;align-items:center}
 .stakes-td{padding:16px;font-size:13px;line-height:1.55;color:rgba(13,14,15,.65);border-right:1px solid rgba(13,14,15,.07)}
-.stakes-td:last-child{border-right:none}
-.stakes-td.good{color:rgba(13,14,15,.8)}
-
-/* HOW IT CONNECTS */
-.flow-section{margin-bottom:72px}
+.stakes-td:last-child{border-right:none}.stakes-td.good{color:rgba(13,14,15,.8)}
 .flow{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid rgba(13,14,15,.10);border-radius:4px;overflow:hidden}
 .flow-step{padding:24px 20px;border-right:1px solid rgba(13,14,15,.07)}
 .flow-step:last-child{border-right:none}
 .flow-num{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:var(--gold);margin-bottom:8px}
 .flow-step h4{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:8px}
 .flow-step p{font-size:13px;line-height:1.55;color:rgba(13,14,15,.6)}
-
-/* FEATURE CARDS */
-.features-section{margin-bottom:72px}
 .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .feature-card{background:var(--bone-soft);border:1px solid rgba(13,14,15,.10);border-radius:var(--r);padding:24px;box-shadow:0 1px 2px rgba(13,14,15,.06),0 4px 16px rgba(13,14,15,.06)}
 .feature-icon{width:36px;height:36px;background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.25);border-radius:var(--r);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:16px}
 .feature-card h3{font-size:15px;font-weight:900;color:var(--ink);margin-bottom:8px}
 .feature-card p{font-size:13px;line-height:1.55;color:rgba(13,14,15,.65)}
-
-/* CTA */
-.cta-section{background:var(--ink);border-radius:4px;padding:40px 36px;display:flex;align-items:flex-start;justify-content:space-between;gap:32px;margin-bottom:72px}
+.cta-section{background:var(--ink);border-radius:4px;padding:40px 36px;display:flex;align-items:flex-start;justify-content:space-between;gap:32px}
 .cta-left{flex:1}
 .cta-eyebrow{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(245,241,232,.4);margin-bottom:10px}
 .cta-left h3{font-size:1.5rem;font-weight:900;color:var(--bone);line-height:1.2;margin-bottom:12px}
-.cta-left > p{font-size:13px;color:rgba(245,241,232,.65);line-height:1.55;margin-bottom:20px}
+.cta-left>p{font-size:13px;color:rgba(245,241,232,.65);line-height:1.55;margin-bottom:20px}
 .cta-perks{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:22px}
 .cta-perks li{font-size:12px;color:rgba(245,241,232,.7);display:flex;align-items:center;gap:8px}
 .cta-perks li::before{content:'';width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0}
-.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;font-weight:700}
-.progress-meta .spots{color:var(--gold)}
-.progress-meta .total{color:rgba(245,241,232,.35)}
+.progress-meta{display:flex;justify-content:space-between;margin-bottom:6px;font-size:11px;font-weight:700}
+.progress-meta .spots{color:var(--gold)}.progress-meta .total{color:rgba(245,241,232,.35)}
 .progress-bar{height:4px;background:rgba(245,241,232,.08);border-radius:2px;overflow:hidden;margin-bottom:8px}
 .progress-fill{height:100%;background:var(--gold);border-radius:2px;width:30%}
-.progress-note{font-size:10px;color:rgba(245,241,232,.35);letter-spacing:.04em}
+.progress-note{font-size:10px;color:rgba(245,241,232,.35)}
 .cta-right{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding-top:4px}
 .btn-gold-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);border:none;border-radius:var(--r);color:var(--ink);font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:12px 24px;cursor:pointer;text-decoration:none;transition:background .2s;white-space:nowrap}
 .btn-gold-cta:hover{background:var(--gold-soft)}
 .btn-outline-bone{display:inline-flex;align-items:center;background:transparent;border:1px solid rgba(245,241,232,.2);border-radius:var(--r);color:rgba(245,241,232,.65);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:10px 20px;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap}
 .btn-outline-bone:hover{border-color:rgba(245,241,232,.45);color:var(--bone)}
-
-/* FOOTER */
-.footer{border-top:1px solid rgba(13,14,15,.10);padding:28px 0;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(13,14,15,.4)}
-.footer a{color:var(--gold-deep);text-decoration:none}
-.footer a:hover{text-decoration:underline}
-#footer-proposal-info{color:rgba(13,14,15,.35)}
-
-/* GENERATE TAB */
-#tab-generate .wrap{max-width:640px}
-.gen-header{margin-bottom:36px}
-.gen-header h2{font-size:1.75rem;font-weight:900;color:var(--ink);margin-bottom:10px}
-.gen-header h2 span{color:var(--gold)}
-.gen-header p{font-size:13.5px;color:rgba(13,14,15,.6);line-height:1.6}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.form-field{display:flex;flex-direction:column;gap:6px}
-.form-field.full{grid-column:1/-1}
-.form-field label{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(13,14,15,.6);display:flex;justify-content:space-between;align-items:center}
-.optional{font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:rgba(13,14,15,.4)}
-.form-field input,.form-field select{background:var(--bone-soft);border:1px solid rgba(13,14,15,.15);border-radius:var(--r);color:var(--ink);font-family:var(--font);font-size:13px;padding:10px 12px;outline:none;transition:border-color .2s;width:100%}
-.form-field input:focus,.form-field select:focus{border-color:var(--gold)}
-.form-field input::placeholder{color:rgba(13,14,15,.3)}
-.autofill-btn{background:rgba(212,160,23,.10);border:1px solid rgba(212,160,23,.25);border-radius:3px;color:var(--gold-deep);font-family:var(--font);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;cursor:pointer;transition:all .15s;flex-shrink:0}
-.autofill-btn:hover{background:rgba(212,160,23,.18)}
-.char-hint{font-size:10px;color:rgba(13,14,15,.35);margin-top:3px}
-.preview-panel{background:var(--ink);border-radius:4px;padding:20px 24px;margin-bottom:24px}
-.preview-label{font-size:9px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:rgba(245,241,232,.3);margin-bottom:12px}
-.preview-hero{font-size:17px;font-weight:900;color:var(--bone);line-height:1.25;margin-bottom:8px}
-.preview-line2{color:var(--gold)}
-.preview-meta{font-size:11px;color:rgba(245,241,232,.4);font-style:italic}
-.gen-btn{width:100%;background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;padding:14px;cursor:pointer;transition:background .2s}
-.gen-btn:hover{background:var(--navy)}
-#success-panel{display:none;background:#f0fdf4;border:1px solid rgba(21,128,61,.25);border-radius:4px;padding:24px;margin-top:20px}
-#success-panel h3{font-size:16px;font-weight:900;color:#15803d;margin-bottom:16px}
-.url-box{display:flex;gap:8px;margin-bottom:16px}
-.url-input{flex:1;background:#fff;border:1px solid rgba(13,14,15,.15);border-radius:var(--r);color:var(--ink-muted);font-family:var(--font);font-size:11px;padding:9px 12px;outline:none}
-.copy-btn{background:var(--ink);border:none;border-radius:var(--r);color:var(--bone);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 18px;cursor:pointer;white-space:nowrap;transition:background .15s}
-.copy-btn:hover{background:var(--navy)}
-.suc-actions{display:flex;gap:8px;margin-bottom:14px}
-.suc-btn{flex:1;padding:10px;border-radius:var(--r);font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;transition:all .15s}
-.suc-btn.view{background:var(--ink);color:var(--bone)}
-.suc-btn.view:hover{background:var(--navy)}
-.suc-btn.pdf{background:rgba(13,14,15,.07);color:rgba(13,14,15,.7);border:1px solid rgba(13,14,15,.12)}
-.suc-btn.pdf:hover{background:rgba(13,14,15,.12)}
-.save-confirm{font-size:11px;color:#15803d}
-.internal-note{font-size:11px;color:rgba(13,14,15,.5);font-style:italic}
+.site-footer{border-top:1px solid rgba(13,14,15,.10);padding:28px 0;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:rgba(13,14,15,.4)}
+.site-footer a{color:var(--gold-deep);text-decoration:none}
 
 /* PRINT */
 @media print{
   body{max-width:816px!important;margin:0 auto!important;padding-top:0!important}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   @page{size:816px auto;margin:0}
-  .wrap{padding:24px 40px 20px!important}
-  #step-nav,#demo-trigger-bar,#demo-overlay,.demo-start-btn,.gen-btn,.suc-actions,.autofill-btn,.copy-btn{display:none!important}
-  .tab-panel{display:none!important}
-  #tab-overview{display:block!important}
-  #proposal-banner{display:none!important}
-  .cta-right{display:none}
-  .section,.stakes-section,.flow-section,.features-section,.cta-section{margin-bottom:28px!important}
-  .hero{margin-bottom:24px!important}
-  .hero h1{font-size:28px!important}
-  .stakes-thead,.stakes-tr,.flow,.features-grid,.cta-section,.footer{page-break-inside:avoid!important;break-inside:avoid!important}
+  .page-wrap{padding:24px 40px!important}
+  #site-header,.wizard-progress,.wizard-nav,.btn-back,.btn-next,.submit-btn,.share-row,.btn-book,.header-cta{display:none!important}
+  .wizard-step{display:none!important}
+  #estimate-reveal{display:block!important}
+  .stakes-table,.flow,.features-grid,.cta-section,.site-footer{page-break-inside:avoid!important;break-inside:avoid!important}
 }
 
 /* MOBILE */
 @media(max-width:640px){
-  body{padding-top:52px}
-  #step-nav{height:52px}
-  .step-label{display:none}
-  .step-tab{padding:0 16px}
-  .step-sep{width:16px}
-  .step-circle{width:24px;height:24px;font-size:10px}
-  .wrap{padding:32px 16px}
-  .hero h1{font-size:1.75rem}
-  .hero .sub{font-size:.9375rem}
-  .dash-svg-wrap{display:none!important}
-  #demo-trigger-bar{display:none!important}
-  .dash-mobile-features{display:flex}
+  body{padding-top:56px}
+  #site-header{height:56px}
+  .header-logo-name{display:none}
+  .page-wrap{padding:0 16px}
+  .hero{padding:48px 0 40px}
+  .hero h1{font-size:1.875rem}
+  .est-card{padding:28px 20px}
+  .checkbox-grid{grid-template-columns:1fr}
+  .radio-cards.cols-2,.radio-cards.cols-3,.radio-cards.cols-4{grid-template-columns:1fr}
+  .cost-scenarios{grid-template-columns:1fr}
+  .timeline-band{flex-direction:column;gap:8px}
   .stakes-thead{display:none}
   .stakes-tr{grid-template-columns:1fr}
   .stakes-scenario{border-bottom:1px solid rgba(13,14,15,.07)}
   .stakes-td{border-right:none;border-top:1px solid rgba(13,14,15,.04)}
-  .stakes-td.bad::before{content:"Without Kingbird: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#dc2626;display:block;margin-bottom:4px;letter-spacing:.5px}
-  .stakes-td.good::before{content:"With Kingbird: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#15803d;display:block;margin-bottom:4px;letter-spacing:.5px}
-  .flow{grid-template-columns:1fr!important}
+  .stakes-td.bad::before{content:"Without Kingbird: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#dc2626;display:block;margin-bottom:4px}
+  .stakes-td.good::before{content:"With Kingbird: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#15803d;display:block;margin-bottom:4px}
+  .flow{grid-template-columns:1fr}
   .flow-step{border-right:none;border-bottom:1px solid rgba(13,14,15,.07)}
   .flow-step:last-child{border-bottom:none}
   .features-grid{grid-template-columns:1fr}
   .cta-section{flex-direction:column;padding:28px 20px}
-  .url-box{flex-direction:column}
-  .suc-actions{flex-direction:column}
-  .form-grid{grid-template-columns:1fr!important}
-  .footer{flex-direction:column;gap:8px;text-align:center}
+  .site-footer{flex-direction:column;gap:8px;text-align:center}
+  .share-row{flex-direction:column}
+  .lead-gate .form-grid{grid-template-columns:1fr}
+  .wp-label{display:none}
+  .wp-line{min-width:16px}
 }
 </style>
 </head>
 <body>
 
-<!-- STICKY NAV -->
-<nav id="step-nav">
-  <button class="step-tab active" onclick="showTab(1)" data-tab="1">
-    <div class="step-circle" id="sc-1">1</div>
-    <span class="step-label">Overview</span>
-  </button>
-  <div class="step-sep"></div>
-  <button class="step-tab" onclick="showTab(2)" data-tab="2">
-    <div class="step-circle" id="sc-2">2</div>
-    <span class="step-label">Generate</span>
-  </button>
-</nav>
+<!-- HEADER -->
+<header id="site-header">
+  <div class="header-inner">
+    <a class="header-logo" href="https://kingbirdsolutions.com" target="_blank">
+      <div class="header-logo-mark">K</div>
+      <span class="header-logo-name">Kingbird Solutions</span>
+    </a>
+    <a class="header-cta" href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank">Book a call with AJ</a>
+  </div>
+</header>
 
-<!-- PROPOSAL BANNER (viewer mode) -->
-<div id="proposal-banner"><span id="proposal-banner-text"></span></div>
-
-<!-- TAB 1: OVERVIEW -->
-<div id="tab-overview" class="tab-panel active">
-<div class="wrap">
+<div class="page-wrap">
 
   <!-- HERO -->
   <section class="hero">
-    <div class="company-badge" id="company-badge">&#9679; Custom Software Development</div>
-    <h1>The workaround that worked last year<span class="line2" id="hero-line2">now runs your business.</span></h1>
-    <p class="sub">Kingbird takes you from intake call to shipped product in a fixed-scope, fixed-price engagement. You own the code when it is done.</p>
+    <div class="company-badge">&#9679; Custom Software Development</div>
+    <h1>Your stack reached its ceiling.<span class="gold"> Find out what it costs to replace it.</span></h1>
+    <p class="sub">Answer four questions. We return a full hour breakdown, cost range across three delivery scenarios, and a timeline. No sales call required to see your number.</p>
     <div class="pills">
       <span class="pill">Fixed-scope builds</span>
       <span class="pill">You own the code</span>
+      <span class="pill">Senior US and offshore engineers</span>
     </div>
+    <a class="btn-hero" href="#estimator">Get your estimate &#8595;</a>
   </section>
 
-  <!-- DASHBOARD MOCKUP + DEMO -->
-  <section class="dash-section">
-    <p class="dash-label">What Kingbird builds. Healthcare care coordination, live.</p>
-    <div id="demo-zone">
-      <div class="dash-svg-wrap">
-        <svg viewBox="0 0 560 360" xmlns="http://www.w3.org/2000/svg" font-family="Lato,system-ui,sans-serif">
-          <!-- BACKGROUND -->
-          <rect width="560" height="360" fill="#0A1525"/>
-          <!-- METRICS BAR -->
-          <rect width="560" height="46" fill="#0F2035"/>
-          <text x="14" y="17" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1.5">ClearView</text>
-          <text x="14" y="32" font-size="9" font-weight="700" fill="#64748b" letter-spacing="1">CLINICAL</text>
-          <circle cx="122" cy="19" r="3" fill="#22c55e"><animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/></circle>
-          <text x="129" y="23" font-size="8" font-weight="700" fill="#4ade80" letter-spacing="0.5">LIVE</text>
-          <!-- KPI 1: Avg Wait -->
-          <rect x="185" y="7" width="82" height="32" rx="2" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <text x="226" y="21" font-size="7" fill="#64748b" text-anchor="middle" letter-spacing="0.5">AVG WAIT</text>
-          <text x="226" y="33" font-size="12" font-weight="700" fill="#e2e8f0" text-anchor="middle">18 min</text>
-          <!-- KPI 2: Today -->
-          <rect x="275" y="7" width="82" height="32" rx="2" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <text x="316" y="21" font-size="7" fill="#64748b" text-anchor="middle" letter-spacing="0.5">SEEN TODAY</text>
-          <text x="316" y="33" font-size="12" font-weight="700" fill="#e2e8f0" text-anchor="middle">23</text>
-          <!-- KPI 3: Escalations -->
-          <rect x="365" y="7" width="82" height="32" rx="2" fill="rgba(239,68,68,0.08)" stroke="rgba(239,68,68,0.2)" stroke-width="0.5"/>
-          <text x="406" y="21" font-size="7" fill="#94a3b8" text-anchor="middle" letter-spacing="0.5">ESCALATIONS</text>
-          <text x="406" y="33" font-size="12" font-weight="700" fill="#fca5a5" text-anchor="middle">1 open</text>
-          <!-- KPI 4: Staff -->
-          <rect x="455" y="7" width="96" height="32" rx="2" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <text x="503" y="21" font-size="7" fill="#64748b" text-anchor="middle" letter-spacing="0.5">ON SHIFT</text>
-          <text x="503" y="33" font-size="12" font-weight="700" fill="#e2e8f0" text-anchor="middle">4 staff</text>
+  <!-- ESTIMATOR -->
+  <section id="estimator">
+    <p class="est-label">Project estimator</p>
+    <h2 class="est-title">What will it cost to build your product?</h2>
+    <p class="est-sub">We estimate hours by phase, apply PM at 15% and QA at 25% of production hours, then show you three cost scenarios side by side. Adjust any phase before you book.</p>
 
-          <!-- VERTICAL DIVIDERS -->
-          <line x1="190" y1="46" x2="190" y2="360" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <line x1="376" y1="46" x2="376" y2="254" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <!-- HORIZONTAL DIVIDER: bottom panel -->
-          <line x1="190" y1="254" x2="560" y2="254" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-
-          <!-- LEFT PANEL: PATIENT QUEUE -->
-          <rect x="0" y="46" width="190" height="22" fill="#0F2035"/>
-          <text x="10" y="60" font-size="7" font-weight="700" fill="#64748b" letter-spacing="1.2">PATIENT QUEUE</text>
-          <rect x="163" y="51" width="20" height="12" rx="2" fill="rgba(255,255,255,0.06)"/>
-          <text x="173" y="60" font-size="7" fill="#94a3b8" text-anchor="middle">5</text>
-
-          <!-- Row 1: Rivera, In Exam -->
-          <line x1="0" y1="68" x2="190" y2="68" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <text x="10" y="82" font-size="9.5" font-weight="700" fill="#e2e8f0">Marcus Rivera</text>
-          <text x="10" y="94" font-size="7.5" fill="#475569">Rm 7 &#183; #MR-0042</text>
-          <rect x="10" y="98" width="46" height="13" rx="2" fill="#134e4a"/>
-          <text x="33" y="108" font-size="7" font-weight="700" fill="#5eead4" text-anchor="middle" letter-spacing="0.3">IN EXAM</text>
-          <text x="10" y="120" font-size="7.5" fill="#475569">Dr. S. Patel</text>
-
-          <!-- Row 2: Holt, Waiting -->
-          <line x1="0" y1="126" x2="190" y2="126" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <text x="10" y="140" font-size="9.5" font-weight="700" fill="#e2e8f0">Susan Holt</text>
-          <text x="10" y="152" font-size="7.5" fill="#475569">Rm 3 &#183; #SH-0091</text>
-          <rect x="10" y="156" width="44" height="13" rx="2" fill="#78350f"/>
-          <text x="32" y="166" font-size="7" font-weight="700" fill="#fcd34d" text-anchor="middle" letter-spacing="0.3">WAITING</text>
-          <text x="10" y="178" font-size="7.5" fill="#475569">Unassigned</text>
-
-          <!-- Row 3: Thornton, Discharged -->
-          <line x1="0" y1="184" x2="190" y2="184" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <text x="10" y="198" font-size="9.5" font-weight="700" fill="#64748b">James Thornton</text>
-          <text x="10" y="210" font-size="7.5" fill="#334155">Rm 1 &#183; #JT-0033</text>
-          <rect x="10" y="214" width="58" height="13" rx="2" fill="#1e293b"/>
-          <text x="39" y="224" font-size="7" font-weight="700" fill="#475569" text-anchor="middle" letter-spacing="0.3">DISCHARGED</text>
-          <text x="10" y="236" font-size="7.5" fill="#334155">Dr. M. Chen</text>
-
-          <!-- Row 4: Moore, Waiting -->
-          <line x1="0" y1="242" x2="190" y2="242" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <text x="10" y="256" font-size="9.5" font-weight="700" fill="#e2e8f0">Aaliyah Moore</text>
-          <text x="10" y="268" font-size="7.5" fill="#475569">Rm 9 &#183; #AM-0108</text>
-          <rect x="10" y="272" width="44" height="13" rx="2" fill="#78350f"/>
-          <text x="32" y="282" font-size="7" font-weight="700" fill="#fcd34d" text-anchor="middle" letter-spacing="0.3">WAITING</text>
-          <text x="10" y="294" font-size="7.5" fill="#475569">N. Torres</text>
-
-          <!-- Row 5: Walsh, ESCALATED (y=300-360) -->
-          <rect id="escalation-row-bg" x="0" y="300" width="190" height="60" fill="rgba(239,68,68,0.07)"/>
-          <line x1="0" y1="300" x2="190" y2="300" stroke="rgba(239,68,68,0.2)" stroke-width="0.5"/>
-          <text x="10" y="314" font-size="9.5" font-weight="700" fill="#fca5a5">Derek Walsh</text>
-          <text x="10" y="326" font-size="7.5" fill="#7f6e6e">Bay 4 &#183; #DW-0057</text>
-          <rect id="queue-badge-walsh" x="10" y="330" width="58" height="13" rx="2" fill="#7f1d1d"/>
-          <text x="39" y="340" font-size="7" font-weight="700" fill="#fca5a5" text-anchor="middle" letter-spacing="0.3">ESCALATED</text>
-          <text x="10" y="354" font-size="7.5" fill="#7f6e6e">Dr. S. Patel &#183; 11:04 AM</text>
-          <!-- Alert indicator -->
-          <circle cx="178" cy="320" r="5" fill="#ef4444" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.2s" repeatCount="indefinite"/></circle>
-
-          <!-- MIDDLE PANEL: ROOM MAP -->
-          <rect x="190" y="46" width="186" height="22" fill="#0F2035"/>
-          <text x="200" y="60" font-size="7" font-weight="700" fill="#64748b" letter-spacing="1.2">ROOM STATUS</text>
-          <!-- Room Rm 1: occupied/teal -->
-          <rect x="193" y="70" width="89" height="58" rx="2" fill="rgba(20,184,166,0.06)" stroke="#134e4a" stroke-width="0.5"/>
-          <text x="199" y="84" font-size="8" font-weight="700" fill="#94a3b8">Rm 1</text>
-          <circle cx="268" cy="80" r="4" fill="#14b8a6"/>
-          <text x="199" y="98" font-size="7.5" fill="#5eead4">OCCUPIED</text>
-          <text x="199" y="110" font-size="7" fill="#334155">Dr. Chen</text>
-          <text x="199" y="122" font-size="7" fill="#1e3a3a">Thornton</text>
-          <!-- Room Rm 3: waiting -->
-          <rect x="284" y="70" width="89" height="58" rx="2" fill="rgba(245,158,11,0.05)" stroke="#78350f" stroke-width="0.5"/>
-          <text x="290" y="84" font-size="8" font-weight="700" fill="#94a3b8">Rm 3</text>
-          <circle cx="359" cy="80" r="4" fill="#f59e0b"/>
-          <text x="290" y="98" font-size="7.5" fill="#fcd34d">WAITING</text>
-          <text x="290" y="110" font-size="7" fill="#475569">Unassigned</text>
-          <text x="290" y="122" font-size="7" fill="#3d2c0a">Holt</text>
-          <!-- Room Rm 5: open -->
-          <rect x="193" y="132" width="89" height="58" rx="2" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
-          <text x="199" y="146" font-size="8" font-weight="700" fill="#94a3b8">Rm 5</text>
-          <circle cx="268" cy="142" r="4" fill="#334155"/>
-          <text x="199" y="160" font-size="7.5" fill="#475569">OPEN</text>
-          <text x="199" y="172" font-size="7" fill="#334155">Available</text>
-          <!-- Room Rm 7: in exam -->
-          <rect x="284" y="132" width="89" height="58" rx="2" fill="rgba(20,184,166,0.08)" stroke="#0e4b45" stroke-width="0.5"/>
-          <text x="290" y="146" font-size="8" font-weight="700" fill="#94a3b8">Rm 7</text>
-          <circle cx="359" cy="142" r="4" fill="#14b8a6"><animate attributeName="r" values="4;5;4" dur="2s" repeatCount="indefinite"/></circle>
-          <text x="290" y="160" font-size="7.5" fill="#5eead4">IN EXAM</text>
-          <text x="290" y="172" font-size="7" fill="#1e3a3a">Dr. Patel</text>
-          <text x="290" y="184" font-size="7" fill="#1e3a3a">Rivera</text>
-          <!-- Room Rm 9: waiting -->
-          <rect x="193" y="194" width="89" height="58" rx="2" fill="rgba(245,158,11,0.05)" stroke="#78350f" stroke-width="0.5"/>
-          <text x="199" y="208" font-size="8" font-weight="700" fill="#94a3b8">Rm 9</text>
-          <circle cx="268" cy="204" r="4" fill="#f59e0b"/>
-          <text x="199" y="222" font-size="7.5" fill="#fcd34d">WAITING</text>
-          <text x="290" y="222" font-size="7" fill="#475569"/>
-          <text x="199" y="234" font-size="7" fill="#3d2c0a">Torres / Moore</text>
-          <!-- Bay 4: ALERT -->
-          <rect x="284" y="194" width="89" height="58" rx="2" fill="rgba(239,68,68,0.10)" stroke="rgba(239,68,68,0.35)" stroke-width="1"/>
-          <text x="290" y="208" font-size="8" font-weight="700" fill="#fca5a5">Bay 4</text>
-          <text x="290" y="222" font-size="7.5" font-weight="700" fill="#ef4444">ALERT</text>
-          <text x="350" y="208" font-size="10" fill="#ef4444" text-anchor="middle">&#9888;</text>
-          <text x="290" y="234" font-size="7" fill="#7f3535">Dr. Patel / Walsh</text>
-          <text x="290" y="244" font-size="7" fill="#7f3535">11:04 AM</text>
-
-          <!-- RIGHT PANEL: STAFF -->
-          <rect x="376" y="46" width="184" height="22" fill="#0F2035"/>
-          <text x="386" y="60" font-size="7" font-weight="700" fill="#64748b" letter-spacing="1.2">STAFF ON SHIFT</text>
-          <!-- Dr. Patel -->
-          <line x1="376" y1="68" x2="560" y2="68" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <circle cx="387" cy="83" r="4" fill="#22c55e"/>
-          <text x="396" y="80" font-size="9" font-weight="700" fill="#e2e8f0">Dr. S. Patel</text>
-          <text x="396" y="92" font-size="7.5" fill="#475569">2 active patients</text>
-          <rect x="508" y="74" width="44" height="13" rx="2" fill="#134e4a"/>
-          <text x="530" y="84" font-size="7" fill="#5eead4" text-anchor="middle">ACTIVE</text>
-          <text x="396" y="104" font-size="7" fill="#334155">Patel &#183; Cardio</text>
-          <!-- Dr. Chen -->
-          <line x1="376" y1="114" x2="560" y2="114" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <circle cx="387" cy="129" r="4" fill="#22c55e"/>
-          <text x="396" y="126" font-size="9" font-weight="700" fill="#e2e8f0">Dr. M. Chen</text>
-          <text x="396" y="138" font-size="7.5" fill="#475569">1 active patient</text>
-          <rect x="508" y="120" width="44" height="13" rx="2" fill="#134e4a"/>
-          <text x="530" y="130" font-size="7" fill="#5eead4" text-anchor="middle">ACTIVE</text>
-          <text x="396" y="150" font-size="7" fill="#334155">Chen &#183; Gen. Surgery</text>
-          <!-- Nurse Torres -->
-          <line x1="376" y1="160" x2="560" y2="160" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <circle cx="387" cy="175" r="4" fill="#22c55e"/>
-          <text x="396" y="172" font-size="9" font-weight="700" fill="#e2e8f0">N. J. Torres</text>
-          <text x="396" y="184" font-size="7.5" fill="#475569">2 patients in triage</text>
-          <rect x="508" y="166" width="44" height="13" rx="2" fill="#134e4a"/>
-          <text x="530" y="176" font-size="7" fill="#5eead4" text-anchor="middle">ACTIVE</text>
-          <text x="396" y="196" font-size="7" fill="#334155">Torres &#183; Triage</text>
-          <!-- Dr. Kim -->
-          <line x1="376" y1="206" x2="560" y2="206" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
-          <circle cx="387" cy="221" r="4" fill="#64748b"/>
-          <text x="396" y="218" font-size="9" font-weight="700" fill="#64748b">Dr. L. Kim</text>
-          <text x="396" y="230" font-size="7.5" fill="#334155">0 patients</text>
-          <rect x="508" y="212" width="44" height="13" rx="2" fill="#1e293b"/>
-          <text x="530" y="222" font-size="7" fill="#64748b" text-anchor="middle">BREAK</text>
-          <text x="396" y="242" font-size="7" fill="#334155">Kim &#183; Pediatrics</text>
-
-          <!-- BOTTOM PANEL: ACTIVE DETAIL (default visible) -->
-          <g id="panel-active">
-            <rect x="190" y="254" width="370" height="106" fill="#0A1525"/>
-            <rect x="190" y="254" width="370" height="22" fill="#160a0a"/>
-            <text x="200" y="268" font-size="7" font-weight="700" fill="#fca5a5" letter-spacing="1.2">ESCALATION DETAIL</text>
-            <rect x="470" y="258" width="82" height="14" rx="2" fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.3)" stroke-width="0.5"/>
-            <text x="511" y="268" font-size="7" font-weight="700" fill="#fca5a5" text-anchor="middle">ACTIVE &#9888; 11:04 AM</text>
-            <text x="200" y="290" font-size="9.5" font-weight="700" fill="#fca5a5">Derek Walsh</text>
-            <text x="200" y="302" font-size="7.5" fill="#7f6e6e">Bay 4 &#183; Admitted 10:42 AM &#183; #DW-0057</text>
-            <text x="200" y="314" font-size="7.5" fill="#94a3b8">Chest pain, shortness of breath &#183; Assigned: Dr. S. Patel</text>
-            <text x="200" y="326" font-size="7.5" fill="#94a3b8">BP: 180/112 &#183; O2 Sat: 89% &#183; Temp: 99.1F &#183; HR: 112</text>
-            <!-- Decorative action buttons -->
-            <rect x="200" y="333" width="68" height="18" rx="2" fill="rgba(239,68,68,0.15)" style="pointer-events:none;cursor:default"/>
-            <text x="234" y="345" font-size="7" font-weight="700" fill="#fca5a5" text-anchor="middle" style="pointer-events:none">ACKNOWLEDGE</text>
-            <rect x="274" y="333" width="52" height="18" rx="2" fill="rgba(20,184,166,0.1)" style="pointer-events:none;cursor:default"/>
-            <text x="300" y="345" font-size="7" font-weight="700" fill="#5eead4" text-anchor="middle" style="pointer-events:none">RESOLVE</text>
-            <rect x="332" y="333" width="52" height="18" rx="2" fill="rgba(255,255,255,0.05)" style="pointer-events:none;cursor:default"/>
-            <text x="358" y="345" font-size="7" font-weight="700" fill="#64748b" text-anchor="middle" style="pointer-events:none">ADD NOTE</text>
-          </g>
-
-          <!-- BOTTOM PANEL: RESOLVED (hidden by default) -->
-          <g id="panel-resolved" style="display:none">
-            <rect x="190" y="254" width="370" height="106" fill="#0A1525"/>
-            <rect x="190" y="254" width="370" height="22" fill="#0a1f12"/>
-            <text x="200" y="268" font-size="7" font-weight="700" fill="#86efac" letter-spacing="1.2">ESCALATION RESOLVED</text>
-            <rect x="476" y="258" width="76" height="14" rx="2" fill="rgba(21,128,61,0.2)" stroke="rgba(21,128,61,0.35)" stroke-width="0.5"/>
-            <text x="514" y="268" font-size="7" font-weight="700" fill="#86efac" text-anchor="middle">CLOSED 11:14 AM</text>
-            <text x="200" y="290" font-size="9.5" font-weight="700" fill="#86efac">Derek Walsh</text>
-            <text x="200" y="302" font-size="7.5" fill="#1a4a2a">Bay 4 &#183; Admitted 10:42 AM &#183; Resolved 11:14 AM</text>
-            <text x="200" y="314" font-size="7.5" fill="#4ade80">Dr. Patel signed off. Audit record saved.</text>
-            <text x="200" y="326" font-size="7.5" fill="#4ade80">Duration: 32 min &#183; Outcome: Treated and stable</text>
-            <rect x="200" y="333" width="82" height="18" rx="2" fill="rgba(21,128,61,0.15)" style="pointer-events:none;cursor:default"/>
-            <text x="241" y="345" font-size="7" font-weight="700" fill="#86efac" text-anchor="middle" style="pointer-events:none">EXPORT RECORD</text>
-          </g>
-
-          <!-- BOTTOM PANEL: TIMELINE (hidden by default) -->
-          <g id="panel-timeline" style="display:none">
-            <rect x="190" y="254" width="370" height="106" fill="#0A1525"/>
-            <rect x="190" y="254" width="370" height="22" fill="#0F2035"/>
-            <text x="200" y="268" font-size="7" font-weight="700" fill="#64748b" letter-spacing="1.2">AUDIT TIMELINE &#183; Derek Walsh &#183; Bay 4</text>
-            <circle cx="200" cy="284" r="3" fill="#475569"/>
-            <text x="209" y="288" font-size="7.5" fill="#64748b">10:42 AM</text>
-            <text x="250" y="288" font-size="7.5" fill="#94a3b8">Patient admitted. Triage: Nurse Torres.</text>
-            <circle cx="200" cy="300" r="3" fill="#475569"/>
-            <text x="209" y="304" font-size="7.5" fill="#64748b">11:02 AM</text>
-            <text x="250" y="304" font-size="7.5" fill="#94a3b8">Vitals documented. BP elevated.</text>
-            <circle cx="200" cy="316" r="3" fill="#ef4444"/>
-            <text x="209" y="320" font-size="7.5" fill="#fca5a5">11:04 AM</text>
-            <text x="250" y="320" font-size="7.5" fill="#fca5a5">Escalation flagged. Assigned to Dr. Patel.</text>
-            <circle cx="200" cy="332" r="3" fill="#f59e0b"/>
-            <text x="209" y="336" font-size="7.5" fill="#64748b">11:09 AM</text>
-            <text x="250" y="336" font-size="7.5" fill="#94a3b8">Dr. Patel acknowledged. Assessment started.</text>
-            <circle cx="200" cy="348" r="3" fill="#22c55e"/>
-            <text x="209" y="352" font-size="7.5" fill="#4ade80">11:14 AM</text>
-            <text x="250" y="352" font-size="7.5" fill="#4ade80">Resolved. Notes saved.</text>
-            <rect x="440" y="333" width="104" height="18" rx="2" fill="rgba(212,160,23,0.12)" style="pointer-events:none;cursor:default"/>
-            <text x="492" y="345" font-size="7" font-weight="700" fill="#D4A017" text-anchor="middle" style="pointer-events:none">EXPORT FOR COMPLIANCE</text>
-          </g>
-        </svg>
-      </div><!-- /dash-svg-wrap -->
-
-      <!-- Mobile feature list -->
-      <div class="dash-mobile-features">
-        <div class="dmf-item"><div class="dmf-dot" style="background:#ef4444"></div>Live escalation queue with status badges, provider assignments, and timestamps in one view.</div>
-        <div class="dmf-item"><div class="dmf-dot" style="background:#f59e0b"></div>Room and bay map with occupancy states. See which rooms are open before a patient hits the queue.</div>
-        <div class="dmf-item"><div class="dmf-dot" style="background:#14b8a6"></div>Staff panel showing who is active, who is on break, and how many patients each provider carries.</div>
-        <div class="dmf-item"><div class="dmf-dot" style="background:#D4A017"></div>Every escalation timestamped and logged. One click to export for compliance, billing, or legal.</div>
+    <div class="est-card">
+      <!-- PROGRESS -->
+      <div class="wizard-progress" id="wizard-progress">
+        <div class="wp-step active" id="wp-1"><div class="wp-circle" id="wpc-1">1</div><span class="wp-label">Project</span></div>
+        <div class="wp-line" id="wpl-1"></div>
+        <div class="wp-step" id="wp-2"><div class="wp-circle" id="wpc-2">2</div><span class="wp-label">Scope</span></div>
+        <div class="wp-line" id="wpl-2"></div>
+        <div class="wp-step" id="wp-3"><div class="wp-circle" id="wpc-3">3</div><span class="wp-label">Delivery</span></div>
+        <div class="wp-line" id="wpl-3"></div>
+        <div class="wp-step" id="wp-4"><div class="wp-circle" id="wpc-4">4</div><span class="wp-label">Details</span></div>
       </div>
 
-      <!-- DEMO OVERLAY -->
-      <div id="demo-overlay">
-        <div id="demo-backdrop"></div>
-        <div id="demo-spotlight"></div>
-        <div id="demo-card">
-          <div class="demo-card-inner">
-            <div class="demo-step-label" id="demo-step-label">STEP 1 OF 5</div>
-            <div class="demo-step-title" id="demo-step-title">Your operations at a glance</div>
-            <div class="demo-step-body" id="demo-step-body">Patient queue, room map, staff assignments, and live metrics. One screen, no tab switching.</div>
-            <div class="demo-contrast" id="demo-contrast">
-              <div class="demo-contrast-label" id="demo-contrast-label">Your current system</div>
-              <div class="demo-contrast-text" id="demo-contrast-text"></div>
+      <!-- STEP 1 -->
+      <div class="wizard-step active" id="step-1">
+        <h2>Tell us about your project.</h2>
+        <p>The more detail you add, the more accurate your estimate. All fields except project type are optional.</p>
+        <div class="form-grid">
+          <div class="form-field"><label>Company Name</label><input type="text" id="w-company" placeholder="Acme Health Group" autocomplete="off"></div>
+          <div class="form-field"><label>Industry</label>
+            <select id="w-industry">
+              <option value="">Select...</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="finance">Finance</option>
+              <option value="operations">Operations and Logistics</option>
+              <option value="ecommerce">E-commerce</option>
+              <option value="professional">Professional Services</option>
+              <option value="tech">Technology</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-field full"><label>What are you building? <span class="optional">2 to 3 sentences</span></label>
+            <textarea id="w-description" rows="4" placeholder="Describe the problem your software needs to solve. What breaks today, and what would working look like?"></textarea>
+          </div>
+          <div class="form-field full"><label>Project type <span class="optional">select all that apply</span></label>
+            <div class="checkbox-grid" id="type-grid">
+              <label class="cb-option"><input type="checkbox" value="workflow"> Workflow automation</label>
+              <label class="cb-option"><input type="checkbox" value="dashboard"> Data dashboard or reporting</label>
+              <label class="cb-option"><input type="checkbox" value="portal"> Customer-facing portal</label>
+              <label class="cb-option"><input type="checkbox" value="internal"> Internal operations tool</label>
+              <label class="cb-option"><input type="checkbox" value="api"> API or integration layer</label>
+              <label class="cb-option"><input type="checkbox" value="mobile"> Mobile companion app</label>
             </div>
-            <div class="demo-progress-bar"><div class="demo-progress-fill" id="demo-progress"></div></div>
-            <div class="demo-controls">
-              <button class="demo-ctrl-btn" id="demo-prev-btn" onclick="demoStep(-1)">&#8249;</button>
-              <button class="demo-ctrl-btn" id="demo-pause-btn" onclick="toggleDemoPause()">&#9208;</button>
-              <div id="demo-dots"></div>
-              <button class="demo-next-btn" id="demo-next-btn" onclick="demoStep(1)">Next &#8250;</button>
-            </div>
-            <button class="demo-close-btn" onclick="stopDemo()">&#10005; Close demo</button>
+            <div class="error-msg" id="err-types">Select at least one project type to continue.</div>
           </div>
         </div>
+        <div class="wizard-nav"><span></span><button class="btn-next" onclick="goToStep(2)">Next: Scope and design &#8594;</button></div>
       </div>
-    </div><!-- /demo-zone -->
 
-    <!-- DEMO TRIGGER -->
-    <div id="demo-trigger-bar">
-      <span class="demo-trigger-label">5-step live demo</span>
-      <button class="demo-start-btn" onclick="startDemo()">&#9654; Run Demo</button>
-    </div>
-  </section><!-- /dash-section -->
+      <!-- STEP 2 -->
+      <div class="wizard-step" id="step-2">
+        <h2>Scope and design.</h2>
+        <p>These inputs drive the hour estimate for each phase.</p>
+        <div class="form-grid">
+          <div class="form-field"><label>External integrations</label>
+            <select id="w-integrations"><option value="0">None</option><option value="1-2">1 to 2 systems</option><option value="3-5">3 to 5 systems</option><option value="5+">More than 5</option></select>
+          </div>
+          <div class="form-field"><label>Compliance requirements</label>
+            <select id="w-compliance"><option value="none">None</option><option value="hipaa">HIPAA</option><option value="soc2">SOC 2</option><option value="pci">PCI DSS</option><option value="ferpa">FERPA</option><option value="multiple">Multiple</option></select>
+          </div>
+          <div class="form-field"><label>Number of users</label>
+            <select id="w-users"><option value="small">Under 10</option><option value="medium">10 to 100</option><option value="large">100 to 1,000</option><option value="enterprise">More than 1,000</option></select>
+          </div>
+          <div class="form-field"><label>Existing code?</label>
+            <select id="w-existing"><option value="no">No, greenfield build</option><option value="partial">Picking up from someone else</option><option value="migrate">Migrating or replacing a system</option></select>
+          </div>
+          <div class="form-field full"><label>Design situation</label>
+            <div class="radio-cards cols-3">
+              <label class="radio-card selected" id="rc-design-provided" onclick="selectRadio('design','provided','rc-design-')"><input type="radio" name="w-design" value="provided" checked><div class="rc-check">&#10003;</div><div class="rc-label">Specs provided</div><div class="rc-sub">Mockups and brand guidelines delivered. We build to spec.</div></label>
+              <label class="radio-card" id="rc-design-assets" onclick="selectRadio('design','assets','rc-design-')"><input type="radio" name="w-design" value="assets"><div class="rc-check">&#10003;</div><div class="rc-label">Brand assets only</div><div class="rc-sub">Logo and colors exist. We design the UI.</div></label>
+              <label class="radio-card" id="rc-design-scratch" onclick="selectRadio('design','scratch','rc-design-')"><input type="radio" name="w-design" value="scratch"><div class="rc-check">&#10003;</div><div class="rc-label">Start from scratch</div><div class="rc-sub">We handle research, wireframes, and full visual design.</div></label>
+            </div>
+          </div>
+          <div class="form-field full"><label>Supporting documents <span class="optional">improves accuracy</span></label>
+            <div class="file-drop" id="file-drop-zone" onclick="document.getElementById('w-files').click()" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event)">
+              <input type="file" id="w-files" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" style="display:none" onchange="handleFileSelect(event)">
+              &#128206; Drop files here or click to upload
+              <span style="display:block;font-size:10px;color:rgba(13,14,15,.35);margin-top:4px">Requirements docs, wireframes, ERDs, screenshots of current system</span>
+            </div>
+            <div class="file-list" id="file-list"></div>
+          </div>
+        </div>
+        <div class="wizard-nav"><button class="btn-back" onclick="goToStep(1)">&#8592; Back</button><button class="btn-next" onclick="goToStep(3)">Next: Delivery preferences &#8594;</button></div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="wizard-step" id="step-3">
+        <h2>Delivery preferences.</h2>
+        <p>Your selections here determine which cost scenario we highlight and how we calculate your timeline.</p>
+        <div style="margin-bottom:28px">
+          <label style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,14,15,.6);display:block;margin-bottom:10px">Timeline</label>
+          <div class="radio-cards cols-4">
+            <label class="radio-card selected" id="rc-tl-flexible" onclick="selectRadio('timeline','flexible','rc-tl-')"><input type="radio" name="w-timeline" value="flexible" checked><div class="rc-check">&#10003;</div><div class="rc-label">Flexible</div><div class="rc-sub">No hard date</div></label>
+            <label class="radio-card" id="rc-tl-6weeks" onclick="selectRadio('timeline','6weeks','rc-tl-')"><input type="radio" name="w-timeline" value="6weeks"><div class="rc-check">&#10003;</div><div class="rc-label">6 to 8 weeks</div><div class="rc-sub">Standard scope</div></label>
+            <label class="radio-card" id="rc-tl-3months" onclick="selectRadio('timeline','3months','rc-tl-')"><input type="radio" name="w-timeline" value="3months"><div class="rc-check">&#10003;</div><div class="rc-label">3 months</div><div class="rc-sub">Larger build</div></label>
+            <label class="radio-card" id="rc-tl-hard" onclick="selectRadio('timeline','hard','rc-tl-')"><input type="radio" name="w-timeline" value="hard"><div class="rc-check">&#10003;</div><div class="rc-label">Hard deadline</div><div class="rc-sub">Date-driven</div></label>
+          </div>
+        </div>
+        <div style="margin-bottom:28px">
+          <label style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,14,15,.6);display:block;margin-bottom:10px">Team requirement <span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:rgba(13,14,15,.4);margin-left:6px">most clients use standard</span></label>
+          <div class="radio-cards cols-2">
+            <label class="radio-card selected" id="rc-res-standard" onclick="selectRadio('resource','standard','rc-res-')"><input type="radio" name="w-resource" value="standard" checked><div class="rc-check">&#10003;</div><div class="rc-label">Standard delivery</div><div class="rc-sub">Senior US operator oversight on every engagement. Kingbird standard.</div><div class="rc-price">$75/hr</div></label>
+            <label class="radio-card" id="rc-res-usonlyl" onclick="selectRadio('resource','usonlyl','rc-res-')"><input type="radio" name="w-resource" value="usonlyl"><div class="rc-check">&#10003;</div><div class="rc-label">US-only team</div><div class="rc-sub">All work performed by US-based engineers. Required for some compliance environments.</div><div class="rc-price">$92/hr</div></label>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,14,15,.6);display:block;margin-bottom:10px">Budget awareness <span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:rgba(13,14,15,.4);margin-left:6px">helps us calibrate</span></label>
+          <div class="radio-cards cols-4">
+            <label class="radio-card" id="rc-bud-sub15" onclick="selectRadio('budget','sub15','rc-bud-')"><input type="radio" name="w-budget" value="sub15"><div class="rc-check">&#10003;</div><div class="rc-label">Under $15K</div></label>
+            <label class="radio-card" id="rc-bud-15to30" onclick="selectRadio('budget','15to30','rc-bud-')"><input type="radio" name="w-budget" value="15to30"><div class="rc-check">&#10003;</div><div class="rc-label">$15K to $30K</div></label>
+            <label class="radio-card" id="rc-bud-30to60" onclick="selectRadio('budget','30to60','rc-bud-')"><input type="radio" name="w-budget" value="30to60"><div class="rc-check">&#10003;</div><div class="rc-label">$30K to $60K</div></label>
+            <label class="radio-card" id="rc-bud-60plus" onclick="selectRadio('budget','60plus','rc-bud-')"><input type="radio" name="w-budget" value="60plus"><div class="rc-check">&#10003;</div><div class="rc-label">$60K+</div></label>
+          </div>
+        </div>
+        <div class="wizard-nav"><button class="btn-back" onclick="goToStep(2)">&#8592; Back</button><button class="btn-next" onclick="goToStep(4)">See my estimate &#8594;</button></div>
+      </div>
+
+      <!-- STEP 4: LEAD GATE -->
+      <div class="wizard-step" id="step-4">
+        <div class="lead-gate">
+          <h2>Your estimate is ready.</h2>
+          <p>Enter your details and we will show you the full breakdown. We follow up within one business day.</p>
+          <div class="form-grid" style="text-align:left">
+            <div class="form-field"><label>First name <span style="color:#dc2626">*</span></label><input type="text" id="g-first" placeholder="Sarah" autocomplete="given-name"><div class="error-msg" id="err-first">Required.</div></div>
+            <div class="form-field"><label>Last name <span style="color:#dc2626">*</span></label><input type="text" id="g-last" placeholder="Nguyen" autocomplete="family-name"><div class="error-msg" id="err-last">Required.</div></div>
+            <div class="form-field full"><label>Work email <span style="color:#dc2626">*</span></label><input type="email" id="g-email" placeholder="sarah@yourcompany.com" autocomplete="email"><div class="error-msg" id="err-email">Enter a valid work email.</div></div>
+            <div class="form-field full"><label>Phone <span class="optional">optional. AJ will text, not cold call.</span></label><input type="tel" id="g-phone" placeholder="(602) 555-0100" autocomplete="tel"></div>
+          </div>
+          <button class="submit-btn" onclick="submitLeadGate()">Show my estimate &#8594;</button>
+          <p class="gate-note">No spam. Your information is used only to follow up on your project estimate.</p>
+        </div>
+        <div class="wizard-nav" style="max-width:480px;margin:0 auto">
+          <button class="btn-back" onclick="goToStep(3)">&#8592; Back</button><span></span>
+        </div>
+      </div>
+
+      <!-- ESTIMATE REVEAL (inside card) -->
+      <div id="estimate-reveal">
+        <div class="er-divider"></div>
+        <div class="er-header"><h2 id="er-headline">Your project estimate.</h2><p class="er-company" id="er-sub"></p></div>
+        <table class="phase-table" id="phase-table">
+          <thead><tr><th>Phase</th><th style="text-align:right">Hours</th><th style="text-align:right">Cost</th></tr></thead>
+          <tbody id="phase-tbody"></tbody>
+        </table>
+        <p class="section-eyebrow" style="margin-bottom:20px">Cost scenarios</p>
+        <div class="cost-scenarios" id="cost-scenarios"></div>
+        <div class="timeline-band"><div><span class="tl-label">Estimated timeline</span><div class="tl-weeks" id="tl-weeks"></div></div><div class="tl-detail" id="tl-detail"></div></div>
+        <div class="confidence-row"><span class="conf-badge" id="conf-badge"></span><span class="conf-text" id="conf-text"></span></div>
+        <div class="open-questions" id="open-questions-wrap" style="display:none"><p class="oq-title">Questions your intake call answers</p><ul class="oq-list" id="oq-list"></ul></div>
+        <div class="book-cta">
+          <h3>Ready to move forward?</h3>
+          <p>Book a 30-minute call with AJ. He has your estimate and will come prepared to confirm scope, answer open questions, and lock in your number.</p>
+          <a href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank" class="btn-book">Book a call with AJ &#8594;</a>
+          <div class="share-row"><input type="text" class="share-input" id="share-url" readonly placeholder="Your shareable estimate link"><button class="share-copy-btn" onclick="copyShareUrl()">Copy link</button></div>
+        </div>
+      </div>
+
+    </div><!-- /est-card -->
+  </section>
 
   <!-- WHAT IS AT STAKE -->
-  <section class="stakes-section">
+  <section class="section">
     <p class="section-eyebrow">What changes</p>
     <h2 class="section-heading">The cost of building on borrowed time.</h2>
     <div class="stakes-table">
-      <div class="stakes-thead">
-        <div class="stakes-th"></div>
-        <div class="stakes-th bad">Without Kingbird</div>
-        <div class="stakes-th good">With Kingbird</div>
-      </div>
-      <div class="stakes-tr">
-        <div class="stakes-scenario">Operations tools</div>
-        <div class="stakes-td bad">Spreadsheets and broken Zaps. One failed automation stops the entire workflow.</div>
-        <div class="stakes-td good">A purpose-built tool that matches your workflow. You own it. Your team runs it without us.</div>
-      </div>
-      <div class="stakes-tr">
-        <div class="stakes-scenario">Vendor relationship</div>
-        <div class="stakes-td bad">The offshore agency disappears after handoff. No documentation. The phone goes unanswered.</div>
-        <div class="stakes-td good">Direct access to the person writing the code throughout the engagement. Not a project manager. The engineer.</div>
-      </div>
-      <div class="stakes-tr">
-        <div class="stakes-scenario">Compliance and reporting</div>
-        <div class="stakes-td bad">You reconcile three separate systems the night before an audit.</div>
-        <div class="stakes-td good">Every record timestamped and exportable from day one. The audit is one click.</div>
-      </div>
+      <div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without Kingbird</div><div class="stakes-th good">With Kingbird</div></div>
+      <div class="stakes-tr"><div class="stakes-scenario">Operations tools</div><div class="stakes-td bad">Spreadsheets and broken Zaps. One failed automation stops the entire workflow.</div><div class="stakes-td good">A purpose-built tool that matches your workflow. You own it. Your team runs it without us.</div></div>
+      <div class="stakes-tr"><div class="stakes-scenario">Vendor relationship</div><div class="stakes-td bad">The offshore agency disappears after handoff. No documentation. The phone goes unanswered.</div><div class="stakes-td good">Direct access to the engineer throughout the engagement. Not a project manager. The person writing the code.</div></div>
+      <div class="stakes-tr"><div class="stakes-scenario">Compliance and reporting</div><div class="stakes-td bad">You reconcile three separate systems the night before an audit.</div><div class="stakes-td good">Every record timestamped and exportable from day one. The audit is one click.</div></div>
     </div>
   </section>
 
   <!-- HOW IT CONNECTS -->
-  <section class="flow-section">
+  <section class="section" style="padding-top:0">
     <p class="section-eyebrow">The engagement</p>
     <h2 class="section-heading">Three steps. No retainer. You own the output.</h2>
     <div class="flow">
-      <div class="flow-step">
-        <div class="flow-num">Step 01</div>
-        <h4>Intake call</h4>
-        <p>30 minutes to scope what you need and what you do not. We leave with a defined problem or we stop there. No commitment required.</p>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">Step 02</div>
-        <h4>Fixed-scope build</h4>
-        <p>Defined deliverable, defined timeline, defined price. Scope creep is Kingbird's problem to manage, not yours.</p>
-      </div>
-      <div class="flow-step">
-        <div class="flow-num">Step 03</div>
-        <h4>Shipped and handed off</h4>
-        <p>You own the code. Full documentation. We stay available for the next scope on your terms, not ours.</p>
-      </div>
+      <div class="flow-step"><div class="flow-num">Step 01</div><h4>Intake call</h4><p>30 minutes to scope what you need and what you do not. We leave with a defined problem or we stop there. No commitment required.</p></div>
+      <div class="flow-step"><div class="flow-num">Step 02</div><h4>Fixed-scope build</h4><p>Defined deliverable, defined timeline, defined price. Scope creep is Kingbird's problem to manage, not yours.</p></div>
+      <div class="flow-step"><div class="flow-num">Step 03</div><h4>Shipped and handed off</h4><p>You own the code. Full documentation. We stay available for the next scope on your terms.</p></div>
     </div>
   </section>
 
   <!-- FEATURE CARDS -->
-  <section class="features-section">
+  <section class="section" style="padding-top:0">
     <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">&#9741;</div>
-        <h3>Works with your existing stack</h3>
-        <p>We integrate with your EHR, scheduling system, or data source. Nothing gets ripped out. Your team keeps using the tools they know, and the new tool fills the gap they were working around.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#36;</div>
-        <h3>Fixed-scope, not hourly</h3>
-        <p>You know the cost before work starts. We scope the engagement, price it, and deliver it. No billing surprises at the end of the month. No invoice that grows with the project.</p>
-      </div>
+      <div class="feature-card"><div class="feature-icon">&#9741;</div><h3>Works with your existing stack</h3><p>We integrate with your EHR, scheduling system, or data source. Nothing gets ripped out. Your team keeps using the tools they know, and the new tool fills the gap they were working around.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#36;</div><h3>Fixed-scope, not hourly</h3><p>You know the cost before work starts. We scope the engagement, price it, and deliver it. No billing surprises at the end of the month.</p></div>
     </div>
   </section>
 
   <!-- FOUNDING CLIENT CTA -->
-  <section class="cta-section">
-    <div class="cta-left">
-      <p class="cta-eyebrow">Founding client pricing</p>
-      <h3>First 10 clients lock in before we scale.</h3>
-      <p>We are taking 10 founding clients at a rate that does not exist after these spots fill. Each engagement includes a dedicated onboarding call, direct Slack access to the engineer building your product, and delivery within 6 weeks.</p>
-      <ul class="cta-perks">
-        <li>Scoped and delivered within 6 weeks</li>
-        <li>Direct Slack access to the founding engineer</li>
-        <li>Dedicated onboarding call before work starts</li>
-        <li>You own the code and all documentation at handoff</li>
-      </ul>
-      <div class="progress-bar-wrap">
-        <div class="progress-meta">
-          <span class="spots">3 of 10 spots committed</span>
-          <span class="total">7 remaining</span>
-        </div>
+  <section class="section" style="padding-top:0">
+    <div class="cta-section">
+      <div class="cta-left">
+        <p class="cta-eyebrow">Founding client pricing</p>
+        <h3>First 10 clients lock in before we scale.</h3>
+        <p>We are taking 10 founding clients at a rate that does not exist after these spots fill. Each engagement includes a dedicated onboarding call, direct Slack access to the engineer, and delivery within 6 weeks.</p>
+        <ul class="cta-perks">
+          <li>Scoped and delivered within 6 weeks</li>
+          <li>Direct Slack access to the founding engineer</li>
+          <li>Dedicated onboarding call before work starts</li>
+          <li>You own the code and documentation at handoff</li>
+        </ul>
+        <div class="progress-meta"><span class="spots">3 of 10 spots committed</span><span class="total">7 remaining</span></div>
         <div class="progress-bar"><div class="progress-fill"></div></div>
         <p class="progress-note">Once these fill, pricing moves to market rate.</p>
       </div>
-    </div>
-    <div class="cta-right">
-      <a href="https://calendly.com/kingbirdsolutions" target="_blank" class="btn-gold-cta">Schedule intake call &#8594;</a>
-      <a href="mailto:chris@kingbirdsolutions.com" class="btn-outline-bone">Email us first</a>
+      <div class="cta-right">
+        <a href="#estimator" class="btn-gold-cta">Get your estimate &#8594;</a>
+        <a href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank" class="btn-outline-bone">Book a call with AJ</a>
+      </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
+  <footer class="site-footer">
     <span>&#169; 2026 Kingbird Solutions LLC &#183; <a href="https://kingbirdsolutions.com" target="_blank">kingbirdsolutions.com</a></span>
-    <span id="footer-proposal-info"></span>
+    <span id="footer-info"></span>
   </footer>
 
-</div><!-- /wrap -->
-</div><!-- /tab-overview -->
-
-<!-- TAB 2: GENERATE -->
-<div id="tab-generate" class="tab-panel">
-<div class="wrap">
-  <div class="gen-header">
-    <h2>Generate a <span>Personalized Proposal</span></h2>
-    <p>Fill in the details below to create a shareable one-pager for a specific contact. You get a link you can send directly. The proposal opens in this same view with their name and context in place.</p>
-  </div>
-
-  <div class="form-grid">
-    <div class="form-field">
-      <label>Contact Name</label>
-      <input type="text" id="f-name" placeholder="e.g. Sarah Nguyen" autocomplete="off" oninput="updatePreview()">
-    </div>
-    <div class="form-field">
-      <label>Contact Email <span class="optional">optional</span></label>
-      <input type="email" id="f-email" placeholder="e.g. sarah@acmehealth.com" autocomplete="off">
-    </div>
-    <div class="form-field">
-      <label>Company Name</label>
-      <input type="text" id="f-company" placeholder="e.g. Acme Health Group" autocomplete="off" oninput="updatePreview()">
-    </div>
-    <div class="form-field">
-      <label>Company Type</label>
-      <select id="f-type" onchange="updatePreview()">
-        <option value="">Select type...</option>
-        <option value="clinic">Health Clinic / Health System</option>
-        <option value="digitalhealth">Digital Health Startup</option>
-        <option value="saas">Healthcare SaaS</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-    <div class="form-field">
-      <label>Team Size</label>
-      <select id="f-size">
-        <option value="">Select size...</option>
-        <option value="1-10">1 to 10</option>
-        <option value="11-50">11 to 50</option>
-        <option value="51-200">51 to 200</option>
-        <option value="200+">200 or more</option>
-      </select>
-    </div>
-    <div class="form-field">
-      <label>Company Website <span class="optional">optional</span></label>
-      <input type="text" id="f-website" placeholder="https://..." autocomplete="off">
-    </div>
-    <div class="form-field full">
-      <label>
-        <span>Context Line <span class="optional">optional. appears in the proposal</span></span>
-        <button class="autofill-btn" onclick="autofillContext()" type="button">Auto-fill</button>
-      </label>
-      <input type="text" id="f-context" maxlength="140" placeholder="e.g. 12-location clinic group running patient routing on a shared spreadsheet." autocomplete="off" oninput="updatePreview()">
-      <div class="char-hint">One sentence shown under the contact name. Proves you did your homework before sending.</div>
-    </div>
-  </div>
-
-  <div class="preview-panel">
-    <div class="preview-label">Live Preview</div>
-    <div class="preview-hero">The workaround that worked last year<br><span class="preview-line2" id="preview-line2">now runs your business.</span></div>
-    <div class="preview-meta" id="preview-meta">Prepared for <em>your contact</em> at <em>your company</em></div>
-  </div>
-
-  <button class="gen-btn" onclick="generateProposal()">Generate Proposal &#8594;</button>
-
-  <div id="success-panel">
-    <h3>&#10003; Proposal generated</h3>
-    <div class="url-box">
-      <input type="text" class="url-input" id="proposal-url" readonly>
-      <button class="copy-btn" onclick="copyProposalUrl()">Copy link</button>
-    </div>
-    <div class="suc-actions">
-      <button class="suc-btn view" onclick="viewGeneratedProposal()">View proposal</button>
-      <button class="suc-btn pdf" onclick="window.print()">Download PDF</button>
-    </div>
-    <div id="save-confirm" class="save-confirm"></div>
-  </div>
-</div>
-</div><!-- /tab-generate -->
+</div><!-- /page-wrap -->
 
 <script>
 // ============================================================
-// CONFIGURATION
+// CONFIG
 // ============================================================
-const WEBHOOK_URL = ''; // Paste your Google Apps Script web app URL here
+const WEBHOOK_URL = '';  // Paste your Google Apps Script webhook URL here
 const SHARE_BASE  = window.location.href.split('#')[0];
+
+// ============================================================
+// ESTIMATION CONSTANTS
+// ============================================================
+const BASE_HOURS = {workflow:120,dashboard:100,portal:160,internal:140,api:80,mobile:180};
+
+function getBaseHours(types){
+  if(!types||!types.length) return 120;
+  const h=types.map(t=>BASE_HOURS[t]||120).sort((a,b)=>b-a);
+  return Math.round(h[0]+h.slice(1).reduce((s,v)=>s+v*0.4,0));
+}
+
+const MULTS={
+  integrations:{'0':1.0,'1-2':1.2,'3-5':1.45,'5+':1.7},
+  users:{small:1.0,medium:1.1,large:1.25,enterprise:1.5},
+  compliance:{none:1.0,hipaa:1.25,soc2:1.2,pci:1.2,ferpa:1.15,multiple:1.45},
+  timeline:{flexible:1.0,'6weeks':1.0,'3months':0.95,hard:1.15},
+  existing:{no:1.0,partial:1.15,migrate:1.25}
+};
+
+const DESIGN_FACTOR={provided:0.05,assets:0.15,scratch:0.25};
+
+const PHASE_LABELS={
+  discovery:'Discovery and Architecture',
+  design:'UI/UX Design',
+  frontend:'Frontend Development',
+  backend:'Backend Development',
+  integrations:'API and Integration Work',
+  deployment:'Deployment and Handoff',
+  qa:'QA and Testing',
+  pm:'Project Management'
+};
+
+const PHASE_NOTES={
+  pm:'15% of production hours',
+  qa:'25% of production hours'
+};
+
+// AI efficiency factors - per phase, applied after base calculation.
+// Source: DORA 2025 (32% avg cost reduction), Faros/METR data for senior engineers
+// on greenfield custom builds. Discovery, design, and PM are human-intensive:
+// no AI reduction applied. Coding phases reflect 20-30% real-world senior gains.
+const AI_EFF={
+  discovery:0.95,    // 5%  - scoping and architecture require human judgment
+  design:1.00,       // 0%  - no reduction, human creativity required
+  frontend:0.70,     // 30% - AI excels at component and layout generation
+  backend:0.75,      // 25% - AI handles patterns, boilerplate, error handling
+  integrations:0.72, // 28% - AI writes connector code from API docs well
+  deployment:0.85,   // 15% - AI speeds docs, IaC scripts, runbooks
+  qa:0.85,           // 15% - AI generates test cases; validation time unchanged
+  pm:1.00            // 0%  - client communication and scope management stay human
+};
+
+// Standard published rate: $75/hr (matches kingbirdsolutions.com)
+// US-only premium: $92/hr (all work by US-based engineers, compliance environments)
+const RATE_STD = 75;
+const RATE_US  = 92;
+
+// Cost range based on scope confidence (scope uncertainty, not resource mix)
+const CONF_RANGE = {
+  high:   {lo:0.90, hi:1.10},
+  medium: {lo:0.85, hi:1.18},
+  low:    {lo:0.80, hi:1.25}
+};
+
+// ============================================================
+// ESTIMATE CALCULATION
+// ============================================================
+function calcEstimate(data){
+  const base = getBaseHours(data.types);
+  const core = Math.round(
+    base
+    * (MULTS.integrations[data.integrations]||1)
+    * (MULTS.users[data.users]||1)
+    * (MULTS.compliance[data.compliance]||1)
+    * (MULTS.timeline[data.timeline]||1)
+    * (MULTS.existing[data.existing]||1)
+  );
+
+  const hasInt    = data.integrations !== '0';
+  const designH   = Math.round(core * (DESIGN_FACTOR[data.design]||0.10));
+  const prodH     = core + designH;
+  const pmH       = Math.round(prodH * 0.15);
+  const qaH       = Math.round(prodH * 0.25);
+
+  // Raw phases before AI efficiency
+  const rawPhases = [
+    {id:'discovery', h: Math.round(core * 0.15)},
+    {id:'design',    h: designH},
+    {id:'frontend',  h: Math.round(core * (hasInt ? 0.26 : 0.30))},
+    {id:'backend',   h: Math.round(core * (hasInt ? 0.32 : 0.40))},
+    {id:'integrations', h: hasInt ? Math.round(core * 0.20) : 0},
+    {id:'deployment',h: Math.round(core * 0.07)},
+    {id:'qa',        h: qaH},
+    {id:'pm',        h: pmH}
+  ].filter(p => p.h > 0);
+
+  // Apply AI efficiency factor to each phase
+  rawPhases.forEach(p => {
+    p.h = Math.max(1, Math.round(p.h * (AI_EFF[p.id] || 1.0)));
+  });
+
+  const totH = rawPhases.reduce((s,p) => s + p.h, 0);
+
+  // Active rate based on team preference
+  const usonlySelected = (data.resource === 'usonlyl');
+  const activeRate     = usonlySelected ? RATE_US : RATE_STD;
+  const activeCost     = Math.round(totH * activeRate);
+  const usCost         = Math.round(totH * RATE_US);
+  const stdCost        = Math.round(totH * RATE_STD);
+
+  // Add per-phase cost for table display
+  rawPhases.forEach(p => { p.cActive = Math.round(p.h * activeRate); });
+
+  // Confidence-based range
+  let score = 0;
+  if(data.description && data.description.length > 100) score += 2;
+  else if(data.description && data.description.length > 20) score += 1;
+  if(data.files && data.files.length > 0) score += 2;
+  if(data.types && data.types.length > 0) score += 1;
+  const confidence = score >= 5 ? 'high' : score >= 2 ? 'medium' : 'low';
+
+  const cr       = CONF_RANGE[confidence];
+  const costRange = {lo: Math.round(activeCost * cr.lo), hi: Math.round(activeCost * cr.hi)};
+
+  // Timeline: 35 productive hours/week
+  const wks      = totH / 35;
+  const timeline = {lo: Math.max(2, Math.floor(wks * 0.85)), hi: Math.ceil(wks * 1.2)};
+
+  // Open questions from scope inputs
+  const oqs = [];
+  if(data.integrations !== '0')
+    oqs.push('Which systems need to integrate, and do they expose a REST API or require a middleware layer?');
+  if(data.compliance === 'hipaa')
+    oqs.push('Where will protected health information be stored, and do you have an existing BAA with your cloud provider?');
+  if(data.compliance === 'soc2')
+    oqs.push('Are you targeting SOC 2 Type I or Type II, and what is your target audit date?');
+  if(data.users === 'large' || data.users === 'enterprise')
+    oqs.push('What are your expected peak concurrent users and uptime requirements?');
+  if(data.design === 'scratch')
+    oqs.push('Do you have examples of UI from other products we can use as visual reference?');
+  if(data.types && data.types.includes('mobile'))
+    oqs.push('Is the mobile app iOS only, Android only, or cross-platform?');
+  if(data.existing === 'partial' || data.existing === 'migrate')
+    oqs.push('What is the current tech stack and what documentation exists for it?');
+  if(!data.description || data.description.length < 40)
+    oqs.unshift('Can you walk us through the day-to-day workflow this tool needs to support?');
+
+  return {
+    phases: rawPhases,
+    totH, activeRate, activeCost, stdCost, usCost, usonlySelected,
+    costRange, timeline, confidence, oqs: oqs.slice(0,4), data
+  };
+}
+
+function fmt(n){ return '$' + n.toLocaleString(); }
+
+// ============================================================
+// RENDER ESTIMATE
+// ============================================================
+function renderEstimate(est){
+  // Phase table
+  const tbody = document.getElementById('phase-tbody');
+  tbody.innerHTML = '';
+  est.phases.forEach(p => {
+    const tr   = document.createElement('tr');
+    tr.id = 'tr-' + p.id;
+    const note = PHASE_NOTES[p.id]
+      ? '<span class="phase-note">' + PHASE_NOTES[p.id] + '</span>' : '';
+    tr.innerHTML =
+      '<td>' + PHASE_LABELS[p.id] + note + '</td>'
+      + '<td><input class="hours-input" type="number" value="' + p.h
+        + '" min="0" id="hi-' + p.id + '" onchange="recalcTable()" onblur="recalcTable()"></td>'
+      + '<td id="c-' + p.id + '">' + fmt(p.cActive) + '</td>';
+    tbody.appendChild(tr);
+  });
+  const tfoot = document.createElement('tr');
+  tfoot.className = 'total-row';
+  tfoot.innerHTML = '<td>Total</td>'
+    + '<td id="tot-h">' + est.totH + ' hrs</td>'
+    + '<td id="tot-c">' + fmt(est.activeCost) + '</td>';
+  tbody.appendChild(tfoot);
+
+  // Cost display - single rate with confidence range
+  const sc = document.getElementById('cost-scenarios');
+  const confPct = {high:'+-10%', medium:'+-18%', low:'+-25%'};
+  const rateLabel = est.usonlySelected
+    ? '$92/hr &middot; US-only team'
+    : '$75/hr &middot; Kingbird standard rate';
+  sc.innerHTML = '<div class="cost-primary">'
+    + '<div class="cp-rate">' + rateLabel + '</div>'
+    + '<div class="cp-total">' + fmt(est.activeCost) + '</div>'
+    + '<div class="cp-hours">' + est.totH + ' hours</div>'
+    + '<div class="cp-range">'
+      + fmt(est.costRange.lo) + ' to ' + fmt(est.costRange.hi)
+      + ' <span class="cp-conf">(' + confPct[est.confidence]
+      + ' based on scope detail provided)</span></div>'
+    + (est.usonlySelected ? '' :
+      '<div class="cp-usnote">Compliance environment requiring US-only delivery? '
+      + '<strong>' + fmt(est.usCost) + '</strong> at $92/hr. '
+      + 'Mention this on your intake call.</div>')
+    + '</div>';
+
+  // Timeline
+  document.getElementById('tl-weeks').textContent =
+    est.timeline.lo + ' to ' + est.timeline.hi + ' weeks';
+  document.getElementById('tl-detail').textContent =
+    'Based on ' + est.totH + ' total hours at standard team velocity. '
+    + 'Exact timeline confirmed at intake call.';
+
+  // Confidence
+  const cm = {
+    high:   {cls:'conf-high',   text:'High confidence. Use this as a working number. The intake call confirms final scope.'},
+    medium: {cls:'conf-medium', text:'Medium confidence. Accurate to within 15-20%. Adding a scope document will sharpen it.'},
+    low:    {cls:'conf-low',    text:'Low confidence. Add a project description or attach a document to improve accuracy.'}
+  };
+  const conf = cm[est.confidence];
+  document.getElementById('conf-badge').className = 'conf-badge ' + conf.cls;
+  document.getElementById('conf-badge').textContent =
+    est.confidence.charAt(0).toUpperCase() + est.confidence.slice(1) + ' confidence';
+  document.getElementById('conf-text').textContent = conf.text;
+
+  // Open questions
+  const oqWrap = document.getElementById('open-questions-wrap');
+  const oqList  = document.getElementById('oq-list');
+  if(est.oqs.length){
+    oqList.innerHTML = est.oqs.map(q => '<li>' + q + '</li>').join('');
+    oqWrap.style.display = 'block';
+  } else { oqWrap.style.display = 'none'; }
+
+  // Header
+  const company = est.data.company || '';
+  document.getElementById('er-headline').textContent =
+    company ? 'Estimate for ' + company + '.' : 'Your project estimate.';
+  document.getElementById('er-sub').textContent =
+    'Generated ' + new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})
+    + (company ? ' for ' + company : '');
+
+  // Share URL - encode for shareable link
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify({
+    lead: currentLead,
+    phases: est.phases.map(p => ({id:p.id, h:p.h})),
+    totH: est.totH, activeCost: est.activeCost, stdCost: est.stdCost,
+    usCost: est.usCost, usonlySelected: est.usonlySelected,
+    costRange: est.costRange, timeline: est.timeline,
+    confidence: est.confidence, oqs: est.oqs, data: est.data
+  }))));
+  document.getElementById('share-url').value = SHARE_BASE + '#' + encoded;
+
+  // Show
+  const reveal = document.getElementById('estimate-reveal');
+  reveal.style.display = 'block';
+  setTimeout(() => reveal.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+}
+
+// Recalculate totals when hours are manually edited
+function recalcTable(){
+  const rateEl = document.querySelector('.cp-rate');
+  const activeRate = (rateEl && rateEl.textContent.includes('92')) ? RATE_US : RATE_STD;
+  let totH = 0, totCost = 0;
+  document.querySelectorAll('#phase-tbody tr:not(.total-row)').forEach(tr => {
+    const id  = tr.id.replace('tr-','');
+    const hEl = document.getElementById('hi-' + id);
+    const cEl = document.getElementById('c-' + id);
+    if(!hEl || !cEl) return;
+    const h    = parseInt(hEl.value) || 0;
+    const cost = Math.round(h * activeRate);
+    cEl.textContent = fmt(cost);
+    totH += h; totCost += cost;
+  });
+  const th = document.getElementById('tot-h');
+  const tc = document.getElementById('tot-c');
+  if(th) th.textContent = totH + ' hrs';
+  if(tc) tc.textContent = fmt(totCost);
+  const tlEl = document.getElementById('tl-weeks');
+  if(tlEl) tlEl.textContent =
+    Math.max(2, Math.floor(totH/35*0.85)) + ' to ' + Math.ceil(totH/35*1.2) + ' weeks';
+}
 
 // ============================================================
 // STATE
 // ============================================================
-let activeTab = 1;
-let demoActive = false, demoPaused = false;
-let demoStep_cur = 0, demoTimer = null, demoProgressInterval = null;
-let demoProgressVal = 0, demoTimeRemaining = 0;
-let currentProposalData = null;
-const DEMO_DURATION = 9000;
+let currentStep = 1;
+let currentLead = {};
+let uploadedFiles = [];
 
 // ============================================================
-// DEMO STEPS
+// WIZARD NAVIGATION
 // ============================================================
-const DEMO_STEPS = [
-  {
-    label: 'STEP 1 OF 5',
-    title: 'Your operations at a glance',
-    body: 'Patient queue, room map, staff assignments, and live metrics. One screen, no tab switching.',
-    spotlight: { l:'0%', t:'0%', w:'100%', h:'100%' },
-    cardPos: 'right',
-    action: 'base'
-  },
-  {
-    label: 'STEP 2 OF 5',
-    title: 'An escalation fires',
-    body: 'Bay 4 flags a critical. Timestamped and assigned in seconds.',
-    contrastLabel: 'Your current system',
-    contrast: 'Your system catches this 20 minutes late. After the next manual check.',
-    spotlight: { l:'0%', t:'83%', w:'34%', h:'17%' },
-    cardPos: 'right',
-    action: 'showEscalation'
-  },
-  {
-    label: 'STEP 3 OF 5',
-    title: 'The assigned staff gets the full picture',
-    body: 'Patient context, room number, vitals history, timestamp. No phone call needed to get context.',
-    spotlight: { l:'34%', t:'70%', w:'66%', h:'30%' },
-    cardPos: 'left',
-    action: 'showDetail'
-  },
-  {
-    label: 'STEP 4 OF 5',
-    title: 'Closed and logged',
-    body: 'Escalation resolved. Audit trail saved. Export ready for compliance or billing.',
-    spotlight: { l:'0%', t:'83%', w:'34%', h:'17%' },
-    cardPos: 'right',
-    action: 'showResolved'
-  },
-  {
-    label: 'STEP 5 OF 5',
-    title: 'Every handoff documented',
-    body: 'Who did what, when. One click to export for compliance, billing, or legal.',
-    contrastLabel: 'What you have today',
-    contrast: 'Three separate systems. You reconcile them the night before an audit.',
-    spotlight: { l:'34%', t:'70%', w:'66%', h:'30%' },
-    cardPos: 'left',
-    action: 'showTimeline'
+function goToStep(n){
+  if(n > currentStep && !validateStep(currentStep)) return;
+  document.querySelectorAll('.wizard-step').forEach((s,i) =>
+    s.classList.toggle('active', i+1 === n));
+  for(let i=1; i<=4; i++){
+    const circ = document.getElementById('wpc-'+i);
+    const step = document.getElementById('wp-'+i);
+    const line = document.getElementById('wpl-'+i);
+    if(circ && step){
+      step.classList.toggle('active', i===n);
+      step.classList.toggle('done', i<n);
+      circ.innerHTML = i<n ? '&#10003;' : String(i);
+    }
+    if(line) line.classList.toggle('done', i<n);
   }
-];
-
-// ============================================================
-// TABS
-// ============================================================
-function showTab(n) {
-  activeTab = n;
-  document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i + 1 === n));
-  document.querySelectorAll('.step-tab').forEach((t, i) => {
-    const isActive = i + 1 === n;
-    const isDone   = i + 1 < n;
-    t.classList.toggle('active', isActive);
-    t.classList.toggle('done', isDone);
-    const sc = document.getElementById('sc-' + (i + 1));
-    if (sc) sc.innerHTML = isDone ? '&#10003;' : String(i + 1);
-  });
-  window.scrollTo(0, 0);
+  currentStep = n;
+  if(n < 4) document.getElementById('estimate-reveal').style.display = 'none';
+  document.getElementById('estimator').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ============================================================
-// DEMO
-// ============================================================
-function startDemo() {
-  demoActive = true; demoPaused = false;
-  document.getElementById('demo-trigger-bar').style.display = 'none';
-  const ov = document.getElementById('demo-overlay');
-  ov.style.display = 'block';
-  ov.style.pointerEvents = 'all';
-  demoStep_cur = 0;
-  buildDemoDots();
-  renderDemoStep(0);
-}
-
-function stopDemo() {
-  demoActive = false; demoPaused = false;
-  clearTimeout(demoTimer); clearInterval(demoProgressInterval);
-  document.getElementById('demo-overlay').style.display = 'none';
-  document.getElementById('demo-trigger-bar').style.display = 'flex';
-  resetDemoSVG();
-}
-
-function demoStep(dir) {
-  clearTimeout(demoTimer); clearInterval(demoProgressInterval);
-  demoPaused = false;
-  const pb = document.getElementById('demo-pause-btn');
-  if (pb) pb.innerHTML = '&#9208;';
-  const next = demoStep_cur + dir;
-  if (next < 0) return;
-  if (next >= DEMO_STEPS.length) { stopDemo(); return; }
-  renderDemoStep(next);
-}
-
-function toggleDemoPause() {
-  if (!demoActive) return;
-  demoPaused = !demoPaused;
-  const pb = document.getElementById('demo-pause-btn');
-  if (demoPaused) {
-    clearTimeout(demoTimer); clearInterval(demoProgressInterval);
-    if (pb) pb.innerHTML = '&#9654;';
-  } else {
-    if (pb) pb.innerHTML = '&#9208;';
-    startDemoProgress(demoTimeRemaining);
-    demoTimer = setTimeout(() => renderDemoStep(demoStep_cur + 1), demoTimeRemaining);
+function validateStep(n){
+  if(n===1){
+    const types = [...document.querySelectorAll('#type-grid input:checked')].map(c=>c.value);
+    if(!types.length){
+      document.getElementById('err-types').classList.add('visible');
+      return false;
+    }
+    document.getElementById('err-types').classList.remove('visible');
   }
+  return true;
 }
 
-function renderDemoStep(idx) {
-  if (idx >= DEMO_STEPS.length) { stopDemo(); return; }
-  demoStep_cur = idx; demoPaused = false;
-  demoProgressVal = 0; demoTimeRemaining = DEMO_DURATION;
-  clearTimeout(demoTimer); clearInterval(demoProgressInterval);
-  const pb = document.getElementById('demo-pause-btn');
-  if (pb) pb.innerHTML = '&#9208;';
-  const step = DEMO_STEPS[idx];
-  document.getElementById('demo-step-label').textContent = step.label;
-  document.getElementById('demo-step-title').textContent = step.title;
-  document.getElementById('demo-step-body').textContent  = step.body;
-  const ct = document.getElementById('demo-contrast');
-  if (step.contrast) {
-    ct.style.display = 'block';
-    document.getElementById('demo-contrast-label').textContent = step.contrastLabel || 'Current state';
-    document.getElementById('demo-contrast-text').textContent  = step.contrast;
-  } else { ct.style.display = 'none'; }
-  const nextBtn = document.getElementById('demo-next-btn');
-  nextBtn.textContent = idx === DEMO_STEPS.length - 1 ? 'Restart' : 'Next ›';
-  nextBtn.onclick     = idx === DEMO_STEPS.length - 1 ? () => renderDemoStep(0) : () => demoStep(1);
-  document.getElementById('demo-prev-btn').style.opacity = idx === 0 ? '0.3' : '1';
-  positionDemoElements(step);
-  updateDemoDots(idx);
-  runDemoAction(step.action);
-  startDemoProgress(DEMO_DURATION);
-  demoTimer = setTimeout(() => renderDemoStep(idx + 1), DEMO_DURATION);
+function selectRadio(group, val, prefix){
+  document.querySelectorAll('[id^="'+prefix+'"]').forEach(el => el.classList.remove('selected'));
+  const t = document.getElementById(prefix + val);
+  if(t){ t.classList.add('selected'); const rb = t.querySelector('input[type=radio]'); if(rb) rb.checked=true; }
 }
 
-function positionDemoElements(step) {
-  const spotlight = document.getElementById('demo-spotlight');
-  const card      = document.getElementById('demo-card');
-  if (step.spotlight) {
-    const s = step.spotlight;
-    Object.assign(spotlight.style, {
-      display:'block', left:s.l, top:s.t, width:s.w, height:s.h,
-      background:'rgba(255,255,255,0.04)',
-      boxShadow:'0 0 0 9999px rgba(0,0,0,0.88), 0 0 0 2px rgba(212,160,23,0.9), 0 0 0 5px rgba(212,160,23,0.35), 0 0 28px 6px rgba(212,160,23,0.4)',
-      transition:'all 0.6s cubic-bezier(0.4,0,0.2,1)'
-    });
-  } else { spotlight.style.display = 'none'; }
-  card.style.transition = 'all 0.4s ease';
-  if (step.cardPos === 'right') {
-    card.style.left = 'auto'; card.style.right = '2%';
-    card.style.top  = '4%';  card.style.transform = 'none';
-  } else if (step.cardPos === 'left') {
-    card.style.right = 'auto'; card.style.left = '1%';
-    card.style.top   = '3%';   card.style.transform = 'none';
-  } else {
-    card.style.left = '50%'; card.style.right = 'auto';
-    card.style.top  = '6%';  card.style.transform = 'translateX(-50%)';
-  }
-}
+document.addEventListener('change', e => {
+  if(e.target.type === 'checkbox')
+    e.target.closest('.cb-option').classList.toggle('checked', e.target.checked);
+});
 
-function startDemoProgress(duration) {
-  clearInterval(demoProgressInterval);
-  const fill = document.getElementById('demo-progress');
-  const tick = 100;
-  let elapsed = 0;
-  demoProgressInterval = setInterval(() => {
-    if (demoPaused) return;
-    elapsed += tick;
-    demoTimeRemaining = Math.max(0, duration - elapsed);
-    const pct = Math.min(100, (elapsed / duration) * 100);
-    if (fill) fill.style.width = pct + '%';
-    if (elapsed >= duration) clearInterval(demoProgressInterval);
-  }, tick);
+// ============================================================
+// FILE HANDLING
+// ============================================================
+function handleFileSelect(e){ addFiles(e.target.files); }
+function handleDragOver(e){ e.preventDefault(); document.getElementById('file-drop-zone').classList.add('dragover'); }
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('file-drop-zone').classList.remove('dragover');
+  addFiles(e.dataTransfer.files);
 }
-
-function buildDemoDots() {
-  const container = document.getElementById('demo-dots');
-  container.innerHTML = '';
-  DEMO_STEPS.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'demo-dot' + (i === 0 ? ' active' : '');
-    d.onclick = () => { clearTimeout(demoTimer); clearInterval(demoProgressInterval); renderDemoStep(i); };
-    container.appendChild(d);
-  });
+function addFiles(files){
+  [...files].forEach(f => { if(!uploadedFiles.find(u=>u.name===f.name)) uploadedFiles.push(f); });
+  renderFileList();
 }
-
-function updateDemoDots(idx) {
-  document.querySelectorAll('.demo-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-}
-
-function runDemoAction(action) {
-  const pa = document.getElementById('panel-active');
-  const pr = document.getElementById('panel-resolved');
-  const pt = document.getElementById('panel-timeline');
-  const badge = document.getElementById('queue-badge-walsh');
-  const rowBg = document.getElementById('escalation-row-bg');
-  if (pa) pa.style.display = 'block';
-  if (pr) pr.style.display = 'none';
-  if (pt) pt.style.display = 'none';
-  if (badge) badge.setAttribute('fill', '#7f1d1d');
-  if (rowBg) rowBg.setAttribute('fill', 'rgba(239,68,68,0.07)');
-  if (action === 'showEscalation') {
-    if (badge) badge.setAttribute('fill', '#ef4444');
-    if (rowBg) rowBg.setAttribute('fill', 'rgba(239,68,68,0.15)');
-  } else if (action === 'showDetail') {
-    // panel-active already visible
-  } else if (action === 'showResolved') {
-    if (pa) pa.style.display = 'none';
-    if (pr) pr.style.display = 'block';
-    if (badge) badge.setAttribute('fill', '#14532d');
-    if (rowBg) rowBg.setAttribute('fill', 'rgba(21,128,61,0.07)');
-  } else if (action === 'showTimeline') {
-    if (pa) pa.style.display = 'none';
-    if (pt) pt.style.display = 'block';
-  }
-}
-
-function resetDemoSVG() {
-  const pa = document.getElementById('panel-active');
-  const pr = document.getElementById('panel-resolved');
-  const pt = document.getElementById('panel-timeline');
-  const badge = document.getElementById('queue-badge-walsh');
-  const rowBg = document.getElementById('escalation-row-bg');
-  if (pa) pa.style.display = 'block';
-  if (pr) pr.style.display = 'none';
-  if (pt) pt.style.display = 'none';
-  if (badge) badge.setAttribute('fill', '#7f1d1d');
-  if (rowBg) rowBg.setAttribute('fill', 'rgba(239,68,68,0.07)');
+function removeFile(name){ uploadedFiles = uploadedFiles.filter(f=>f.name!==name); renderFileList(); }
+function renderFileList(){
+  document.getElementById('file-list').innerHTML = uploadedFiles.map(f =>
+    '<div class="file-item"><span>&#128206; '+f.name+' ('+Math.round(f.size/1024)+'KB)</span>'
+    +'<button onclick="removeFile(\''+f.name+'\')">&#10005;</button></div>'
+  ).join('');
 }
 
 // ============================================================
-// LIVE PREVIEW
+// LEAD GATE + SUBMISSION
 // ============================================================
-function updatePreview() {
-  const company = (document.getElementById('f-company').value.trim()) || 'your company';
-  const name    = (document.getElementById('f-name').value.trim())    || 'your contact';
-  const context = document.getElementById('f-context').value.trim();
-  const line2El = document.getElementById('preview-line2');
-  const metaEl  = document.getElementById('preview-meta');
-  if (line2El) line2El.textContent = company !== 'your company'
-    ? 'Build the tool ' + company + ' actually needs.'
-    : 'now runs your business.';
-  if (metaEl) {
-    metaEl.innerHTML = 'Prepared for <em>' + name + '</em> at <em>' + company + '</em>';
-    if (context) metaEl.innerHTML += '<br><span style="display:block;font-style:normal;color:rgba(245,241,232,0.35);font-size:10px;margin-top:4px;">' + context + '</span>';
-  }
-}
-
-function autofillContext() {
-  const company = document.getElementById('f-company').value.trim();
-  const type    = document.getElementById('f-type').value;
-  if (!company) { alert('Enter a company name first.'); return; }
-  const samples = {
-    clinic:      company + ' runs patient routing across ' + (Math.floor(Math.random()*8)+3) + ' locations with no shared system.',
-    digitalhealth: company + ' hit the limit of no-code tooling and needs owned infrastructure before their Series A.',
-    saas:        company + ' is building around a legacy data pipeline that three engineers are afraid to touch.',
-    other:       company + ' coordinates operations across teams with a stack of spreadsheets and manual handoffs.'
+function collectFormData(){
+  return {
+    company:      (document.getElementById('w-company').value||'').trim(),
+    industry:     document.getElementById('w-industry').value,
+    description:  (document.getElementById('w-description').value||'').trim(),
+    types:        [...document.querySelectorAll('#type-grid input:checked')].map(c=>c.value),
+    integrations: document.getElementById('w-integrations').value,
+    compliance:   document.getElementById('w-compliance').value,
+    users:        document.getElementById('w-users').value,
+    existing:     document.getElementById('w-existing').value,
+    design:       (document.querySelector('input[name="w-design"]:checked')||{value:'assets'}).value,
+    timeline:     (document.querySelector('input[name="w-timeline"]:checked')||{value:'flexible'}).value,
+    resource:     (document.querySelector('input[name="w-resource"]:checked')||{value:'standard'}).value,
+    budget:       (document.querySelector('input[name="w-budget"]:checked')||{value:''}).value,
+    files:        uploadedFiles.map(f=>f.name)
   };
-  const line = samples[type] || company + ' is running critical operations on tools that were never meant to scale.';
-  document.getElementById('f-context').value = line;
-  updatePreview();
 }
 
-function getTypeLabel(type) {
-  return { clinic:'FOR CLINICS', digitalhealth:'FOR DIGITAL HEALTH', saas:'FOR HEALTHCARE SAAS', other:'FOR YOUR BUSINESS' }[type] || 'CUSTOM SOFTWARE';
-}
+function submitLeadGate(){
+  const first = document.getElementById('g-first').value.trim();
+  const last  = document.getElementById('g-last').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  let ok = true;
+  if(!first){ document.getElementById('err-first').classList.add('visible'); ok=false; }
+  else document.getElementById('err-first').classList.remove('visible');
+  if(!last){ document.getElementById('err-last').classList.add('visible'); ok=false; }
+  else document.getElementById('err-last').classList.remove('visible');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    document.getElementById('err-email').classList.add('visible'); ok=false;
+  } else document.getElementById('err-email').classList.remove('visible');
+  if(!ok) return;
 
-// ============================================================
-// PROPOSAL GENERATION
-// ============================================================
-function generateProposal() {
-  const name    = document.getElementById('f-name').value.trim();
-  const company = document.getElementById('f-company').value.trim();
-  if (!name)    { alert('Please enter a contact name.'); return; }
-  if (!company) { alert('Please enter a company name.'); return; }
-  const emailVal  = (document.getElementById('f-email').value.trim()).toLowerCase();
-  const isInternal = emailVal.endsWith('@kingbirdsolutions.com');
-  const data = {
-    id:          Date.now().toString(36),
-    name:        name,
-    email:       emailVal,
-    company:     company,
-    type:        document.getElementById('f-type').value,
-    size:        document.getElementById('f-size').value,
-    website:     document.getElementById('f-website').value.trim(),
-    context:     document.getElementById('f-context').value.trim(),
-    date:        new Date().toISOString(),
-    internal:    isInternal
+  currentLead = {
+    first, last, name: first+' '+last,
+    email, phone: document.getElementById('g-phone').value.trim()
   };
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  const url = SHARE_BASE + '#' + encoded;
-  document.getElementById('proposal-url').value = url;
+  const data = collectFormData();
+  const est  = calcEstimate(data);
 
-  // Webhook (skip for internal)
-  if (WEBHOOK_URL && !isInternal) {
-    const payload = { ...data, shareLink: url };
-    const wUrl = WEBHOOK_URL + '?data=' + encodeURIComponent(JSON.stringify(payload));
-    fetch(wUrl, { mode:'no-cors' }).catch(() => {});
-  }
-
-  const confirmEl = document.getElementById('save-confirm');
-  if (isInternal) {
-    confirmEl.className = 'internal-note';
-    confirmEl.textContent = 'Internal proposal. Slack and Drive skipped.';
-  } else {
-    confirmEl.className = 'save-confirm';
-    confirmEl.textContent = WEBHOOK_URL ? 'Saved to Google Drive and Slack notified.' : 'Proposal link ready to send.';
-  }
-
-  document.getElementById('success-panel').style.display = 'block';
-  setTimeout(() => document.getElementById('success-panel').scrollIntoView({ behavior:'smooth', block:'start' }), 80);
-
-  currentProposalData = data;
-  const sc2 = document.getElementById('sc-2');
-  if (sc2) sc2.innerHTML = '&#10003;';
-  document.querySelector('[data-tab="2"]').classList.add('done');
+  document.getElementById('step-4').classList.remove('active');
+  document.getElementById('wizard-progress').style.display = 'none';
+  renderEstimate(est);
+  fireSlack(currentLead, data, est);
 }
 
-function copyProposalUrl() {
-  const el = document.getElementById('proposal-url');
+// ============================================================
+// SLACK NOTIFICATION
+// ============================================================
+function fireSlack(lead, data, est){
+  if(!WEBHOOK_URL) return;
+  const rateNote = est.usonlySelected ? 'US-only team at $92/hr' : 'Standard at $75/hr';
+  const txt = [
+    '*New estimate lead* | Kingbird Sales Tool',
+    '',
+    '*' + lead.name + '*  |  ' + lead.email + (lead.phone ? ' | ' + lead.phone : ''),
+    'Company: ' + (data.company||'Not provided') + '  |  Industry: ' + (data.industry||'Not provided'),
+    '',
+    '*Project:* ' + (data.types.join(', ')||'Not specified'),
+    data.description ? '*Description:* ' + data.description.slice(0,280) : '',
+    'Integrations: ' + data.integrations + '  |  Compliance: ' + data.compliance
+      + '  |  Users: ' + data.users,
+    'Design: ' + data.design + '  |  Timeline: ' + data.timeline + '  |  Team: ' + rateNote,
+    'Budget: ' + (data.budget||'Not selected'),
+    '',
+    '*Estimate: ' + est.totH + ' hrs  |  ' + fmt(est.activeCost)
+      + ' (' + rateNote + ')  |  ' + est.timeline.lo + ' to ' + est.timeline.hi + ' weeks*',
+    'Range: ' + fmt(est.costRange.lo) + ' to ' + fmt(est.costRange.hi)
+      + '  |  Confidence: ' + est.confidence,
+    est.oqs.length
+      ? '\n*Open questions for intake call:*\n' + est.oqs.map(q => '  - ' + q).join('\n')
+      : '',
+    '',
+    'View estimate: ' + document.getElementById('share-url').value
+  ].filter(Boolean).join('\n');
+  fetch(WEBHOOK_URL + '?data=' + encodeURIComponent(JSON.stringify({text:txt})), {mode:'no-cors'}).catch(()=>{});
+}
+
+// ============================================================
+// SHARE
+// ============================================================
+function copyShareUrl(){
+  const el = document.getElementById('share-url');
   el.select();
   document.execCommand('copy');
-  const btn = document.querySelector('.copy-btn');
+  const btn = el.nextElementSibling;
   const orig = btn.textContent;
   btn.textContent = 'Copied!';
   setTimeout(() => { btn.textContent = orig; }, 2000);
 }
 
-function viewGeneratedProposal() {
-  if (!currentProposalData) return;
-  applyPersonalization(currentProposalData);
-  showTab(1);
-  document.body.classList.add('viewer-mode');
-}
-
 // ============================================================
-// PERSONALIZATION
-// ============================================================
-function applyPersonalization(data) {
-  const banner   = document.getElementById('proposal-banner');
-  const bannerTx = document.getElementById('proposal-banner-text');
-  const h1line2  = document.getElementById('hero-line2');
-  const badge    = document.getElementById('company-badge');
-  const footerPi = document.getElementById('footer-proposal-info');
-  if (banner && bannerTx) {
-    bannerTx.innerHTML = 'Prepared for ' + data.name + ' at ' + data.company +
-      (data.context ? '<br><span style="font-size:11px;font-weight:400;font-style:italic;color:rgba(245,241,232,0.55);display:block;margin-top:3px;">' + data.context + '</span>' : '');
-    banner.classList.add('visible');
-  }
-  if (h1line2) h1line2.textContent = 'Build the tool ' + data.company + ' actually needs.';
-  if (badge && data.type) badge.textContent = '● ' + getTypeLabel(data.type);
-  if (footerPi && data.name) {
-    const d = new Date(data.date);
-    footerPi.textContent = data.name + ' · ' + data.company + ' · ' + d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
-  }
-}
-
-// ============================================================
-// HASH LOADING
-// ============================================================
-function loadProposalFromHash() {
-  const hash = window.location.hash.slice(1);
-  if (!hash) return;
-  try {
-    const data = JSON.parse(decodeURIComponent(escape(atob(hash))));
-    if (data.company) {
-      applyPersonalization(data);
-      showTab(1);
-      document.body.classList.add('viewer-mode');
-      currentProposalData = data;
-    }
-  } catch(e) {}
-}
-
-// ============================================================
-// INIT
+// HASH RESTORE (shared estimate links)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-  loadProposalFromHash();
+  const hash = window.location.hash.slice(1);
+  if(!hash) return;
+  try {
+    const saved = JSON.parse(decodeURIComponent(escape(atob(hash))));
+    if(saved && saved.phases && saved.lead){
+      currentLead = saved.lead;
+      // Reattach per-phase cost for table rendering
+      const ar = saved.usonlySelected ? RATE_US : RATE_STD;
+      saved.activeRate = ar;
+      if(!saved.activeCost) saved.activeCost = Math.round(saved.totH * ar);
+      if(!saved.usCost)     saved.usCost     = Math.round(saved.totH * RATE_US);
+      if(!saved.stdCost)    saved.stdCost    = Math.round(saved.totH * RATE_STD);
+      if(!saved.costRange){
+        const cr2 = CONF_RANGE[saved.confidence] || {lo:.85, hi:1.18};
+        saved.costRange = {lo: Math.round(saved.activeCost*cr2.lo), hi: Math.round(saved.activeCost*cr2.hi)};
+      }
+      saved.phases.forEach(p => { p.cActive = Math.round(p.h * ar); });
+      document.getElementById('wizard-progress').style.display = 'none';
+      document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+      renderEstimate(saved);
+      document.getElementById('estimator').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  } catch(e){}
 });
 </script>
 </body>
