@@ -146,6 +146,9 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
 .track-onshore{background:rgba(11,36,71,.08);color:#0b2447}
 .track-offshore{background:rgba(25,167,206,.10);color:#0e6b8a}
 .phase-note{font-size:9px;color:rgba(13,14,15,.35);display:block;margin-top:1px;font-weight:400}
+.phase-footnote{font-size:10px;color:rgba(13,14,15,.4);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid rgba(13,14,15,.06)}
+.phase-footnote a{color:var(--gold-deep);text-decoration:none}
+.phase-footnote a:hover{text-decoration:underline}
 .cost-scenarios{margin-bottom:32px}
 .cost-primary{background:var(--bone-soft);border:1.5px solid var(--gold);border-radius:4px;padding:28px 28px 24px}
 .cp-rate{font-size:10px;font-weight:700;letter-spacing:var(--track);text-transform:uppercase;color:var(--gold-deep);margin-bottom:10px}
@@ -442,7 +445,14 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
           <thead><tr><th>Phase</th><th style="text-align:right">Hours</th><th style="text-align:right">Cost</th></tr></thead>
           <tbody id="phase-tbody"></tbody>
         </table>
-        <p class="section-eyebrow" style="margin-bottom:20px">Cost scenarios</p>
+        <p class="phase-footnote">
+          QA allocation (25% of production hours) and PM allocation (15%) follow
+          <a href="https://www.pmi.org/learning/library/measuring-progress-software-development-9042" target="_blank" rel="noopener">PMI-cited benchmarks</a>
+          for custom software projects. Typical industry range: QA 20-30%, PM 10-20%.
+          QA hours reflect a 15% AI efficiency reduction per
+          <a href="https://dora.dev/dora-report-2025/" target="_blank" rel="noopener">DORA 2025</a>.
+        </p>
+        <p class="section-eyebrow" style="margin-bottom:20px;margin-top:24px">Cost scenarios</p>
         <div class="cost-scenarios" id="cost-scenarios"></div>
         <div class="timeline-band"><div><span class="tl-label">Estimated timeline</span><div class="tl-weeks" id="tl-weeks"></div></div><div class="tl-detail" id="tl-detail"></div></div>
         <div class="confidence-row"><span class="conf-badge" id="conf-badge"></span><span class="conf-text" id="conf-text"></span></div>
