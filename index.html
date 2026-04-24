@@ -266,6 +266,15 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
   .wp-label{display:none}
   .wp-line{min-width:16px}
 }
+
+/* === AI INTEGRATION === */
+#ai-status{margin-bottom:16px;min-height:18px}
+.ai-analyzing{font-size:11px;font-weight:700;color:var(--gold-deep);letter-spacing:.06em;display:inline-flex;align-items:center;gap:7px}
+.ai-analyzing::before{content:'';display:inline-block;width:10px;height:10px;border:2px solid var(--gold-deep);border-top-color:transparent;border-radius:50%;animation:ai-spin .8s linear infinite}
+@keyframes ai-spin{to{transform:rotate(360deg)}}
+.ai-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep)}
+.ai-badge::before{content:'\2736';font-size:9px}
+#ai-note{display:none;font-size:12px;color:var(--ink-muted);font-style:italic;padding:10px 14px;background:rgba(212,160,23,.06);border-left:2px solid var(--gold);border-radius:0 2px 2px 0;margin-bottom:20px;line-height:1.55}
 </style>
 </head>
 <body>
@@ -441,6 +450,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
       <div id="estimate-reveal">
         <div class="er-divider"></div>
         <div class="er-header"><h2 id="er-headline">Your project estimate.</h2><p class="er-company" id="er-sub"></p></div>
+        <div id="ai-status"></div><div id="ai-note"></div>
         <table class="phase-table" id="phase-table">
           <thead><tr><th>Phase</th><th style="text-align:right">Hours</th><th style="text-align:right">Cost</th></tr></thead>
           <tbody id="phase-tbody"></tbody>
@@ -936,6 +946,10 @@ function submitLeadGate(){
   document.getElementById('wizard-progress').style.display = 'none';
   renderEstimate(est);
   fireSlack(currentLead, data, est);
+  // Trigger AI refinement if the prospect provided a meaningful description
+  if (data.description && data.description.trim().length >= 50) {
+    callAIEstimator(est);
+  }
 }
 
 // ============================================================
@@ -1011,6 +1025,180 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch(e){}
 });
+
+// ============================================================
+// AI ESTIMATOR INTEGRATION
+// ============================================================
+
+// Calls /api/estimate with the current estimate data.
+// On success, applies phase multipliers and updates the displayed estimate.
+// On any failure, silently keeps the rule-based result - no error shown.
+async function callAIEstimator(est) {
+  const statusEl = document.getElementById('ai-status');
+  const noteEl   = document.getElementById('ai-note');
+
+  if (statusEl) {
+    statusEl.innerHTML = '<span class="ai-analyzing">Analyzing your description</span>';
+  }
+
+  try {
+    const res = await fetch('/api/estimate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phases:     est.phases,
+        data:       est.data,
+        totH:       est.totH,
+        activeCost: est.activeCost,
+        activeRate: est.activeRate || 75
+      })
+    });
+
+    if (!res.ok) throw new Error('API ' + res.status);
+    const ai = await res.json();
+
+    // Server said no description signal - keep as-is
+    if (ai.skip) {
+      if (statusEl) statusEl.innerHTML = '';
+      return;
+    }
+
+    applyAIAdjustments(est, ai);
+
+    if (statusEl) {
+      statusEl.innerHTML = '<span class="ai-badge">AI-enhanced estimate</span>';
+    }
+
+    if (ai.overall_note && noteEl) {
+      noteEl.textContent = ai.overall_note;
+      noteEl.style.display = 'block';
+    }
+
+  } catch(e) {
+    // Silent fallback - estimate stays rule-based
+    if (statusEl) statusEl.innerHTML = '';
+  }
+}
+
+// Apply Claude's phase multipliers to the live estimate table and cost display.
+function applyAIAdjustments(est, ai) {
+  const adj        = ai.phase_adjustments || {};
+  const activeRate = est.activeRate || 75;
+  let newTotH = 0, newCost = 0;
+
+  est.phases.forEach(p => {
+    const mult = Math.min(2.0, Math.max(0.6, Number(adj[p.id]) || 1.0));
+    const newH = Math.max(1, Math.round(p.h * mult));
+    p.h = newH; // mutate the phase so share URL reflects updated hours
+
+    const hEl = document.getElementById('hi-' + p.id);
+    const cEl = document.getElementById('c-' + p.id);
+    if (hEl) hEl.value  = newH;
+    if (cEl) cEl.textContent = '$' + Math.round(newH * activeRate).toLocaleString();
+
+    newTotH += newH;
+    newCost += Math.round(newH * activeRate);
+  });
+
+  // Update totals row
+  const thEl = document.getElementById('tot-h');
+  const tcEl = document.getElementById('tot-c');
+  if (thEl) thEl.textContent = newTotH + ' hrs';
+  if (tcEl) tcEl.textContent = '$' + newCost.toLocaleString();
+
+  // Update timeline
+  const tlEl = document.getElementById('tl-weeks');
+  if (tlEl) {
+    const lo = Math.max(2, Math.floor(newTotH / 35 * 0.85));
+    const hi = Math.ceil(newTotH / 35 * 1.2);
+    tlEl.textContent = lo + ' to ' + hi + ' weeks';
+  }
+
+  // Optionally boost confidence if Claude says the description clarified scope
+  if (ai.confidence_boost) {
+    const badgeEl = document.getElementById('conf-badge');
+    const confTextEl = document.getElementById('conf-text');
+    if (badgeEl && badgeEl.classList.contains('conf-low')) {
+      badgeEl.className = 'conf-badge conf-medium';
+      badgeEl.textContent = 'Medium confidence';
+      if (confTextEl) {
+        confTextEl.textContent =
+          'Your description helped sharpen the estimate. ' +
+          'The intake call confirms final scope.';
+      }
+    }
+  }
+
+  // Append AI-specific questions to the open questions list
+  const aqList = ai.additional_questions || [];
+  if (aqList.length) {
+    const oqList = document.getElementById('oq-list');
+    const oqWrap = document.getElementById('open-questions-wrap');
+    if (oqList) {
+      aqList.forEach(q => {
+        const li = document.createElement('li');
+        li.textContent = q;
+        oqList.appendChild(li);
+      });
+      if (oqWrap) oqWrap.style.display = 'block';
+    }
+  }
+
+  // Recalculate cost primary display
+  const confBadge = document.getElementById('conf-badge');
+  const confLevel = confBadge
+    ? (confBadge.classList.contains('conf-high') ? 'high'
+       : confBadge.classList.contains('conf-medium') ? 'medium' : 'low')
+    : 'low';
+  const cr = CONF_RANGE[confLevel];
+  const newLo = Math.round(newCost * cr.lo);
+  const newHi = Math.round(newCost * cr.hi);
+  const confPct = { high: '+-10%', medium: '+-18%', low: '+-25%' };
+
+  const cpTotal  = document.querySelector('.cp-total');
+  const cpHours  = document.querySelector('.cp-hours');
+  const cpRange  = document.querySelector('.cp-range');
+  const cpUsnote = document.querySelector('.cp-usnote');
+
+  if (cpTotal) cpTotal.textContent = '$' + newCost.toLocaleString();
+  if (cpHours) cpHours.textContent = newTotH + ' hours';
+  if (cpRange) {
+    cpRange.innerHTML = '$' + newLo.toLocaleString() + ' to $' + newHi.toLocaleString()
+      + ' <span class="cp-conf">(' + confPct[confLevel]
+      + ' based on scope detail provided)</span>';
+  }
+
+  // Update US-only note if visible
+  if (cpUsnote && !est.usonlySelected) {
+    const usCost = Math.round(newTotH * 92);
+    cpUsnote.innerHTML = 'Compliance environment requiring US-only delivery? '
+      + '<strong>$' + usCost.toLocaleString() + '</strong> at $92/hr. '
+      + 'Mention this on your intake call.';
+  }
+
+  // Refresh share URL with updated hours
+  const shareEl = document.getElementById('share-url');
+  if (shareEl && currentLead) {
+    try {
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify({
+        lead: currentLead,
+        phases: est.phases.map(p => ({ id: p.id, h: p.h })),
+        totH: newTotH, activeCost: newCost,
+        usonlySelected: est.usonlySelected, activeRate,
+        costRange: { lo: newLo, hi: newHi },
+        timeline: {
+          lo: Math.max(2, Math.floor(newTotH/35*0.85)),
+          hi: Math.ceil(newTotH/35*1.2)
+        },
+        confidence: confLevel,
+        oqs: est.oqs,
+        data: est.data
+      }))));
+      shareEl.value = SHARE_BASE + '#' + encoded;
+    } catch(ignored) {}
+  }
+}
+
 </script>
 </body>
 </html>
