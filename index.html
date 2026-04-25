@@ -436,8 +436,8 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
   .stakes-tr{grid-template-columns:1fr}
   .stakes-scenario{border-bottom:1px solid rgba(13,14,15,.07)}
   .stakes-td{border-right:none;border-top:1px solid rgba(13,14,15,.04)}
-  .stakes-td.bad::before{content:"Without Kingbird: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#dc2626;display:block;margin-bottom:4px}
-  .stakes-td.good::before{content:"With Kingbird: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#15803d;display:block;margin-bottom:4px}
+  .stakes-td.bad::before{content:"Without a custom build: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#dc2626;display:block;margin-bottom:4px}
+  .stakes-td.good::before{content:"With a custom build: ";font-size:9px;font-weight:700;text-transform:uppercase;color:#15803d;display:block;margin-bottom:4px}
   .flow{grid-template-columns:1fr}
   .flow-step{border-right:none;border-bottom:1px solid rgba(13,14,15,.07)}
   .flow-step:last-child{border-bottom:none}
@@ -469,7 +469,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
       <img src="https://kingbirdsolutions.com/brand/kingbird-logo.png" alt="Kingbird Solutions" style="height:32px;width:auto;display:block">
       <span class="header-logo-name">Kingbird Solutions</span>
     </a>
-    <a class="header-cta" href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank">Book a call with AJ</a>
+    <a class="header-cta" href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank">Book a call with AJ, our engagement lead</a>
   </div>
 </header>
 
@@ -533,8 +533,8 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
               <label class="cb-option"><input type="checkbox" value="dashboard"> Data dashboard or reporting</label>
               <label class="cb-option"><input type="checkbox" value="portal"> Customer-facing portal</label>
               <label class="cb-option"><input type="checkbox" value="internal"> Internal operations tool</label>
-              <label class="cb-option"><input type="checkbox" value="api"> API or integration layer</label>
-              <label class="cb-option"><input type="checkbox" value="mobile"> Mobile companion app</label>
+              <label class="cb-option"><input type="checkbox" value="api"> Connect existing tools</label>
+              <label class="cb-option"><input type="checkbox" value="mobile"> Mobile app</label>
             </div>
             <div class="error-msg" id="err-types">Select at least one project type to continue.</div>
           </div>
@@ -545,9 +545,9 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
       <!-- STEP 2 -->
       <div class="wizard-step" id="step-2">
         <h2>Scope and design.</h2>
-        <p>These inputs drive the hour estimate for each phase.</p>
+        <p>The more you tell us, the tighter the number.</p>
         <div class="form-grid">
-          <div class="form-field"><label>External integrations</label>
+          <div class="form-field"><label>External integrations <span class="optional">e.g. Salesforce, QuickBooks, Stripe</span></label>
             <select id="w-integrations"><option value="0">None</option><option value="1-2">1 to 2 systems</option><option value="3-5">3 to 5 systems</option><option value="5+">More than 5</option></select>
           </div>
           <div class="form-field"><label>Compliance requirements</label>
@@ -594,7 +594,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
         <div style="margin-bottom:28px">
           <label style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(13,14,15,.6);display:block;margin-bottom:10px">Team requirement <span style="font-size:9px;font-weight:400;letter-spacing:0;text-transform:none;color:rgba(13,14,15,.4);margin-left:6px">most clients use standard</span></label>
           <div class="radio-cards cols-2">
-            <label class="radio-card selected" id="rc-res-standard" onclick="selectRadio('resource','standard','rc-res-')"><input type="radio" name="w-resource" value="standard" checked><div class="rc-check">&#10003;</div><div class="rc-label">Standard delivery</div><div class="rc-sub">Senior US operator oversight on every engagement. Kingbird standard.</div><div class="rc-price">$75/hr</div></label>
+            <label class="radio-card selected" id="rc-res-standard" onclick="selectRadio('resource','standard','rc-res-')"><input type="radio" name="w-resource" value="standard" checked><div class="rc-check">&#10003;</div><div class="rc-label">Standard delivery</div><div class="rc-sub">Senior US operator manages all client communication, architecture, and QA sign-off. Development work is executed with offshore team members under direct oversight.</div><div class="rc-price">$75/hr</div></label>
             <label class="radio-card" id="rc-res-usonlyl" onclick="selectRadio('resource','usonlyl','rc-res-')"><input type="radio" name="w-resource" value="usonlyl"><div class="rc-check">&#10003;</div><div class="rc-label">US-only team</div><div class="rc-sub">All work performed by US-based engineers. Required for some compliance environments.</div><div class="rc-price">$92/hr</div></label>
           </div>
         </div>
@@ -614,15 +614,16 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
       <div class="wizard-step" id="step-4">
         <div class="lead-gate">
           <h2>Your estimate is ready.</h2>
-          <p>Enter your details and we will show you the full breakdown. We follow up within one business day.</p>
+          <p>Enter your details to see the full phase breakdown — instantly.</p>
           <div class="form-grid" style="text-align:left">
             <div class="form-field"><label>First name <span style="color:#dc2626">*</span></label><input type="text" id="g-first" placeholder="Sarah" autocomplete="given-name"><div class="error-msg" id="err-first">Required.</div></div>
             <div class="form-field"><label>Last name <span style="color:#dc2626">*</span></label><input type="text" id="g-last" placeholder="Nguyen" autocomplete="family-name"><div class="error-msg" id="err-last">Required.</div></div>
             <div class="form-field full"><label>Work email <span style="color:#dc2626">*</span></label><input type="email" id="g-email" placeholder="sarah@yourcompany.com" autocomplete="email"><div class="error-msg" id="err-email">Enter a valid work email.</div></div>
-            <div class="form-field full"><label>Phone <span class="optional">optional. AJ will text, not cold call.</span></label><input type="tel" id="g-phone" placeholder="(602) 555-0100" autocomplete="tel"></div>
+            <div class="form-field full"><label>Phone <span class="optional">optional. AJ, our engagement lead, will text — not cold call.</span></label><input type="tel" id="g-phone" placeholder="(602) 555-0100" autocomplete="tel"></div>
           </div>
           <button class="submit-btn" onclick="submitLeadGate()">Show my estimate &#8594;</button>
-          <p class="gate-note">No spam. Your information is used only to follow up on your project estimate.</p>
+          <p class="gate-note">No sales deck. No pitch call. Just your number.</p>
+          <p class="gate-note" style="margin-top:6px;font-size:10px;opacity:0.55">AJ may follow up within one business day to confirm scope.</p>
         </div>
         <div class="wizard-nav" style="max-width:480px;margin:0 auto">
           <button class="btn-back" onclick="goToStep(3)">&#8592; Back</button><span></span>
@@ -634,6 +635,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
         <div class="er-divider"></div>
         <div class="er-header"><h2 id="er-headline">Your project estimate.</h2><p class="er-company" id="er-sub"></p></div>
         <div id="ai-status"></div><div id="ai-note"></div>
+        <p style="font-size:11px;color:rgba(13,14,15,.45);margin-bottom:8px">Hours are editable — adjust any line if your scope changes and costs update live.</p>
         <table class="phase-table" id="phase-table">
           <thead><tr><th>Phase</th><th style="text-align:right">Hours</th><th style="text-align:right">Cost</th></tr></thead>
           <tbody id="phase-tbody"></tbody>
@@ -644,11 +646,12 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
           for custom software projects. Typical industry range: QA 20-30%, PM 10-20%.
           QA hours reflect a 15% AI efficiency reduction per
           <a href="https://dora.dev/dora-report-2025/" target="_blank" rel="noopener">DORA 2025</a>.
+          &nbsp;·&nbsp;<a href="https://kingbirdsolutions.com/#work" target="_blank" rel="noopener" style="color:var(--gold)">See what we've shipped &#8594;</a>
         </p>
         <p class="section-eyebrow" style="margin-bottom:20px;margin-top:24px">Cost scenarios</p>
         <div class="cost-scenarios" id="cost-scenarios"></div>
         <div class="timeline-band"><div><span class="tl-label">Estimated timeline</span><div class="tl-weeks" id="tl-weeks"></div></div><div class="tl-detail" id="tl-detail"></div></div>
-        <div class="burn-rate-band"><div><span class="tl-label">Monthly burn rate</span><div class="tl-weeks" id="burn-rate-value"></div></div><div class="tl-detail" id="burn-rate-detail"></div></div>
+        <div class="burn-rate-band"><div><span class="tl-label">Monthly spend</span><div class="tl-weeks" id="burn-rate-value"></div></div><div class="tl-detail" id="burn-rate-detail"></div></div>
         <div class="confidence-row"><span class="conf-badge" id="conf-badge"></span><span class="conf-text" id="conf-text"></span></div>
         <div class="open-questions" id="open-questions-wrap" style="display:none"><p class="oq-title">Questions your intake call answers</p><ul class="oq-list" id="oq-list"></ul></div>
         <div class="phase1-callout" id="phase1-callout">
@@ -659,10 +662,10 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
           </div>
         </div>
         <div class="book-cta">
-          <h3>Ready to move forward?</h3>
-          <p>Book a 30-minute call with AJ. He has your estimate and will come prepared to confirm scope, answer open questions, and lock in your number.</p>
+          <h3>Your estimate is confirmed. Let's lock in scope.</h3>
+          <p>Book a 30-minute call with AJ, our engagement lead. He has your estimate and will come prepared to confirm scope, answer open questions, and lock in your number.</p>
           <div class="delay-note" id="delay-note"></div>
-          <a href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank" class="btn-book">Book a call with AJ &#8594;</a>
+          <a href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank" class="btn-book">Book a call with AJ, our engagement lead &#8594;</a>
           <div class="share-row"><input type="text" class="share-input" id="share-url" readonly placeholder="Your shareable estimate link"><button class="share-copy-btn" onclick="copyShareUrl()">Copy link</button></div>
         </div>
       </div>
@@ -677,7 +680,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
     <div class="flow">
       <div class="flow-step"><div class="flow-num">Step 01</div><h4>Intake call</h4><p>30 minutes to scope the problem. We leave with a defined problem or we stop there. No commitment required.</p></div>
       <div class="flow-step"><div class="flow-num">Step 02</div><h4>Fixed-scope build</h4><p>Defined deliverable, defined timeline, defined price. Scope creep is Kingbird's problem to manage, not yours.</p></div>
-      <div class="flow-step"><div class="flow-num">Step 03</div><h4>Shipped and handed off</h4><p>You own the code. Full documentation. We stay available for the next scope on your terms.</p></div>
+      <div class="flow-step"><div class="flow-num">Step 03</div><h4>Shipped and handed off</h4><p>You own the code. Full documentation. When your next need surfaces, the relationship is already built.</p></div>
     </div>
   </section>
 
@@ -686,7 +689,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
     <p class="section-eyebrow">Before and after</p>
     <h2 class="section-heading" id="ba-heading">What shifts when you stop patching and start building.</h2>
     <div class="stakes-table" id="ba-table">
-      <div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without Kingbird</div><div class="stakes-th good">With Kingbird</div></div>
+      <div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without a custom build</div><div class="stakes-th good">With a custom build</div></div>
       <div class="stakes-tr"><div class="stakes-scenario">Operations tools</div><div class="stakes-td bad">Spreadsheets and broken Zaps. One failed automation stops the entire workflow.</div><div class="stakes-td good">A purpose-built tool that matches your workflow. You own it. Your team runs it without us.</div></div>
       <div class="stakes-tr"><div class="stakes-scenario">Vendor relationship</div><div class="stakes-td bad">The offshore agency disappears after handoff. No documentation. The phone goes unanswered.</div><div class="stakes-td good">Direct access to the engineer writing your code. Throughout the engagement, not just at kickoff.</div></div>
       <div class="stakes-tr"><div class="stakes-scenario">Compliance and reporting</div><div class="stakes-td bad">You reconcile three separate systems the night before an audit.</div><div class="stakes-td good">Every record timestamped and exportable from day one. The audit is one click.</div></div>
@@ -709,7 +712,7 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
       <p style="color:var(--muted);font-size:0.95rem;max-width:480px;margin:0 auto 28px">Rates published: $75/hr standard. Projects typically $15K–$75K. See the phase breakdown before you talk to anyone.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <a href="#estimator" class="btn-gold-cta">Get your estimate &#8594;</a>
-        <a href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank" class="btn-outline-bone">Book a call with AJ</a>
+        <a href="https://kingbirdsolutions.com/book-aj?utm_source=kingbird&utm_medium=book_page&utm_campaign=aj_scope_call" target="_blank" class="btn-outline-bone">Book a call with AJ, our engagement lead</a>
       </div>
     </div>
   </section>
@@ -860,7 +863,7 @@ function renderBeforeAfter(data, aiScenarios) {
 
   // Render table
   container.innerHTML =
-    '<div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without Kingbird</div><div class="stakes-th good">With Kingbird</div></div>'
+    '<div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without a custom build</div><div class="stakes-th good">With a custom build</div></div>'
     + scenarios.map(s =>
         '<div class="stakes-tr">'
         + '<div class="stakes-scenario">' + s.label + '</div>'
@@ -1165,7 +1168,7 @@ function renderEstimate(est){
   setTimeout(() => reveal.scrollIntoView({behavior:'smooth', block:'start'}), 100);
   var ctaEst = document.getElementById('cta-bottom-estimate');
   var ctaCall = document.getElementById('cta-bottom-call');
-  if(ctaEst && ctaCall){ ctaEst.className='btn-outline-bone'; ctaEst.textContent='Adjust estimate ↑'; ctaCall.className='btn-gold-cta'; ctaCall.textContent='Book a call with AJ →'; }
+  if(ctaEst && ctaCall){ ctaEst.className='btn-outline-bone'; ctaEst.textContent='Adjust estimate ↑'; ctaCall.className='btn-gold-cta'; ctaCall.textContent='Book a call with AJ, our engagement lead →'; }
 }
 
 // Recalculate totals when hours are manually edited
@@ -1269,4 +1272,329 @@ document.addEventListener('change', e => {
 // FILE HANDLING
 // ============================================================
 function handleFileSelect(e){ addFiles(e.target.files); }
-function handleDragOver(e){ e.preventDefaul
+function handleDragOver(e){ e.preventDefault(); document.getElementById('file-drop-zone').classList.add('dragover'); }
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('file-drop-zone').classList.remove('dragover');
+  addFiles(e.dataTransfer.files);
+}
+function addFiles(files){
+  [...files].forEach(f => { if(!uploadedFiles.find(u=>u.name===f.name)) uploadedFiles.push(f); });
+  renderFileList();
+}
+function removeFile(name){ uploadedFiles = uploadedFiles.filter(f=>f.name!==name); renderFileList(); }
+function renderFileList(){
+  document.getElementById('file-list').innerHTML = uploadedFiles.map(f =>
+    '<div class="file-item"><span>&#128206; '+f.name+' ('+Math.round(f.size/1024)+'KB)</span>'
+    +'<button onclick="removeFile(\''+f.name+'\')">&#10005;</button></div>'
+  ).join('');
+}
+
+// ============================================================
+// LEAD GATE + SUBMISSION
+// ============================================================
+function collectFormData(){
+  return {
+    company:      (document.getElementById('w-company').value||'').trim(),
+    industry:     document.getElementById('w-industry').value,
+    description:  (document.getElementById('w-description').value||'').trim(),
+    types:        [...document.querySelectorAll('#type-grid input:checked')].map(c=>c.value),
+    integrations: document.getElementById('w-integrations').value,
+    compliance:   document.getElementById('w-compliance').value,
+    users:        document.getElementById('w-users').value,
+    existing:     document.getElementById('w-existing').value,
+    design:       (document.querySelector('input[name="w-design"]:checked')||{value:'assets'}).value,
+    timeline:     (document.querySelector('input[name="w-timeline"]:checked')||{value:'flexible'}).value,
+    resource:     (document.querySelector('input[name="w-resource"]:checked')||{value:'standard'}).value,
+    budget:       (document.querySelector('input[name="w-budget"]:checked')||{value:''}).value,
+    files:        uploadedFiles.map(f=>f.name)
+  };
+}
+
+function submitLeadGate(){
+  const first = document.getElementById('g-first').value.trim();
+  const last  = document.getElementById('g-last').value.trim();
+  const email = document.getElementById('g-email').value.trim();
+  let ok = true;
+  if(!first){ document.getElementById('err-first').classList.add('visible'); ok=false; }
+  else document.getElementById('err-first').classList.remove('visible');
+  if(!last){ document.getElementById('err-last').classList.add('visible'); ok=false; }
+  else document.getElementById('err-last').classList.remove('visible');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    document.getElementById('err-email').classList.add('visible'); ok=false;
+  } else document.getElementById('err-email').classList.remove('visible');
+  if(!ok) return;
+
+  currentLead = {
+    first, last, name: first+' '+last,
+    email, phone: document.getElementById('g-phone').value.trim()
+  };
+  const data = collectFormData();
+  const est  = calcEstimate(data);
+
+  document.getElementById('step-4').classList.remove('active');
+  document.getElementById('wizard-progress').style.display = 'none';
+  renderEstimate(est);
+  renderBeforeAfter(data);  // rule-based pass; AI will upgrade if description is rich enough
+  fireSlack(currentLead, data, est);
+  // Trigger AI refinement if the prospect provided a meaningful description
+  if (data.description && data.description.trim().length >= 50) {
+    callAIEstimator(est);
+  }
+}
+
+// ============================================================
+// SLACK NOTIFICATION
+// ============================================================
+function fireSlack(lead, data, est){
+  try {
+    const payload = {
+      lead,
+      data,
+      est: {
+        totH:          est.totH,
+        activeCost:    est.activeCost,
+        usonlySelected:est.usonlySelected,
+        costRange:     est.costRange,
+        timeline:      est.timeline,
+        confidence:    est.confidence,
+        oqs:           est.oqs || [],
+        shareUrl:      document.getElementById('share-url')?.value || ''
+      }
+    };
+    fetch('/api/notify', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload)
+    }).catch(() => {});
+  } catch(e) {}
+}
+
+// ============================================================
+// SHARE
+// ============================================================
+function copyShareUrl(){
+  const el = document.getElementById('share-url');
+  el.select();
+  document.execCommand('copy');
+  const btn = el.nextElementSibling;
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => { btn.textContent = orig; }, 2000);
+}
+
+// ============================================================
+// HASH RESTORE (shared estimate links)
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.slice(1);
+  if(!hash) return;
+  try {
+    const saved = JSON.parse(decodeURIComponent(escape(atob(hash))));
+    if(saved && saved.phases && saved.lead){
+      currentLead = saved.lead;
+      // Reattach per-phase cost for table rendering
+      const ar = saved.usonlySelected ? RATE_US : RATE_STD;
+      saved.activeRate = ar;
+      if(!saved.activeCost) saved.activeCost = Math.round(saved.totH * ar);
+      if(!saved.usCost)     saved.usCost     = Math.round(saved.totH * RATE_US);
+      if(!saved.stdCost)    saved.stdCost    = Math.round(saved.totH * RATE_STD);
+      if(!saved.costRange){
+        const cr2 = CONF_RANGE[saved.confidence] || {lo:.85, hi:1.18};
+        saved.costRange = {lo: Math.round(saved.activeCost*cr2.lo), hi: Math.round(saved.activeCost*cr2.hi)};
+      }
+      saved.phases.forEach(p => { p.cActive = Math.round(p.h * ar); });
+      document.getElementById('wizard-progress').style.display = 'none';
+      document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+      renderEstimate(saved);
+      document.getElementById('estimator').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  } catch(e){}
+});
+
+// ============================================================
+// AI ESTIMATOR INTEGRATION
+// ============================================================
+
+// Calls /api/estimate with the current estimate data.
+// On success, applies phase multipliers and updates the displayed estimate.
+// On any failure, silently keeps the rule-based result - no error shown.
+async function callAIEstimator(est) {
+  const statusEl = document.getElementById('ai-status');
+  const noteEl   = document.getElementById('ai-note');
+
+  if (statusEl) {
+    statusEl.innerHTML = '<span class="ai-analyzing">Analyzing your description</span>';
+  }
+
+  try {
+    const res = await fetch('/api/estimate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phases:     est.phases,
+        data:       est.data,
+        totH:       est.totH,
+        activeCost: est.activeCost,
+        activeRate: est.activeRate || 75
+      })
+    });
+
+    if (!res.ok) throw new Error('API ' + res.status);
+    const ai = await res.json();
+
+    // Server said no description signal - keep as-is
+    if (ai.skip) {
+      if (statusEl) statusEl.innerHTML = '';
+      return;
+    }
+
+    applyAIAdjustments(est, ai);
+
+    if (statusEl) {
+      statusEl.innerHTML = '<span class="ai-badge">AI-enhanced estimate</span>';
+    }
+
+    if (ai.overall_note && noteEl) {
+      noteEl.textContent = 'AI adjustment: ' + ai.overall_note;
+      noteEl.style.display = 'block';
+    }
+
+  } catch(e) {
+    // Silent fallback - estimate stays rule-based
+    if (statusEl) statusEl.innerHTML = '';
+  }
+}
+
+// Apply Claude's phase multipliers to the live estimate table and cost display.
+function applyAIAdjustments(est, ai) {
+  const adj        = ai.phase_adjustments || {};
+  const activeRate = est.activeRate || 75;
+  let newTotH = 0, newCost = 0;
+
+  est.phases.forEach(p => {
+    const mult = Math.min(2.0, Math.max(0.6, Number(adj[p.id]) || 1.0));
+    const newH = Math.max(1, Math.round(p.h * mult));
+    p.h = newH; // mutate the phase so share URL reflects updated hours
+
+    const hEl = document.getElementById('hi-' + p.id);
+    const cEl = document.getElementById('c-' + p.id);
+    if (hEl) hEl.value  = newH;
+    if (cEl) cEl.textContent = '$' + Math.round(newH * activeRate).toLocaleString();
+
+    newTotH += newH;
+    newCost += Math.round(newH * activeRate);
+  });
+
+  // Update totals row
+  const thEl = document.getElementById('tot-h');
+  const tcEl = document.getElementById('tot-c');
+  if (thEl) thEl.textContent = newTotH + ' hrs';
+  if (tcEl) tcEl.textContent = '$' + newCost.toLocaleString();
+
+  // Update timeline (weeks label + detail text)
+  const tlEl     = document.getElementById('tl-weeks');
+  const tlDetail = document.getElementById('tl-detail');
+  if (tlEl) {
+    const lo = Math.max(2, Math.floor(newTotH / 35 * 0.85));
+    const hi = Math.ceil(newTotH / 35 * 1.2);
+    tlEl.textContent = lo + ' to ' + hi + ' weeks';
+  }
+  if (tlDetail) {
+    tlDetail.textContent = 'Based on ' + newTotH + ' total hours at standard team velocity. '
+      + 'Exact timeline confirmed at intake call.';
+  }
+
+  // Optionally boost confidence if Claude says the description clarified scope
+  if (ai.confidence_boost) {
+    const badgeEl = document.getElementById('conf-badge');
+    const confTextEl = document.getElementById('conf-text');
+    if (badgeEl && badgeEl.classList.contains('conf-low')) {
+      badgeEl.className = 'conf-badge conf-medium';
+      badgeEl.textContent = 'Medium confidence';
+      if (confTextEl) {
+        confTextEl.textContent =
+          'Your description helped sharpen the estimate. ' +
+          'The intake call confirms final scope.';
+      }
+    }
+  }
+
+  // Upgrade before/after table with AI-generated scenarios if provided
+  if (ai.before_after && ai.before_after.length) {
+    renderBeforeAfter(est.data, ai.before_after);
+  }
+
+  // Append AI-specific questions to the open questions list
+  const aqList = ai.additional_questions || [];
+  if (aqList.length) {
+    const oqList = document.getElementById('oq-list');
+    const oqWrap = document.getElementById('open-questions-wrap');
+    if (oqList) {
+      aqList.forEach(q => {
+        const li = document.createElement('li');
+        li.textContent = q;
+        oqList.appendChild(li);
+      });
+      if (oqWrap) oqWrap.style.display = 'block';
+    }
+  }
+
+  // Recalculate cost primary display
+  const confBadge = document.getElementById('conf-badge');
+  const confLevel = confBadge
+    ? (confBadge.classList.contains('conf-high') ? 'high'
+       : confBadge.classList.contains('conf-medium') ? 'medium' : 'low')
+    : 'low';
+  const cr = CONF_RANGE[confLevel];
+  const newLo = Math.round(newCost * cr.lo);
+  const newHi = Math.round(newCost * cr.hi);
+  const confPct = { high: '+-10%', medium: '+-18%', low: '+-25%' };
+
+  const cpTotal  = document.querySelector('.cp-total');
+  const cpHours  = document.querySelector('.cp-hours');
+  const cpRange  = document.querySelector('.cp-range');
+  const cpUsnote = document.querySelector('.cp-usnote');
+
+  if (cpTotal) cpTotal.textContent = '$' + newCost.toLocaleString();
+  if (cpHours) cpHours.textContent = newTotH + ' hours';
+  if (cpRange) {
+    cpRange.innerHTML = '$' + newLo.toLocaleString() + ' to $' + newHi.toLocaleString()
+      + ' <span class="cp-conf">(' + confPct[confLevel]
+      + ' based on scope detail provided)</span>';
+  }
+
+  // Update US-only note if visible
+  if (cpUsnote && !est.usonlySelected) {
+    const usCost = Math.round(newTotH * 92);
+    cpUsnote.innerHTML = 'Compliance environment requiring US-only delivery? '
+      + '<strong>$' + usCost.toLocaleString() + '</strong> at $92/hr. '
+      + 'Mention this on your intake call.';
+  }
+
+  // Refresh share URL with updated hours
+  const shareEl = document.getElementById('share-url');
+  if (shareEl && currentLead) {
+    try {
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify({
+        lead: currentLead,
+        phases: est.phases.map(p => ({ id: p.id, h: p.h })),
+        totH: newTotH, activeCost: newCost,
+        usonlySelected: est.usonlySelected, activeRate,
+        costRange: { lo: newLo, hi: newHi },
+        timeline: {
+          lo: Math.max(2, Math.floor(newTotH/35*0.85)),
+          hi: Math.ceil(newTotH/35*1.2)
+        },
+        confidence: confLevel,
+        oqs: est.oqs,
+        data: est.data
+      }))));
+      shareEl.value = SHARE_BASE + '#' + encoded;
+    } catch(ignored) {}
+  }
+}
+
+</script>
+</body>
+</html>
