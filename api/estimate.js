@@ -151,4 +151,47 @@ Rules for before_after:
       console.error('Anthropic API error:', anthropicRes.status, err);
       return new Response(JSON.stringify({ error: 'Upstream API error' }), {
         status: 502,
-  
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    const result = await anthropicRes.json();
+    const text   = result.content?.[0]?.text || '';
+
+    // Extract JSON robustly
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON object found in response');
+
+    const parsed = JSON.parse(match[0]);
+    if (!parsed.phase_adjustments) throw new Error('Missing phase_adjustments');
+
+    // Clamp multipliers to safe range
+    const adj = parsed.phase_adjustments;
+    Object.keys(adj).forEach(k => {
+      adj[k] = Math.min(2.0, Math.max(0.6, Number(adj[k]) || 1.0));
+    });
+
+    // Validate before_after shape — drop malformed rows
+    if (Array.isArray(parsed.before_after)) {
+      parsed.before_after = parsed.before_after.filter(
+        r => r && typeof r.label === 'string' && typeof r.bad === 'string' && typeof r.good === 'string'
+      ).slice(0, 4);
+    }
+
+    return new Response(JSON.stringify(parsed), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store'
+      }
+    });
+
+  } catch (e) {
+    console.error('Estimate handler error:', e.message);
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
