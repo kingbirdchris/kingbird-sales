@@ -497,18 +497,6 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
     <span class="trust-item">No vendor lock-in</span>
   </div>
 
-  <!-- BEFORE AND AFTER -->
-  <section class="section" style="padding-bottom:32px">
-    <p class="section-eyebrow">Before and after</p>
-    <h2 class="section-heading">What shifts when you stop patching and start building.</h2>
-    <div class="stakes-table">
-      <div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without Kingbird</div><div class="stakes-th good">With Kingbird</div></div>
-      <div class="stakes-tr"><div class="stakes-scenario">Operations tools</div><div class="stakes-td bad">Spreadsheets and broken Zaps. One failed automation stops the entire workflow.</div><div class="stakes-td good">A purpose-built tool that matches your workflow. You own it. Your team runs it without us.</div></div>
-      <div class="stakes-tr"><div class="stakes-scenario">Vendor relationship</div><div class="stakes-td bad">The offshore agency disappears after handoff. No documentation. The phone goes unanswered.</div><div class="stakes-td good">Direct access to the engineer writing your code. Throughout the engagement, not just at kickoff.</div></div>
-      <div class="stakes-tr"><div class="stakes-scenario">Compliance and reporting</div><div class="stakes-td bad">You reconcile three separate systems the night before an audit.</div><div class="stakes-td good">Every record timestamped and exportable from day one. The audit is one click.</div></div>
-    </div>
-  </section>
-
     <!-- ESTIMATOR -->
   <section id="estimator">
     <p class="est-label">Project estimator</p>
@@ -702,6 +690,18 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
     </div>
   </section>
 
+  <!-- BEFORE AND AFTER (dynamic) -->
+  <section class="section" id="ba-section" style="padding-top:0;padding-bottom:32px">
+    <p class="section-eyebrow">Before and after</p>
+    <h2 class="section-heading" id="ba-heading">What shifts when you stop patching and start building.</h2>
+    <div class="stakes-table" id="ba-table">
+      <div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without Kingbird</div><div class="stakes-th good">With Kingbird</div></div>
+      <div class="stakes-tr"><div class="stakes-scenario">Operations tools</div><div class="stakes-td bad">Spreadsheets and broken Zaps. One failed automation stops the entire workflow.</div><div class="stakes-td good">A purpose-built tool that matches your workflow. You own it. Your team runs it without us.</div></div>
+      <div class="stakes-tr"><div class="stakes-scenario">Vendor relationship</div><div class="stakes-td bad">The offshore agency disappears after handoff. No documentation. The phone goes unanswered.</div><div class="stakes-td good">Direct access to the engineer writing your code. Throughout the engagement, not just at kickoff.</div></div>
+      <div class="stakes-tr"><div class="stakes-scenario">Compliance and reporting</div><div class="stakes-td bad">You reconcile three separate systems the night before an audit.</div><div class="stakes-td good">Every record timestamped and exportable from day one. The audit is one click.</div></div>
+    </div>
+  </section>
+
   <!-- FEATURE CARDS -->
   <section class="section" style="padding-top:0">
     <div class="features-grid">
@@ -741,6 +741,160 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
 </div><!-- /page-wrap -->
 
 <script>
+// ============================================================
+// BEFORE / AFTER — scenario library
+// ============================================================
+const BA_SCENARIOS = {
+  workflow: {
+    label: 'Process automation',
+    bad:  'Tasks fall through email threads and Slack messages. One missed step means manual rework across three systems.',
+    good: 'Every step in the workflow runs automatically. Exceptions surface to a human. Nothing falls through.'
+  },
+  dashboard: {
+    label: 'Reporting',
+    bad:  'You export to Excel on Monday morning and the numbers are already stale by the time leadership reads them.',
+    good: 'Live dashboards pull from your actual data sources. The Monday report runs itself.'
+  },
+  portal: {
+    label: 'Customer self-service',
+    bad:  'Customers email support for status updates, document requests, and every routine question your team has answered a hundred times.',
+    good: 'Customers log in, see their status, upload documents, and handle routine requests without touching your team.'
+  },
+  internal: {
+    label: 'Operations tools',
+    bad:  'Spreadsheets and workarounds. One person knows how the formula works. When they leave, the process leaves with them.',
+    good: 'A purpose-built tool that matches your actual workflow. Documented, transferable, and owned by you.'
+  },
+  api: {
+    label: 'System connectivity',
+    bad:  'Your tools don\'t talk to each other. Someone manually exports from system A and imports into system B every day.',
+    good: 'One integration layer connects everything. Data moves automatically. No human in the loop for routine syncs.'
+  },
+  mobile: {
+    label: 'Field access',
+    bad:  'Your team in the field calls the office for information they need right now. The office looks it up and reads it back.',
+    good: 'Field staff pull up current data on their phone. Updates sync back in real time. No calls required.'
+  }
+};
+
+const BA_COMPLIANCE = {
+  hipaa: {
+    label: 'HIPAA compliance',
+    bad:  'Protected health information lives in spreadsheets and email attachments. An audit would require days of manual reconstruction.',
+    good: 'Every PHI access logged, every record encrypted at rest and in transit. The audit report generates itself.'
+  },
+  soc2: {
+    label: 'Security posture',
+    bad:  'Access controls are manual and undocumented. You rely on trust, not enforcement.',
+    good: 'Role-based access enforced at the code level. Access logs ready for Type II review without scrambling.'
+  },
+  pci: {
+    label: 'PCI compliance',
+    bad:  'Payment data handling is inconsistent. Compliance is a best-guess exercise before each audit.',
+    good: 'Cardholder data isolated and handled to DSS requirements. Controls are code, not policy.'
+  },
+  ferpa: {
+    label: 'Student data compliance',
+    bad:  'Student records are accessible to anyone who knows where to look. FERPA violations are one breach notification away.',
+    good: 'Access gated by role and relationship. Every disclosure logged. Audit-ready without the scramble.'
+  },
+  multiple: {
+    label: 'Multi-framework compliance',
+    bad:  'You\'re managing HIPAA, SOC 2, and other requirements in separate spreadsheets. Each audit starts from scratch.',
+    good: 'Compliance controls baked into the architecture. One source of truth for every framework.'
+  }
+};
+
+const BA_EXISTING = {
+  partial: {
+    label: 'Inherited codebase',
+    bad:  'You\'re maintaining code nobody fully understands. Every new feature risks breaking something that was already working.',
+    good: 'Clean architecture with documented decisions. New engineers can contribute without a two-week ramp-up just to understand the repo.'
+  },
+  migrate: {
+    label: 'Legacy migration',
+    bad:  'The old system runs on software the vendor stopped supporting. You\'re one dependency update away from a production outage.',
+    good: 'Modern stack with clear ownership. Upgrades are planned, not emergencies.'
+  }
+};
+
+const BA_VENDOR = {
+  label: 'Vendor relationship',
+  bad:  'The offshore agency delivers and disappears. No documentation. Support tickets go unanswered.',
+  good: 'Direct access to the engineer who wrote your code. Throughout the engagement, not just at kickoff.'
+};
+
+function renderBeforeAfter(data, aiScenarios) {
+  const container = document.getElementById('ba-table');
+  const heading   = document.getElementById('ba-heading');
+  if (!container) return;
+
+  let scenarios = [];
+
+  if (aiScenarios && aiScenarios.length) {
+    // AI-generated scenarios take priority
+    scenarios = aiScenarios;
+  } else {
+    // Rule-based: pick from selected project types (max 2)
+    const types = data.types || [];
+    types.slice(0, 2).forEach(t => {
+      if (BA_SCENARIOS[t]) scenarios.push(BA_SCENARIOS[t]);
+    });
+
+    // Compliance row if applicable
+    if (data.compliance && data.compliance !== 'none' && BA_COMPLIANCE[data.compliance]) {
+      scenarios.push(BA_COMPLIANCE[data.compliance]);
+    }
+
+    // Existing-code row if applicable
+    if (data.existing && data.existing !== 'no' && BA_EXISTING[data.existing]) {
+      scenarios.push(BA_EXISTING[data.existing]);
+    }
+
+    // Always add vendor row
+    scenarios.push(BA_VENDOR);
+
+    // Cap at 4 rows
+    scenarios = scenarios.slice(0, 4);
+
+    // Fallback if nothing matched
+    if (scenarios.length < 2) {
+      scenarios = [
+        BA_SCENARIOS.internal,
+        BA_VENDOR,
+        { label: 'Compliance and reporting', bad: 'You reconcile three separate systems the night before an audit.', good: 'Every record timestamped and exportable from day one. The audit is one click.' }
+      ];
+    }
+  }
+
+  // Personalize heading
+  if (heading) {
+    const company = (data.company || '').trim();
+    if (company) {
+      heading.textContent = 'What changes once ' + company + ' ships this.';
+    } else {
+      heading.textContent = 'What shifts once this is built.';
+    }
+  }
+
+  // Render table
+  container.innerHTML =
+    '<div class="stakes-thead"><div class="stakes-th"></div><div class="stakes-th bad">Without Kingbird</div><div class="stakes-th good">With Kingbird</div></div>'
+    + scenarios.map(s =>
+        '<div class="stakes-tr">'
+        + '<div class="stakes-scenario">' + s.label + '</div>'
+        + '<div class="stakes-td bad">' + s.bad + '</div>'
+        + '<div class="stakes-td good">' + s.good + '</div>'
+        + '</div>'
+    ).join('');
+
+  // Scroll the section into view a beat after the estimate
+  setTimeout(() => {
+    const section = document.getElementById('ba-section');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 2400);
+}
+
 // ============================================================
 // CONFIG
 // ============================================================
@@ -1197,6 +1351,7 @@ function submitLeadGate(){
   document.getElementById('step-4').classList.remove('active');
   document.getElementById('wizard-progress').style.display = 'none';
   renderEstimate(est);
+  renderBeforeAfter(data);  // rule-based pass; AI will upgrade if description is rich enough
   fireSlack(currentLead, data, est);
   // Trigger AI refinement if the prospect provided a meaningful description
   if (data.description && data.description.trim().length >= 50) {
@@ -1379,6 +1534,11 @@ function applyAIAdjustments(est, ai) {
           'The intake call confirms final scope.';
       }
     }
+  }
+
+  // Upgrade before/after table with AI-generated scenarios if provided
+  if (ai.before_after && ai.before_after.length) {
+    renderBeforeAfter(est.data, ai.before_after);
   }
 
   // Append AI-specific questions to the open questions list
