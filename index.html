@@ -874,11 +874,6 @@ function renderBeforeAfter(data, aiScenarios) {
         + '</div>'
     ).join('');
 
-  // Scroll the section into view a beat after the estimate
-  setTimeout(() => {
-    const section = document.getElementById('ba-section');
-    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 2400);
 }
 
 // ============================================================
