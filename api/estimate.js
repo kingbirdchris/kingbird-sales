@@ -37,11 +37,12 @@ export default async function handler(req) {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { phases = [], data = {}, totH = 0, activeCost = 0, activeRate = 75 } = body;
+  const { phases = [], data = {}, totH = 0, activeCost = 0, activeRate = 75, codeContext = '' } = body;
 
-  // Don't call the API if there's no meaningful description to analyze
+  // Don't call the API if there's neither a meaningful description nor code context
   const desc = (data.description || '').trim();
-  if (desc.length < 50) {
+  const hasCode = codeContext && codeContext.trim().length > 0;
+  if (desc.length < 50 && !hasCode) {
     return new Response(JSON.stringify({ skip: true }), {
       status: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
@@ -56,11 +57,17 @@ export default async function handler(req) {
   const compliStr = data.compliance === 'none' ? 'none' : data.compliance;
   const integStr  = data.integrations === '0' ? 'none' : data.integrations + ' external systems';
 
+  // Build optional code context section
+  const codeSection = hasCode
+    ? `\nEXISTING CODEBASE CONTEXT (extracted from uploaded files):\n${codeContext.slice(0, 4000)}\n`
+    : '';
+
   const prompt = `You are a senior software estimator at Kingbird Solutions, a custom software development shop that builds owned, maintainable software for non-technical founders and operators.
 
-A prospect has described their project. A rule-based estimator has already produced hour estimates per phase, adjusted for AI-assisted senior engineers. Your job is to:
-1. Read the description and identify signals the parameter-based rules would not capture
+A prospect has described their project${hasCode ? ' and uploaded their existing codebase' : ''}. A rule-based estimator has already produced hour estimates per phase, adjusted for AI-assisted senior engineers. Your job is to:
+1. Read the description${hasCode ? ', analyse the uploaded code context,' : ''} and identify signals the parameter-based rules would not capture
 2. Write 3 before/after comparison rows that are specific to THIS project (not generic)
+${hasCode ? '3. Use the codebase context to assess: tech stack, complexity, existing patterns, and migration/refactor risk' : ''}
 
 RULE-BASED BASELINE (hours already reflect AI tooling efficiency):
 ${phaseLines}
@@ -76,9 +83,9 @@ PROJECT PARAMETERS:
 - Timeline: ${data.timeline}
 - Company: ${data.company || 'not provided'}
 - Industry: ${data.industry || 'not provided'}
-
+${codeSection}
 PROSPECT DESCRIPTION:
-"${desc}"
+"${desc || '(no description provided — base your analysis on the codebase context above)'}"
 
 Return ONLY a raw JSON object. No markdown fences, no explanation outside the JSON.
 
@@ -141,7 +148,7 @@ Rules for before_after:
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 800,
+        max_tokens: hasCode ? 1200 : 800,
         messages: [{ role: 'user', content: prompt }]
       })
     });

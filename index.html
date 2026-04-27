@@ -176,6 +176,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -568,11 +569,12 @@ body{font-family:var(--font);background:var(--bone);color:var(--ink);-webkit-fon
           </div>
           <div class="form-field full"><label>Supporting documents <span class="optional">improves accuracy</span></label>
             <div class="file-drop" id="file-drop-zone" onclick="document.getElementById('w-files').click()" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event)">
-              <input type="file" id="w-files" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" style="display:none" onchange="handleFileSelect(event)">
+              <input type="file" id="w-files" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.zip,.js,.ts,.jsx,.tsx,.json,.sql,.py,.rb,.go,.php,.cs,.java,.md,.yaml,.yml,.env,.sh" style="display:none" onchange="handleFileSelect(event)">
               &#128206; Drop files here or click to upload
-              <span style="display:block;font-size:10px;color:rgba(13,14,15,.35);margin-top:4px">Requirements docs, wireframes, ERDs, screenshots of current system</span>
+              <span style="display:block;font-size:10px;color:rgba(13,14,15,.35);margin-top:4px">Requirements docs, wireframes, screenshots — or drop a <strong style="color:rgba(13,14,15,.5)">.zip of your codebase</strong> for a code-aware estimate</span>
             </div>
             <div class="file-list" id="file-list"></div>
+            <div id="code-analysis-status" style="display:none;font-size:11px;color:rgba(13,14,15,.5);margin-top:6px;padding:6px 10px;background:rgba(212,160,23,.06);border-radius:2px;border-left:2px solid var(--gold)"></div>
           </div>
         </div>
         <div class="wizard-nav"><button class="btn-back" onclick="goToStep(1)">&#8592; Back</button><button class="btn-next" onclick="goToStep(3)">Next: Delivery preferences &#8594;</button></div>
@@ -1221,6 +1223,7 @@ function recalcTable(){
 let currentStep = 1;
 let currentLead = {};
 let uploadedFiles = [];
+let codeContext   = '';
 
 // ============================================================
 // WIZARD NAVIGATION
@@ -1271,6 +1274,21 @@ document.addEventListener('change', e => {
 // ============================================================
 // FILE HANDLING
 // ============================================================
+
+const CODE_EXTS = new Set([
+  'js','mjs','cjs','ts','jsx','tsx',
+  'py','rb','go','php','cs','java','kt','swift','rs','cpp','c','h',
+  'html','css','scss','sass','less',
+  'json','yaml','yml','toml','env','sh','bash','zsh',
+  'sql','graphql','gql','prisma','proto',
+  'md','txt','csv','xml'
+]);
+const SKIP_RE   = /node_modules\/|\.git\/|dist\/|build\/|\.next\/|coverage\/|__pycache__\/|venv\/|\.yarn\//;
+const BINARY_RE = /\.(png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|doc|docx|zip|tar|gz|exe|bin|lock)$/i;
+const PRIORITY_FILES = ['package.json','composer.json','requirements.txt','pyproject.toml',
+  'README.md','readme.md','schema.sql','schema.prisma','.env.example','docker-compose.yml',
+  'Dockerfile','tsconfig.json','next.config.js','vite.config.js','webpack.config.js'];
+
 function handleFileSelect(e){ addFiles(e.target.files); }
 function handleDragOver(e){ e.preventDefault(); document.getElementById('file-drop-zone').classList.add('dragover'); }
 function handleFileDrop(e){
@@ -1281,13 +1299,79 @@ function handleFileDrop(e){
 function addFiles(files){
   [...files].forEach(f => { if(!uploadedFiles.find(u=>u.name===f.name)) uploadedFiles.push(f); });
   renderFileList();
+  processFilesForAI();
 }
-function removeFile(name){ uploadedFiles = uploadedFiles.filter(f=>f.name!==name); renderFileList(); }
+function removeFile(name){
+  uploadedFiles = uploadedFiles.filter(f=>f.name!==name);
+  codeContext = '';
+  renderFileList();
+  processFilesForAI();
+}
 function renderFileList(){
   document.getElementById('file-list').innerHTML = uploadedFiles.map(f =>
     '<div class="file-item"><span>&#128206; '+f.name+' ('+Math.round(f.size/1024)+'KB)</span>'
     +'<button onclick="removeFile(\''+f.name+'\')">&#10005;</button></div>'
   ).join('');
+}
+
+async function processFilesForAI(){
+  if(!uploadedFiles.length){ codeContext=''; hideCodeStatus(); return; }
+  const statusEl = document.getElementById('code-analysis-status');
+  statusEl.style.display = 'block';
+  statusEl.textContent = '\u23F3 Reading files\u2026';
+  const allEntries = [];
+  for(const file of uploadedFiles){
+    const ext = file.name.split('.').pop().toLowerCase();
+    if(file.size > 20 * 1024 * 1024){
+      statusEl.textContent = '\u26A0\uFE0F ' + file.name + ' exceeds 20 MB \u2014 skipped.';
+      continue;
+    }
+    if(ext === 'zip'){
+      try {
+        const zip = await JSZip.loadAsync(file);
+        const jobs = [];
+        zip.forEach((path, entry) => {
+          if(entry.dir || SKIP_RE.test(path) || BINARY_RE.test(path)) return;
+          const fe = path.split('.').pop().toLowerCase();
+          if(!CODE_EXTS.has(fe)) return;
+          jobs.push(entry.async('string').then(t => allEntries.push({path, content:t})).catch(()=>{}));
+        });
+        await Promise.all(jobs);
+      } catch(e){ console.warn('ZIP error:', e); }
+    } else if(CODE_EXTS.has(ext)){
+      try { allEntries.push({path: file.name, content: await readFileAsText(file)}); } catch(e){}
+    }
+  }
+  if(!allEntries.length){
+    codeContext = '';
+    statusEl.textContent = '\uD83D\uDCCE Files attached (no readable code \u2014 description still used for AI analysis)';
+    return;
+  }
+  codeContext = buildCodeSummary(allEntries);
+  statusEl.textContent = '\u2713 ' + allEntries.length + ' file' + (allEntries.length!==1?'s':'') + ' read \u2014 estimate will reflect your actual stack.';
+}
+
+function readFileAsText(file){
+  return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.onerror=rej; r.readAsText(file,'utf-8'); });
+}
+function hideCodeStatus(){ const el=document.getElementById('code-analysis-status'); if(el) el.style.display='none'; }
+function buildCodeSummary(entries){
+  const MAX=4000; const parts=[];
+  parts.push('FILE TREE:\n'+entries.map(e=>e.path).sort().join('\n'));
+  const sorted=[...entries].sort((a,b)=>{
+    const aP=PRIORITY_FILES.some(p=>a.path.endsWith(p))?0:1;
+    const bP=PRIORITY_FILES.some(p=>b.path.endsWith(p))?0:1;
+    if(aP!==bP) return aP-bP; return a.path.length-b.path.length;
+  });
+  let used=parts[0].length+100;
+  for(const e of sorted){
+    if(used>=MAX) break;
+    const budget=Math.min(600,MAX-used);
+    const s=e.content.slice(0,budget);
+    const block='\n---\n'+e.path+':\n'+s+(e.content.length>budget?'\n[truncated]':'');
+    parts.push(block); used+=block.length;
+  }
+  return parts.join('');
 }
 
 // ============================================================
@@ -1307,7 +1391,8 @@ function collectFormData(){
     timeline:     (document.querySelector('input[name="w-timeline"]:checked')||{value:'flexible'}).value,
     resource:     (document.querySelector('input[name="w-resource"]:checked')||{value:'standard'}).value,
     budget:       (document.querySelector('input[name="w-budget"]:checked')||{value:''}).value,
-    files:        uploadedFiles.map(f=>f.name)
+    files:        uploadedFiles.map(f=>f.name),
+    codeContext:  codeContext || ''
   };
 }
 
@@ -1337,8 +1422,8 @@ function submitLeadGate(){
   renderEstimate(est);
   renderBeforeAfter(data);  // rule-based pass; AI will upgrade if description is rich enough
   fireSlack(currentLead, data, est);
-  // Trigger AI refinement if the prospect provided a meaningful description
-  if (data.description && data.description.trim().length >= 50) {
+  // Trigger AI refinement if prospect provided a meaningful description OR uploaded code
+  if ((data.description && data.description.trim().length >= 50) || data.codeContext) {
     callAIEstimator(est);
   }
 }
@@ -1432,11 +1517,12 @@ async function callAIEstimator(est) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        phases:     est.phases,
-        data:       est.data,
-        totH:       est.totH,
-        activeCost: est.activeCost,
-        activeRate: est.activeRate || 75
+        phases:      est.phases,
+        data:        est.data,
+        totH:        est.totH,
+        activeCost:  est.activeCost,
+        activeRate:  est.activeRate || 75,
+        codeContext: est.data.codeContext || ''
       })
     });
 
