@@ -3,17 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>On-Demand Space Booking — KBS Reference Demo</title>
 <style>
   :root{
     --accent:#0E7C7B; --accent-d:#0a5c5b; --ink:#15211f; --muted:#5d6b68;
-    --line:#e7ece9; --bg:#f6f8f7; --card:#ffffff; --good:#147a4a; --warn:#b4531f;
+    --line:#e7ece9; --bg:#f6f8f7; --card:#ffffff; --good:#147a4a; --warn:#b4531f; --bad:#c0392b;
     --radius:14px; --shadow:0 6px 22px rgba(20,40,38,.08);
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
   a{color:inherit}
   .wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
   .demo-flag{background:#15211f;color:#cfe9e7;font-size:12.5px;text-align:center;padding:7px 10px;letter-spacing:.02em}
   .demo-flag b{color:#fff}
   header.bar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
@@ -30,13 +32,15 @@
   .hero{padding:30px 0 8px}
   .hero h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
   .hero p{margin:0;color:var(--muted);max-width:620px}
-  .steps{display:flex;gap:8px;margin:18px 0 22px;flex-wrap:wrap}
+  .modebadge{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:#eef5f4;color:var(--accent-d);border:1px solid var(--line)}
+  .steps{display:flex;gap:8px;margin:16px 0 22px;flex-wrap:wrap}
   .pill{font-size:12px;font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--line);padding:6px 11px;border-radius:30px}
   .pill.on{color:#fff;background:var(--accent);border-color:var(--accent)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
-  .card.click{cursor:pointer}
-  .card.click:hover{transform:translateY(-2px);border-color:var(--accent)}
+  button.card{font:inherit;color:inherit;text-align:left;width:100%;display:block;padding:0;cursor:pointer}
+  button.card[disabled]{opacity:.5;cursor:not-allowed}
+  button.card:not([disabled]):hover{transform:translateY(-2px);border-color:var(--accent)}
   .ph{height:120px;background:linear-gradient(135deg,var(--accent),var(--accent-d));position:relative;display:grid;place-items:center;color:#fff;font-size:30px}
   .ph .cap{position:absolute;left:12px;bottom:10px;background:rgba(0,0,0,.28);padding:3px 9px;border-radius:20px;font-size:12px;font-weight:600}
   .cbody{padding:13px 14px}
@@ -50,18 +54,19 @@
   .btn{border:0;background:var(--accent);color:#fff;font-weight:700;font-size:14px;padding:11px 16px;border-radius:10px;cursor:pointer}
   .btn:hover{background:var(--accent-d)}
   .btn.ghost{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
-  .btn.sm{padding:8px 12px;font-size:13px}
+  .btn.sm{padding:8px 12px;font-size:13px;display:inline-block}
   .btn:disabled{opacity:.45;cursor:not-allowed}
   .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:18px;box-shadow:var(--shadow)}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
   .field select,.field input{font:inherit;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;min-width:130px}
   .back{background:none;border:0;color:var(--muted);font-weight:600;cursor:pointer;font-size:13px;padding:4px 0;margin-bottom:8px}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:var(--radius);padding:30px;text-align:center;color:var(--muted)}
   .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin:6px 0 4px}
-  .slot{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 6px;text-align:center;font-size:13px;font-weight:600;cursor:pointer}
+  .slot{border:1px solid var(--line);background:#fff;border-radius:9px;padding:0 6px;min-height:44px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
   .slot.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
-  .slot.booked{background:#f1f1f1;color:#b9b9b9;cursor:not-allowed;text-decoration:line-through}
-  .legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:10px 0 0}
+  .slot[disabled]{background:#f1f1f1;color:#9a9a9a;cursor:not-allowed;text-decoration:line-through}
+  .legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:10px 0 0;flex-wrap:wrap}
   .dot{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px}
   .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
   .twocol{display:grid;grid-template-columns:1.4fr .9fr;gap:18px}
@@ -70,13 +75,18 @@
   .total{display:flex;justify-content:space-between;font-weight:800;font-size:18px;border-top:1px solid var(--line);margin-top:8px;padding-top:10px}
   .modal-bg{position:fixed;inset:0;background:rgba(15,33,31,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
   .modal-bg.show{display:flex}
-  .modal{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative}
   .modal h3{margin:0 0 4px}
   .modal .mut{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+  .x{position:absolute;top:12px;right:12px;border:0;background:var(--bg);width:32px;height:32px;border-radius:8px;font-size:18px;cursor:pointer;color:var(--muted)}
+  .lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 4px}
   .inp{width:100%;font:inherit;font-size:14px;padding:11px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+  .inp.err{border-color:var(--bad)}
+  .errmsg{color:var(--bad);font-size:12.5px;margin:-6px 0 10px}
   .cardrow{display:flex;gap:10px}
   .stripe{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
   .check{width:62px;height:62px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;font-size:32px;margin:2px auto 12px}
+  .check.req{background:var(--accent)}
   .codebox{background:var(--bg);border:1px dashed var(--accent);border-radius:11px;padding:12px;text-align:center;margin:12px 0}
   .codebox .c{font-size:26px;font-weight:800;letter-spacing:.18em;color:var(--accent)}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
@@ -109,6 +119,7 @@
   .sugg button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 10px;cursor:pointer;color:var(--accent);font-weight:600}
   .foot{color:var(--muted);font-size:12px;text-align:center;padding:26px 0 40px}
   @media(max-width:760px){.twocol{grid-template-columns:1fr}.hero h1{font-size:24px}.navtabs button{padding:8px 10px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 </style>
 </head>
 <body>
@@ -117,12 +128,12 @@
 <header class="bar"><div class="wrap bar-in">
   <div class="brand"><span class="logo" id="logo">C</span><span><span id="bname">Cactus Co. Workspace</span><small id="btag">Phoenix · Powered by Kingbird</small></span></div>
   <div class="spacer"></div>
-  <div class="navtabs">
-    <button id="tab-book" class="on" onclick="setTab('book')">Book a space</button>
-    <button id="tab-ops" onclick="setTab('ops')">Operator dashboard</button>
+  <div class="navtabs" role="tablist" aria-label="View">
+    <button id="tab-book" class="on" role="tab" aria-selected="true" onclick="setTab('book')">Book a space</button>
+    <button id="tab-ops" role="tab" aria-selected="false" onclick="setTab('ops')">Operator dashboard</button>
   </div>
   <div class="wl" title="White-label: same platform, the operator's own brand">
-    <span>Demo operator:</span>
+    <label for="opsel">Demo operator:</label>
     <select id="opsel" onchange="switchOperator(this.value)">
       <option value="a">Cactus Co. Workspace (coworking)</option>
       <option value="b">The Mill House (event venue)</option>
@@ -132,8 +143,8 @@
 
 <main class="wrap" id="view"></main>
 
-<button class="fab" onclick="toggleChat()">💬 Booking assistant</button>
-<div class="chat" id="chat">
+<button class="fab" onclick="toggleChat()" aria-label="Open booking assistant">💬 Booking assistant</button>
+<div class="chat" id="chat" role="dialog" aria-label="AI booking concierge">
   <div class="top">AI Booking Concierge</div>
   <div class="body" id="chatbody">
     <div class="msg ai"><span class="b">Hi! Tell me what you need and I'll find a space. Try one of these:</span></div>
@@ -141,8 +152,8 @@
   <div class="sugg" id="sugg"></div>
 </div>
 
-<div class="modal-bg" id="modal">
-  <div class="modal" id="modalcontent"></div>
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalcontent" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1"></div>
 </div>
 
 <div class="foot">On-Demand Space Booking — Kingbird Solutions reference demo. Stack: Next.js · Supabase · Stripe Connect · smart-lock APIs. Sample data only.</div>
@@ -150,7 +161,7 @@
 <script>
 const OPS = {
   a:{ name:"Cactus Co. Workspace", tag:"Phoenix · Powered by Kingbird", letter:"C",
-      accent:"#0E7C7B", accentD:"#0a5c5b", city:"Phoenix, AZ",
+      accent:"#0E7C7B", accentD:"#0a5c5b", city:"Phoenix, AZ", tz:"MST", mode:"instant",
       types:[
         {id:"day", icon:"🪑", label:"Day Pass", sub:"A seat in the lounge, all day"},
         {id:"meet", icon:"📽️", label:"Meeting Room", sub:"By the hour, A/V ready"},
@@ -163,7 +174,7 @@ const OPS = {
         {id:4,type:"office",name:"Focus Suite",cap:2,rate:25,unit:"hr",amen:["Door lock","Standing desk","Wi-Fi"]}
       ]},
   b:{ name:"The Mill House", tag:"Tempe · Powered by Kingbird", letter:"M",
-      accent:"#B4531F", accentD:"#8c3f17", city:"Tempe, AZ",
+      accent:"#B4531F", accentD:"#8c3f17", city:"Tempe, AZ", tz:"MST", mode:"request",
       types:[
         {id:"meet", icon:"🍽️", label:"Private Room", sub:"Dining & meetings by the hour"},
         {id:"event", icon:"✨", label:"Event Space", sub:"Loft & studio, by the hour"},
@@ -181,77 +192,95 @@ const BOOKED={1:[],2:[9,10,14],3:[11,12,13],4:[8,15,16],5:[18,19],6:[15,16,17],7
 const fmtH=h=>{const ap=h<12?"am":"pm";let hh=h%12;if(hh===0)hh=12;return hh+ap;};
 
 let op="a", tab="book";
-let step=1, selType=null, selSpace=null, selSlots=[], partySize=2, day="Today";
+let step=1, selType=null, selSpace=null, selSlots=[], partySize=2, day="Today", lastFocus=null;
 
 function cur(){return OPS[op];}
+function isReq(){return cur().mode==='request';}
 function applyTheme(){const o=cur();document.documentElement.style.setProperty('--accent',o.accent);document.documentElement.style.setProperty('--accent-d',o.accentD);
   document.getElementById('logo').textContent=o.letter;document.getElementById('bname').textContent=o.name;document.getElementById('btag').textContent=o.tag;}
 
 function switchOperator(v){op=v;step=1;selType=null;selSpace=null;selSlots=[];applyTheme();render();renderSugg();}
-function setTab(t){tab=t;document.getElementById('tab-book').classList.toggle('on',t==='book');document.getElementById('tab-ops').classList.toggle('on',t==='ops');render();}
+function setTab(t){tab=t;
+  const b=document.getElementById('tab-book'),o=document.getElementById('tab-ops');
+  b.classList.toggle('on',t==='book');o.classList.toggle('on',t==='ops');
+  b.setAttribute('aria-selected',t==='book');o.setAttribute('aria-selected',t==='ops');render();}
 
 function render(){ tab==='book'?renderBook():renderOps(); }
 
+function modeLine(){return isReq()
+  ? `Submit a request and the team confirms availability, then sends a deposit invoice — built for venues and event spaces. Branded as the operator.`
+  : `Real-time availability, instant payment, and a door code on confirmation — no calls, no email back-and-forth. Branded as the operator.`;}
+
 function renderBook(){
   const o=cur();let h='';
-  h+=`<div class="hero"><h1>Book ${o.name}</h1><p>Real-time availability, instant payment, and a door code on confirmation — no calls, no email back-and-forth. This is the customer-facing flow KBS builds, branded as the operator.</p>
+  h+=`<div class="hero"><h1>Book ${o.name}</h1><p>${modeLine()}</p>
+    <span class="modebadge">${isReq()?'Booking mode: Request to book + deposit':'Booking mode: Instant book'}</span>
     <div class="steps">
       <span class="pill ${step>=1?'on':''}">1 · Choose</span>
       <span class="pill ${step>=2?'on':''}">2 · Pick a space</span>
-      <span class="pill ${step>=3?'on':''}">3 · Time & pay</span>
-      <span class="pill ${step>=4?'on':''}">4 · Confirmed</span>
+      <span class="pill ${step>=3?'on':''}">3 · ${isReq()?'Time & request':'Time & pay'}</span>
+      <span class="pill ${step>=4?'on':''}">4 · ${isReq()?'Requested':'Confirmed'}</span>
     </div></div>`;
 
   if(step===1){
     h+=`<div class="grid">`+o.types.map(t=>`
-      <div class="card click" onclick="pickType('${t.id}')">
-        <div class="ph">${t.icon}<span class="cap">${o.city}</span></div>
+      <button type="button" class="card click" onclick="pickType('${t.id}')" aria-label="${t.label}: ${t.sub}">
+        <div class="ph" aria-hidden="true">${t.icon}<span class="cap">${o.city}</span></div>
         <div class="cbody"><h3>${t.label}</h3><div class="sub">${t.sub}</div>
         <div class="row"><span class="chip">${o.spaces.filter(s=>s.type===t.id).length} space(s)</span><span class="btn sm">Browse →</span></div></div>
-      </div>`).join('')+`</div>`;
+      </button>`).join('')+`</div>`;
   }
 
   if(step===2){
     const list=o.spaces.filter(s=>s.type===selType);
+    const fitList=list.filter(s=>s.cap>=partySize);
     h+=`<button class="back" onclick="step=1;render()">← Back to space types</button>`;
     h+=`<div class="filters">
-      <div class="field"><label>Date</label><select onchange="day=this.value"><option ${day==='Today'?'selected':''}>Today</option><option ${day==='Tomorrow'?'selected':''}>Tomorrow</option><option>Thu, Jun 18</option></select></div>
-      <div class="field"><label>People</label><select onchange="partySize=+this.value">${[1,2,4,6,12,20,40].map(n=>`<option ${n===partySize?'selected':''}>${n}</option>`).join('')}</select></div>
-      <div class="field"><label>&nbsp;</label><span class="chip">Showing live availability</span></div>
+      <div class="field"><label for="f-date">Date</label><select id="f-date" onchange="day=this.value"><option ${day==='Today'?'selected':''}>Today</option><option ${day==='Tomorrow'?'selected':''}>Tomorrow</option><option>Thu, Jun 18</option></select></div>
+      <div class="field"><label for="f-ppl">People</label><select id="f-ppl" onchange="partySize=+this.value;render()">${[1,2,4,6,12,20,40].map(n=>`<option ${n===partySize?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="field"><span class="chip">Times shown in ${o.tz}</span></div>
     </div>`;
-    h+=`<div class="grid">`+list.map(s=>{
-      const free=HOURS.filter(x=>!(BOOKED[s.id]||[]).includes(x)).length;
-      const fits=s.cap>=partySize;
-      return `<div class="card ${fits?'click':''}" ${fits?`onclick="pickSpace(${s.id})"`:''} style="${fits?'':'opacity:.5'}">
-        <div class="ph">${o.types.find(t=>t.id===s.type).icon}<span class="cap">Seats ${s.cap}</span></div>
-        <div class="cbody"><h3>${s.name}</h3><div class="sub">${free} of ${HOURS.length} hours open today</div>
-        <div class="chips">${s.amen.map(a=>`<span class="chip">${a}</span>`).join('')}</div>
-        <div class="row"><span class="price">$${s.rate}<small>/${s.unit}</small></span><span class="btn sm">${fits?'Select →':'Too small'}</span></div></div>
-      </div>`;}).join('')+`</div>`;
+    if(fitList.length===0){
+      h+=`<div class="empty"><b>No ${o.types.find(t=>t.id===selType).label.toLowerCase()} fits ${partySize} people right now.</b><br>Try a smaller party size or another space type.</div>`;
+    }else{
+      h+=`<div class="grid">`+list.map(s=>{
+        const free=HOURS.filter(x=>!(BOOKED[s.id]||[]).includes(x)).length;
+        const fits=s.cap>=partySize;
+        const soldout=free===0;
+        return `<button type="button" class="card click" ${(!fits||soldout)?'disabled':''} onclick="pickSpace(${s.id})" aria-label="${s.name}, seats ${s.cap}, $${s.rate} per ${s.unit}">
+          <div class="ph" aria-hidden="true">${o.types.find(t=>t.id===s.type).icon}<span class="cap">Seats ${s.cap}</span></div>
+          <div class="cbody"><h3>${s.name}</h3><div class="sub">${soldout?'Fully booked today':free+' of '+HOURS.length+' hours open today'}</div>
+          <div class="chips">${s.amen.map(a=>`<span class="chip">${a}</span>`).join('')}</div>
+          <div class="row"><span class="price">$${s.rate}<small>/${s.unit}</small></span><span class="btn sm">${soldout?'Sold out':(fits?'Select →':'Too small')}</span></div></div>
+        </button>`;}).join('')+`</div>`;
+    }
   }
 
   if(step===3){
     const s=selSpace;
     h+=`<button class="back" onclick="step=2;selSlots=[];render()">← Back to spaces</button>`;
     h+=`<div class="twocol"><div class="panel">
-      <h3 style="margin:0 0 2px">${s.name}</h3><div class="sub" style="color:var(--muted);margin-bottom:14px">${o.city} · seats ${s.cap} · $${s.rate}/${s.unit}</div>`;
+      <h3 style="margin:0 0 2px">${s.name}</h3><div class="sub" style="color:var(--muted);margin-bottom:14px">${cur().city} · seats ${s.cap} · $${s.rate}/${s.unit} · times in ${cur().tz}</div>`;
     if(s.unit==='day'){
       h+=`<p>Day pass for <b>${day}</b> — full-day access to the lounge during open hours.</p>`;
     }else{
-      h+=`<div class="sectitle" style="margin-top:0">Pick your hours · ${day}</div><div class="slots">`+
+      h+=`<div class="sectitle" style="margin-top:0">Pick your hours · ${day}</div><div class="slots" role="group" aria-label="Available hours">`+
         HOURS.map(x=>{const bk=(BOOKED[s.id]||[]).includes(x);const sel=selSlots.includes(x);
-          return `<div class="slot ${bk?'booked':''} ${sel?'sel':''}" ${bk?'':`onclick="toggleSlot(${x})"`}>${fmtH(x)}</div>`;}).join('')+`</div>
+          return `<button type="button" class="slot ${sel?'sel':''}" ${bk?'disabled':''} aria-pressed="${sel}" onclick="toggleSlot(${x})">${fmtH(x)}</button>`;}).join('')+`</div>
         <div class="legend"><span><span class="dot" style="background:var(--accent)"></span>Selected</span><span><span class="dot" style="background:#fff;border:1px solid var(--line)"></span>Available</span><span><span class="dot" style="background:#f1f1f1"></span>Booked</span></div>`;
     }
     const qty=s.unit==='day'?1:selSlots.length;
     const sub=s.rate*qty, fee=Math.round(sub*0.05*100)/100, tot=sub+fee;
-    h+=`</div><div class="panel summary"><h3 style="margin:0 0 10px">Your booking</h3>
+    const dep=Math.round(tot*0.3*100)/100;
+    const hoursLabel=s.unit==='day'?day:(qty?qty+' hour'+(qty>1?'s':'')+' · '+day:'Select hours');
+    h+=`</div><div class="panel summary"><h3 style="margin:0 0 10px">Your ${isReq()?'request':'booking'}</h3>
       <div class="lineitem"><span>${s.name}</span><span>$${s.rate}/${s.unit}</span></div>
-      <div class="lineitem"><span>${s.unit==='day'?day:(qty?qty+' hour(s) · '+day:'Select hours')}</span><span>${qty?'$'+sub.toFixed(2):'—'}</span></div>
+      <div class="lineitem"><span>${hoursLabel}</span><span>${qty?'$'+sub.toFixed(2):'—'}</span></div>
       <div class="lineitem"><span>Service fee</span><span>${qty?'$'+fee.toFixed(2):'—'}</span></div>
-      <div class="total"><span>Total</span><span>${qty?'$'+tot.toFixed(2):'$0.00'}</span></div>
-      <button class="btn" style="width:100%;margin-top:14px" ${qty?'':'disabled'} onclick="openCheckout(${tot.toFixed(2)})">Book & pay</button>
-      <div class="stripe">🔒 Secure checkout · powered by Stripe (demo)</div>
+      <div class="total"><span>${isReq()?'Estimated total':'Total'}</span><span>${qty?'$'+tot.toFixed(2):'$0.00'}</span></div>`;
+    if(isReq()) h+=`<div class="lineitem" style="margin-top:6px"><span>Deposit on approval (30%)</span><span>${qty?'$'+dep.toFixed(2):'—'}</span></div>`;
+    h+=`<button class="btn" style="width:100%;margin-top:14px" ${qty?'':'disabled'} onclick="openCheckout(${tot.toFixed(2)})">${isReq()?'Request to book':'Book & pay'}</button>
+      <div class="stripe">${isReq()?'No charge now — you approve the deposit after the venue confirms':'🔒 Secure checkout · powered by Stripe (demo)'}</div>
     </div></div>`;
   }
   document.getElementById('view').innerHTML=h;
@@ -261,33 +290,77 @@ function pickType(t){selType=t;step=2;render();}
 function pickSpace(id){selSpace=cur().spaces.find(s=>s.id===id);selSlots=[];step=3;render();}
 function toggleSlot(x){const i=selSlots.indexOf(x);if(i>=0)selSlots.splice(i,1);else selSlots.push(x);selSlots.sort((a,b)=>a-b);render();}
 
+function openModal(){lastFocus=document.activeElement;const m=document.getElementById('modal');m.classList.add('show');
+  const first=m.querySelector('input,button,select,textarea');(first||document.getElementById('modalcontent')).focus();}
+function closeModal(){document.getElementById('modal').classList.remove('show');if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+document.addEventListener('keydown',e=>{
+  const m=document.getElementById('modal');if(!m.classList.contains('show'))return;
+  if(e.key==='Escape'){closeModal();return;}
+  if(e.key==='Tab'){const f=m.querySelectorAll('input,button,select,textarea,[tabindex]');if(!f.length)return;
+    const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+});
+
 function openCheckout(total){
+  const reqMode=isReq();
   document.getElementById('modalcontent').innerHTML=`
-    <h3>Checkout</h3><p class="mut">${selSpace.name} · ${cur().name}</p>
-    <input class="inp" placeholder="Full name" value="">
-    <input class="inp" placeholder="Email" value="">
-    <input class="inp" placeholder="Card number" value="4242 4242 4242 4242">
-    <div class="cardrow"><input class="inp" placeholder="MM/YY" value="12/28"><input class="inp" placeholder="CVC" value="123"></div>
-    <button class="btn" style="width:100%" onclick="confirmBooking(${total})">Pay $${total}</button>
-    <div class="stripe">🔒 Demo only — no card is charged</div>`;
-  document.getElementById('modal').classList.add('show');
+    <button class="x" aria-label="Close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle">${reqMode?'Request to book':'Checkout'}</h3><p class="mut">${selSpace.name} · ${cur().name}</p>
+    <label class="lbl" for="ck-name">Full name</label>
+    <input class="inp" id="ck-name" autocomplete="name">
+    <label class="lbl" for="ck-email">Email</label>
+    <input class="inp" id="ck-email" type="email" autocomplete="email" aria-describedby="ck-email-err">
+    <div class="errmsg" id="ck-email-err" style="display:none">Enter the email we'll send your ${reqMode?'request update':'booking'} to.</div>
+    ${reqMode?`
+      <label class="lbl" for="ck-head">Headcount</label>
+      <input class="inp" id="ck-head" type="number" min="1" value="${partySize}">
+      <label class="lbl" for="ck-note">What's the event? (optional)</label>
+      <input class="inp" id="ck-note" placeholder="e.g. team dinner, product launch">
+      <button class="btn" style="width:100%" onclick="confirmBooking(${total})">Send request</button>
+      <div class="stripe">No card needed yet — the venue confirms availability first.</div>`
+    :`
+      <label class="lbl" for="ck-card">Card number</label>
+      <input class="inp" id="ck-card" inputmode="numeric" value="4242 4242 4242 4242">
+      <div class="cardrow"><div style="flex:1"><label class="lbl" for="ck-exp">Expiry</label><input class="inp" id="ck-exp" value="12/28"></div><div style="flex:1"><label class="lbl" for="ck-cvc">CVC</label><input class="inp" id="ck-cvc" value="123"></div></div>
+      <button class="btn" style="width:100%" onclick="confirmBooking(${total})">Pay $${total}</button>
+      <div class="stripe">🔒 Demo only — no card is charged</div>`}`;
+  openModal();
 }
-function closeModal(){document.getElementById('modal').classList.remove('show');}
+function validEmail(){const v=(document.getElementById('ck-email')||{}).value||'';return /.+@.+\..+/.test(v.trim());}
 function confirmBooking(total){
-  const code=Math.floor(1000+Math.random()*9000);
-  const ref='KB-'+Math.random().toString(36).slice(2,7).toUpperCase();
-  const when=selSpace.unit==='day'?day+' · all day':(selSlots.length?fmtH(selSlots[0])+'–'+fmtH(selSlots[selSlots.length-1]+1)+' · '+day:day);
-  document.getElementById('modalcontent').innerHTML=`
-    <div class="check">✓</div>
-    <h3 style="text-align:center">You're booked</h3>
-    <p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
-    <div class="codebox"><div style="font-size:12px;color:var(--muted)">Smart-lock door code</div><div class="c">${code}</div></div>
-    <div class="lineitem"><span>Booking ref</span><span>${ref}</span></div>
-    <div class="lineitem"><span>Paid</span><span>$${total}</span></div>
-    <div class="lineitem"><span>Location</span><span>${cur().city}</span></div>
-    <button class="btn" style="width:100%;margin-top:12px" onclick="addCal('${ref}','${when}')">Add to calendar</button>
-    <button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal();step=4;render()">Done</button>
-    <div class="stripe">A confirmation email + arrival instructions were “sent” (demo)</div>`;
+  if(!validEmail()){const i=document.getElementById('ck-email'),e=document.getElementById('ck-email-err');if(i){i.classList.add('err');i.focus();}if(e)e.style.display='block';return;}
+  const ref=(isReq()?'REQ-':'KB-')+Math.random().toString(36).slice(2,7).toUpperCase();
+  const qty=selSpace.unit==='day'?1:selSlots.length;
+  const when=selSpace.unit==='day'?day+' · all day':(qty?qty+' hour'+(qty>1?'s':'')+' · '+day:day);
+  if(isReq()){
+    const dep=Math.round(total*0.3*100)/100;
+    document.getElementById('modalcontent').innerHTML=`
+      <button class="x" aria-label="Close" onclick="closeModal()">✕</button>
+      <div class="check req">✓</div>
+      <h3 id="modalTitle" style="text-align:center">Request received</h3>
+      <p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
+      <div class="lineitem"><span>Request ref</span><span>${ref}</span></div>
+      <div class="lineitem"><span>Estimated total</span><span>$${total}</span></div>
+      <div class="lineitem"><span>Deposit on approval</span><span>$${dep.toFixed(2)}</span></div>
+      <p class="mut" style="margin-top:12px">The ${cur().name} team will confirm availability and send a deposit invoice, usually within a few hours. You approve the deposit to lock it in.</p>
+      <button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal();step=4;render()">Done</button>`;
+  }else{
+    const code=Math.floor(1000+Math.random()*9000);
+    document.getElementById('modalcontent').innerHTML=`
+      <button class="x" aria-label="Close" onclick="closeModal()">✕</button>
+      <div class="check">✓</div>
+      <h3 id="modalTitle" style="text-align:center">You're booked</h3>
+      <p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
+      <div class="codebox"><div style="font-size:12px;color:var(--muted)">Smart-lock door code</div><div class="c">${code}</div></div>
+      <div class="lineitem"><span>Booking ref</span><span>${ref}</span></div>
+      <div class="lineitem"><span>Paid</span><span>$${total}</span></div>
+      <div class="lineitem"><span>Location</span><span>${cur().city}</span></div>
+      <button class="btn" style="width:100%;margin-top:12px" onclick="addCal('${ref}','${when}')">Add to calendar</button>
+      <button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal();step=4;render()">Done</button>
+      <div class="stripe">A confirmation email + arrival instructions were “sent” (demo)</div>`;
+  }
+  document.getElementById('modalcontent').focus();
 }
 function addCal(ref,when){
   const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${selSpace.name} — ${cur().name}\nDESCRIPTION:Booking ${ref} (${when}). Demo booking.\nLOCATION:${cur().city}\nEND:VEVENT\nEND:VCALENDAR`;
@@ -297,9 +370,9 @@ function addCal(ref,when){
 const _rb=renderBook;
 renderBook=function(){
   if(step===4){
-    const o=cur();
-    document.getElementById('view').innerHTML=`<div class="hero"><h1>Thanks — see you soon 👋</h1><p>That's the full guest journey: choose → pick → pay → instant door code, all self-serve. The operator never touched email. Flip to the <b>Operator dashboard</b> tab to see what they see.</p></div>
-    <div class="panel" style="text-align:center"><p style="margin:0 0 12px">Want to run the flow again?</p><button class="btn" onclick="step=1;selType=null;selSpace=null;selSlots=[];render()">Start a new booking</button></div>`;
+    const reqMode=isReq();
+    document.getElementById('view').innerHTML=`<div class="hero"><h1>${reqMode?'Request sent — nice work 👋':'Thanks — see you soon 👋'}</h1><p>${reqMode?'That’s the venue journey: choose → pick → request → the operator approves and invoices a deposit. Different from the instant-book flow, same platform.':'That’s the full guest journey: choose → pick → pay → instant door code, all self-serve. The operator never touched email.'} Flip to the <b>Operator dashboard</b> tab to see what they see, or switch operators (top right) to compare instant vs request booking.</p></div>
+    <div class="panel" style="text-align:center"><p style="margin:0 0 12px">Run the flow again?</p><button class="btn" onclick="step=1;selType=null;selSpace=null;selSlots=[];render()">Start over</button></div>`;
     return;
   }
   _rb();
@@ -322,9 +395,9 @@ function renderOps(){
   </div>`;
   h+=`<div class="panel"><div class="sectitle" style="margin-top:0">Utilization by hour (all spaces)</div>
     <div class="bars">`+byHour.map((c,i)=>`<div class="bar" style="height:${Math.round(c/spacesN*100)}%"><b>${c}/${spacesN}</b><span>${fmtH(HOURS[i])}</span></div>`).join('')+`</div></div>`;
-  h+=`<div class="sectitle">Today's bookings</div><div class="panel"><table><thead><tr><th>Space</th><th>Time</th><th>Guest</th><th>Amount</th><th>Status</th></tr></thead><tbody>`;
+  h+=`<div class="sectitle">Today's ${isReq()?'requests & bookings':'bookings'}</div><div class="panel"><table><thead><tr><th>Space</th><th>Time</th><th>Guest</th><th>Amount</th><th>Status</th></tr></thead><tbody>`;
   const names=["A. Patel","Lena Ortiz","Mike Doyle","S. Kim","Jordan W.","Priya R.","Tom B."];let r=0;
-  o.spaces.forEach(s=>{(BOOKED[s.id]||[]).filter(x=>HOURS.includes(x)).forEach((x,j)=>{const amt=s.rate;h+=`<tr><td>${s.name}</td><td>${fmtH(x)}–${fmtH(x+1)}</td><td>${names[r%names.length]}</td><td>$${amt}</td><td><span class="tag ${j%4===0?'hold':'paid'}">${j%4===0?'Hold':'Paid'}</span></td></tr>`;r++;});});
+  o.spaces.forEach(s=>{(BOOKED[s.id]||[]).filter(x=>HOURS.includes(x)).forEach((x,j)=>{const amt=s.rate;const pending=isReq()&&j%3===0;h+=`<tr><td>${s.name}</td><td>${fmtH(x)}–${fmtH(x+1)}</td><td>${names[r%names.length]}</td><td>$${amt}</td><td><span class="tag ${pending?'hold':'paid'}">${pending?'Awaiting approval':'Paid'}</span></td></tr>`;r++;});});
   h+=`</tbody></table></div>`;
   document.getElementById('view').innerHTML=h;
 }
