@@ -6,34 +6,31 @@
 <meta name="robots" content="noindex">
 <title>On-Demand Space Booking — KBS Reference Demo</title>
 <style>
-  :root{
-    --accent:#0E7C7B; --accent-d:#0a5c5b; --ink:#15211f; --muted:#5d6b68;
-    --line:#e7ece9; --bg:#f6f8f7; --card:#ffffff; --good:#147a4a; --warn:#b4531f; --bad:#c0392b;
-    --radius:14px; --shadow:0 6px 22px rgba(20,40,38,.08);
-  }
+  :root{--accent:#0E7C7B;--accent-d:#0a5c5b;--ink:#15211f;--muted:#5d6b68;--line:#e7ece9;--bg:#f6f8f7;--card:#fff;--good:#147a4a;--warn:#b4531f;--bad:#c0392b;--radius:14px;--shadow:0 6px 22px rgba(20,40,38,.08)}
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
-  a{color:inherit}
   .wrap{max-width:1040px;margin:0 auto;padding:0 18px}
   :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
   .demo-flag{background:#15211f;color:#cfe9e7;font-size:12.5px;text-align:center;padding:7px 10px;letter-spacing:.02em}
   .demo-flag b{color:#fff}
   header.bar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
-  .bar-in{display:flex;align-items:center;gap:14px;height:64px;flex-wrap:wrap}
+  .bar-in{display:flex;align-items:center;gap:12px;height:64px;flex-wrap:wrap}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
   .logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800}
   .brand small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
   .spacer{flex:1}
   .navtabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:11px}
-  .navtabs button{border:0;background:transparent;padding:8px 14px;border-radius:8px;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer}
+  .navtabs button{border:0;background:transparent;padding:8px 13px;border-radius:8px;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer}
   .navtabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .userbtn{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:13px;padding:8px 12px;border-radius:9px;cursor:pointer}
+  .memberbadge{font-size:11.5px;font-weight:700;color:#fff;background:var(--accent);padding:4px 9px;border-radius:20px}
   .wl{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
   .wl select{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
-  .hero{padding:30px 0 8px}
+  .hero{padding:28px 0 6px}
   .hero h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
-  .hero p{margin:0;color:var(--muted);max-width:620px}
+  .hero p{margin:0;color:var(--muted);max-width:640px}
   .modebadge{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:#eef5f4;color:var(--accent-d);border:1px solid var(--line)}
-  .steps{display:flex;gap:8px;margin:16px 0 22px;flex-wrap:wrap}
+  .steps{display:flex;gap:8px;margin:16px 0 20px;flex-wrap:wrap}
   .pill{font-size:12px;font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--line);padding:6px 11px;border-radius:30px}
   .pill.on{color:#fff;background:var(--accent);border-color:var(--accent)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
@@ -50,16 +47,21 @@
   .chip{font-size:11.5px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:3px 9px;color:var(--muted)}
   .price{font-weight:800;font-size:18px}
   .price small{font-weight:600;color:var(--muted);font-size:12px}
+  .price s{color:var(--muted);font-weight:600;font-size:13px;margin-right:5px}
   .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .btn{border:0;background:var(--accent);color:#fff;font-weight:700;font-size:14px;padding:11px 16px;border-radius:10px;cursor:pointer}
   .btn:hover{background:var(--accent-d)}
   .btn.ghost{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
   .btn.sm{padding:8px 12px;font-size:13px;display:inline-block}
+  .btn.tiny{padding:6px 10px;font-size:12.5px}
+  .btn.danger{background:#fff;color:var(--bad);border:1.5px solid var(--bad)}
   .btn:disabled{opacity:.45;cursor:not-allowed}
-  .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:18px;box-shadow:var(--shadow)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:18px;box-shadow:var(--shadow)}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
-  .field select,.field input{font:inherit;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;min-width:130px}
+  .field select,.field input{font:inherit;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;min-width:120px}
+  .amchip{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 10px;cursor:pointer;color:var(--muted);font-weight:600}
+  .amchip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   .back{background:none;border:0;color:var(--muted);font-weight:600;cursor:pointer;font-size:13px;padding:4px 0;margin-bottom:8px}
   .empty{background:#fff;border:1px dashed var(--line);border-radius:var(--radius);padding:30px;text-align:center;color:var(--muted)}
   .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px;margin:6px 0 4px}
@@ -68,14 +70,20 @@
   .slot[disabled]{background:#f1f1f1;color:#9a9a9a;cursor:not-allowed;text-decoration:line-through}
   .legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:10px 0 0;flex-wrap:wrap}
   .dot{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+  .note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
   .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
   .twocol{display:grid;grid-template-columns:1.4fr .9fr;gap:18px}
   .summary{position:sticky;top:84px}
+  .addons{margin:6px 0 0}
+  .addon{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+  .addon input{width:18px;height:18px}
+  .addon .ap{margin-left:auto;color:var(--muted);font-weight:600}
   .lineitem{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;color:var(--muted)}
+  .lineitem.dim{font-size:13px}
   .total{display:flex;justify-content:space-between;font-weight:800;font-size:18px;border-top:1px solid var(--line);margin-top:8px;padding-top:10px}
   .modal-bg{position:fixed;inset:0;background:rgba(15,33,31,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
   .modal-bg.show{display:flex}
-  .modal{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative}
+  .modal{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;max-height:92vh;overflow:auto}
   .modal h3{margin:0 0 4px}
   .modal .mut{color:var(--muted);font-size:13.5px;margin:0 0 14px}
   .x{position:absolute;top:12px;right:12px;border:0;background:var(--bg);width:32px;height:32px;border-radius:8px;font-size:18px;cursor:pointer;color:var(--muted)}
@@ -105,6 +113,9 @@
   .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
   .tag.paid{background:#e6f4ec;color:var(--good)} .tag.hold{background:#fdeee2;color:var(--warn)}
   .sectitle{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:22px 0 10px}
+  .qcard{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;flex-wrap:wrap}
+  .qcard .qmain{flex:1;min-width:180px}
+  .qcard .qa{display:flex;gap:8px}
   .fab{position:fixed;right:20px;bottom:20px;z-index:40;background:var(--accent);color:#fff;border:0;border-radius:30px;padding:13px 18px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(14,124,123,.4)}
   .chat{position:fixed;right:20px;bottom:78px;width:330px;max-width:calc(100vw - 40px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.22);z-index:41;display:none;overflow:hidden}
   .chat.show{display:block}
@@ -118,315 +129,255 @@
   .sugg{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 12px}
   .sugg button{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 10px;cursor:pointer;color:var(--accent);font-weight:600}
   .foot{color:var(--muted);font-size:12px;text-align:center;padding:26px 0 40px}
-  @media(max-width:760px){.twocol{grid-template-columns:1fr}.hero h1{font-size:24px}.navtabs button{padding:8px 10px}}
+  @media(max-width:760px){.twocol{grid-template-columns:1fr}.hero h1{font-size:24px}.navtabs button{padding:8px 9px}}
   @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 </style>
 </head>
 <body>
 <div class="demo-flag">Reference demo · <b>real local operators shown as illustrative examples</b> · sample availability & pricing, no real payments · these businesses are not customers of or affiliated with Kingbird Solutions</div>
-
 <header class="bar"><div class="wrap bar-in">
   <div class="brand"><span class="logo" id="logo">P</span><span><span id="bname">Perimeter83</span><small id="btag">Tempe, AZ · Powered by Kingbird</small></span></div>
   <div class="spacer"></div>
   <div class="navtabs" role="tablist" aria-label="View">
     <button id="tab-book" class="on" role="tab" aria-selected="true" onclick="setTab('book')">Book a space</button>
+    <button id="tab-mine" role="tab" aria-selected="false" onclick="setTab('mine')">My bookings</button>
     <button id="tab-ops" role="tab" aria-selected="false" onclick="setTab('ops')">Operator dashboard</button>
   </div>
+  <span id="userarea"></span>
   <div class="wl" title="White-label: same platform, each operator's own brand">
     <label for="citysel">City:</label>
-    <select id="citysel" onchange="switchCity(this.value)">
-      <option value="phx">Phoenix metro</option>
-      <option value="oc">Orange County, CA</option>
-    </select>
+    <select id="citysel" onchange="switchCity(this.value)"><option value="phx">Phoenix metro</option><option value="oc">Orange County, CA</option></select>
     <label for="opsel">Operator:</label>
     <select id="opsel" onchange="switchOp(+this.value)"></select>
   </div>
 </div></header>
-
 <main class="wrap" id="view"></main>
-
 <button class="fab" onclick="toggleChat()" aria-label="Open booking assistant">💬 Booking assistant</button>
 <div class="chat" id="chat" role="dialog" aria-label="AI booking concierge">
   <div class="top">AI Booking Concierge</div>
-  <div class="body" id="chatbody">
-    <div class="msg ai"><span class="b">Hi! Tell me what you need and I'll find a space. Try one of these:</span></div>
-  </div>
+  <div class="body" id="chatbody"><div class="msg ai"><span class="b">Hi! Tell me what you need and I'll find a space. Try one of these:</span></div></div>
   <div class="sugg" id="sugg"></div>
 </div>
-
-<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modalcontent" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1"></div>
-</div>
-
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal" id="modalcontent" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1"></div></div>
 <div class="foot">On-Demand Space Booking — Kingbird Solutions reference demo. Stack: Next.js · Supabase · Stripe Connect · smart-lock APIs. Sample data only.</div>
-
 <script>
+const ADDONS={cater:{label:"Catering package",price:18,per:"guest"},av:{label:"A/V technician",price:75,per:"flat"},park:{label:"Reserved parking (10)",price:40,per:"flat"},clean:{label:"Deep clean",price:60,per:"flat"},photo:{label:"On-site photographer",price:120,per:"flat"}};
+function mkAddons(ids){return ids.map(id=>({id,...ADDONS[id]}));}
 const CITIES={
-  phx:{label:"Phoenix metro", ops:[
-    { name:"Perimeter83", city:"Tempe, AZ", letter:"P", accent:"#0E7C7B", accentD:"#0a5c5b", tz:"MST", mode:"instant",
-      types:[{id:"day",icon:"🪑",label:"Day Pass",sub:"A seat in the lounge, all day"},{id:"meet",icon:"📽️",label:"Meeting Room",sub:"By the hour, A/V ready"},{id:"office",icon:"🚪",label:"Hourly Office",sub:"Private focus, by the hour"}],
-      spaces:[
-        {id:1,type:"day",name:"Lounge Day Pass",cap:1,rate:25,unit:"day",amen:["Wi-Fi","Coffee","Free parking"]},
-        {id:2,type:"meet",name:"Tempe Conference Room",cap:8,rate:40,unit:"hr",amen:["4K display","Whiteboard","Wi-Fi"]},
-        {id:3,type:"meet",name:"Mill Ave Boardroom",cap:12,rate:55,unit:"hr",amen:["Video conf","Whiteboard","Parking"]},
-        {id:4,type:"office",name:"Focus Office",cap:2,rate:20,unit:"hr",amen:["Door lock","Standing desk","Wi-Fi"]}
-      ]},
-    { name:"The Mission", city:"Old Town Scottsdale, AZ", letter:"M", accent:"#B4531F", accentD:"#8c3f17", tz:"MST", mode:"request",
-      types:[{id:"room",icon:"🍽️",label:"Private Room",sub:"Plated dining & meetings"},{id:"patio",icon:"🌿",label:"Patio",sub:"Open-air events"},{id:"buyout",icon:"✨",label:"Full Buyout",sub:"The whole venue"}],
-      spaces:[
-        {id:5,type:"room",name:"Agave Private Room",cap:40,rate:150,unit:"hr",amen:["Catering","A/V","Sommelier","Parking"]},
-        {id:6,type:"patio",name:"Courtyard Patio",cap:60,rate:200,unit:"hr",amen:["Outdoor","Full bar","Heaters"]},
-        {id:7,type:"buyout",name:"Full Venue Buyout",cap:120,rate:400,unit:"hr",amen:["Whole venue","Dedicated staff","A/V"]}
-      ]}
-  ]},
-  oc:{label:"Orange County, CA", ops:[
-    { name:"FLDWRK", city:"Costa Mesa, CA", letter:"F", accent:"#3a4cb8", accentD:"#2c3a8f", tz:"PST", mode:"instant",
-      types:[{id:"day",icon:"🪑",label:"Day Pass",sub:"A hot desk for the day"},{id:"meet",icon:"📽️",label:"Meeting Room",sub:"By the hour, A/V ready"},{id:"office",icon:"🚪",label:"Hourly Office",sub:"Private focus, by the hour"}],
-      spaces:[
-        {id:8,type:"day",name:"Hot Desk Day Pass",cap:1,rate:35,unit:"day",amen:["Wi-Fi","Coffee bar","Community"]},
-        {id:9,type:"meet",name:"Conference Room",cap:10,rate:70,unit:"hr",amen:["Display","Whiteboard","Wi-Fi"]},
-        {id:10,type:"meet",name:"Huddle Room",cap:4,rate:45,unit:"hr",amen:["Display","Wi-Fi"]},
-        {id:11,type:"office",name:"Private Day Office",cap:3,rate:30,unit:"hr",amen:["Door lock","Monitor","Wi-Fi"]}
-      ]},
-    { name:"Zov's", city:"Tustin, CA", letter:"Z", accent:"#7d2e46", accentD:"#5e2034", tz:"PST", mode:"request",
-      types:[{id:"room",icon:"🍽️",label:"Private Room",sub:"Plated dining"},{id:"garden",icon:"🌿",label:"Garden",sub:"Outdoor events"},{id:"buyout",icon:"✨",label:"Full Buyout",sub:"The whole restaurant"}],
-      spaces:[
-        {id:12,type:"room",name:"Garden Room",cap:14,rate:120,unit:"hr",amen:["Catering","A/V","Plated menu"]},
-        {id:13,type:"room",name:"Banquet Room",cap:50,rate:180,unit:"hr",amen:["Catering","Stage","A/V"]},
-        {id:14,type:"garden",name:"Courtyard",cap:40,rate:150,unit:"hr",amen:["Outdoor","Bar","Heaters"]},
-        {id:15,type:"buyout",name:"Full Buyout",cap:80,rate:350,unit:"hr",amen:["Whole venue","Staffing","A/V"]}
-      ]}
-  ]}
+ phx:{label:"Phoenix metro",ops:[
+  {name:"Perimeter83",city:"Tempe, AZ",letter:"P",accent:"#0E7C7B",accentD:"#0a5c5b",tz:"MST",mode:"instant",min:1,
+   types:[{id:"day",icon:"🪑",label:"Day Pass",sub:"A seat in the lounge, all day"},{id:"meet",icon:"📽️",label:"Meeting Room",sub:"By the hour, A/V ready"},{id:"office",icon:"🚪",label:"Hourly Office",sub:"Private focus, by the hour"}],
+   spaces:[{id:1,type:"day",name:"Lounge Day Pass",cap:1,rate:25,unit:"day",amen:["Wi-Fi","Coffee","Free parking"],addons:[]},
+    {id:2,type:"meet",name:"Tempe Conference Room",cap:8,rate:40,unit:"hr",amen:["4K display","Whiteboard","Wi-Fi"],addons:mkAddons(["av","cater","park"])},
+    {id:3,type:"meet",name:"Mill Ave Boardroom",cap:12,rate:55,unit:"hr",amen:["Video conf","Whiteboard","Parking"],addons:mkAddons(["av","cater"])},
+    {id:4,type:"office",name:"Focus Office",cap:2,rate:20,unit:"hr",amen:["Door lock","Standing desk","Wi-Fi"],addons:[]}]},
+  {name:"The Mission",city:"Old Town Scottsdale, AZ",letter:"M",accent:"#B4531F",accentD:"#8c3f17",tz:"MST",mode:"request",min:2,
+   types:[{id:"room",icon:"🍽️",label:"Private Room",sub:"Plated dining & meetings"},{id:"patio",icon:"🌿",label:"Patio",sub:"Open-air events"},{id:"buyout",icon:"✨",label:"Full Buyout",sub:"The whole venue"}],
+   spaces:[{id:5,type:"room",name:"Agave Private Room",cap:40,rate:150,unit:"hr",amen:["Catering","A/V","Sommelier"],addons:mkAddons(["cater","av","park"])},
+    {id:6,type:"patio",name:"Courtyard Patio",cap:60,rate:200,unit:"hr",amen:["Outdoor","Full bar","Heaters"],addons:mkAddons(["cater","av","park","photo"])},
+    {id:7,type:"buyout",name:"Full Venue Buyout",cap:120,rate:400,unit:"hr",amen:["Whole venue","Staff","A/V"],addons:mkAddons(["cater","av","park","photo"])}]},
+  {name:"Blok Photo Studio",city:"Phoenix, AZ",letter:"B",accent:"#444",accentD:"#222",tz:"MST",mode:"instant",min:1,
+   types:[{id:"studio",icon:"📸",label:"Photo Studio",sub:"Natural-light studios, hourly"},{id:"pod",icon:"🎙️",label:"Content Pod",sub:"Video & podcast, hourly"}],
+   spaces:[{id:16,type:"studio",name:"Studio A (Daylight)",cap:8,rate:75,unit:"hr",amen:["Natural light","Cyclorama","Wi-Fi"],addons:mkAddons(["photo","park","clean"])},
+    {id:17,type:"studio",name:"Studio B (Blackout)",cap:6,rate:65,unit:"hr",amen:["Strobes","Backdrops","A/C"],addons:mkAddons(["photo","clean"])},
+    {id:18,type:"pod",name:"Content Pod",cap:3,rate:55,unit:"hr",amen:["4K cams","Lav mics","Lighting"],addons:mkAddons(["photo"])}]}
+ ]},
+ oc:{label:"Orange County, CA",ops:[
+  {name:"FLDWRK",city:"Costa Mesa, CA",letter:"F",accent:"#3a4cb8",accentD:"#2c3a8f",tz:"PST",mode:"instant",min:1,
+   types:[{id:"day",icon:"🪑",label:"Day Pass",sub:"A hot desk for the day"},{id:"meet",icon:"📽️",label:"Meeting Room",sub:"By the hour, A/V ready"},{id:"office",icon:"🚪",label:"Hourly Office",sub:"Private focus, by the hour"}],
+   spaces:[{id:8,type:"day",name:"Hot Desk Day Pass",cap:1,rate:35,unit:"day",amen:["Wi-Fi","Coffee bar","Community"],addons:[]},
+    {id:9,type:"meet",name:"Conference Room",cap:10,rate:70,unit:"hr",amen:["Display","Whiteboard","Wi-Fi"],addons:mkAddons(["av","cater","park"])},
+    {id:10,type:"meet",name:"Huddle Room",cap:4,rate:45,unit:"hr",amen:["Display","Wi-Fi"],addons:mkAddons(["av"])},
+    {id:11,type:"office",name:"Private Day Office",cap:3,rate:30,unit:"hr",amen:["Door lock","Monitor","Wi-Fi"],addons:[]}]},
+  {name:"Zov's",city:"Tustin, CA",letter:"Z",accent:"#7d2e46",accentD:"#5e2034",tz:"PST",mode:"request",min:2,
+   types:[{id:"room",icon:"🍽️",label:"Private Room",sub:"Plated dining"},{id:"garden",icon:"🌿",label:"Garden",sub:"Outdoor events"},{id:"buyout",icon:"✨",label:"Full Buyout",sub:"The whole restaurant"}],
+   spaces:[{id:12,type:"room",name:"Garden Room",cap:14,rate:120,unit:"hr",amen:["Catering","A/V","Plated menu"],addons:mkAddons(["cater","av","park"])},
+    {id:13,type:"room",name:"Banquet Room",cap:50,rate:180,unit:"hr",amen:["Catering","Stage","A/V"],addons:mkAddons(["cater","av","park","photo"])},
+    {id:14,type:"garden",name:"Courtyard",cap:40,rate:150,unit:"hr",amen:["Outdoor","Bar","Heaters"],addons:mkAddons(["cater","av","photo"])},
+    {id:15,type:"buyout",name:"Full Buyout",cap:80,rate:350,unit:"hr",amen:["Whole venue","Staff","A/V"],addons:mkAddons(["cater","av","park","photo"])}]},
+  {name:"The Space OC",city:"Santa Ana, CA",letter:"S",accent:"#1d8a74",accentD:"#13634f",tz:"PST",mode:"instant",min:2,
+   types:[{id:"studio",icon:"📸",label:"Photo Studio",sub:"Loft & daylight suites, hourly"}],
+   spaces:[{id:19,type:"studio",name:"The Loft",cap:15,rate:90,unit:"hr",amen:["Natural light","Props","Kitchen"],addons:mkAddons(["photo","park","clean"])},
+    {id:20,type:"studio",name:"Daylight Suite",cap:10,rate:75,unit:"hr",amen:["Big windows","Backdrops","Wi-Fi"],addons:mkAddons(["photo","clean"])}]}
+ ]}
 };
 const HOURS=[8,9,10,11,12,13,14,15,16,17];
-const BOOKED={1:[],2:[9,10,14],3:[11,12],4:[8,15,16],5:[12,13],6:[16,17],7:[],8:[],9:[10,11,15],10:[13],11:[9,14],12:[12],13:[10],14:[16,17],15:[]};
+const BOOKED={1:[],2:[9,10,14],3:[11,12],4:[8,15,16],5:[12,13],6:[16,17],7:[],8:[],9:[10,11,15],10:[13],11:[9,14],12:[12],13:[10],14:[16,17],15:[],16:[9,10],17:[14],18:[],19:[11,12],20:[15]};
 const fmtH=h=>{const ap=h<12?"am":"pm";let hh=h%12;if(hh===0)hh=12;return hh+ap;};
 
-let cityKey="phx", opIdx=0, tab="book";
-let step=1, selType=null, selSpace=null, selSlots=[], partySize=2, day="Today", lastFocus=null;
+let cityKey="phx",opIdx=0,tab="book";
+let step=1,selType=null,selSpace=null,selSlots=[],partySize=2,day="Today",sortBy="rec",amen=null,picked=[],lastFocus=null;
+let member=null;
+let myBookings=[];
+let approvals={};
 
 function cur(){return CITIES[cityKey].ops[opIdx];}
 function isReq(){return cur().mode==='request';}
+function rateOf(s){return member?Math.round(s.rate*0.9):s.rate;}
 function applyTheme(){const o=cur();document.documentElement.style.setProperty('--accent',o.accent);document.documentElement.style.setProperty('--accent-d',o.accentD);
-  document.getElementById('logo').textContent=o.letter;document.getElementById('bname').textContent=o.name;document.getElementById('btag').textContent=o.city+' · Powered by Kingbird';}
-function resetSel(){step=1;selType=null;selSpace=null;selSlots=[];}
-function renderOpSelect(){document.getElementById('opsel').innerHTML=CITIES[cityKey].ops.map((o,i)=>`<option value="${i}" ${i===opIdx?'selected':''}>${o.name} (${o.mode==='request'?'venue':'coworking'})</option>`).join('');}
+  document.getElementById('logo').textContent=o.letter;document.getElementById('bname').textContent=o.name;document.getElementById('btag').textContent=o.city+' · Powered by Kingbird';renderUser();}
+function renderUser(){document.getElementById('userarea').innerHTML=member
+  ? `<span class="memberbadge" title="Member rate: 10% off">★ ${member.name.split(' ')[0]} · Member</span> <button class="userbtn" onclick="signOut()">Sign out</button>`
+  : `<button class="userbtn" onclick="openSignIn()">Sign in</button>`;}
+function resetSel(){step=1;selType=null;selSpace=null;selSlots=[];sortBy="rec";amen=null;picked=[];}
+function renderOpSelect(){document.getElementById('opsel').innerHTML=CITIES[cityKey].ops.map((o,i)=>`<option value="${i}" ${i===opIdx?'selected':''}>${o.name} (${o.mode==='request'?'venue':o.types[0].id==='studio'?'studio':'coworking'})</option>`).join('');}
 function switchCity(v){cityKey=v;opIdx=0;resetSel();renderOpSelect();applyTheme();render();renderSugg();}
 function switchOp(i){opIdx=i;resetSel();applyTheme();render();renderSugg();}
-function setTab(t){tab=t;
-  const b=document.getElementById('tab-book'),o=document.getElementById('tab-ops');
-  b.classList.toggle('on',t==='book');o.classList.toggle('on',t==='ops');
-  b.setAttribute('aria-selected',t==='book');o.setAttribute('aria-selected',t==='ops');render();}
-
-function render(){ tab==='book'?renderBook():renderOps(); }
+function setTab(t){tab=t;['book','mine','ops'].forEach(k=>{const el=document.getElementById('tab-'+k);el.classList.toggle('on',k===t);el.setAttribute('aria-selected',k===t);});render();}
+function render(){tab==='book'?renderBook():tab==='mine'?renderMine():renderOps();}
 
 function modeLine(){return isReq()
-  ? `Submit a request and the team confirms availability, then sends a deposit invoice — built for venues and event spaces. Branded as the operator.`
-  : `Real-time availability, instant payment, and a door code on confirmation — no calls, no email back-and-forth. Branded as the operator.`;}
+  ? `Submit a request and the team confirms availability, then sends a deposit invoice — built for venues and event spaces.`
+  : `Real-time availability, instant payment, and a door code on confirmation — no calls, no email back-and-forth.`;}
 
 function renderBook(){
   const o=cur();let h='';
-  h+=`<div class="hero"><h1>Book ${o.name}</h1><p>${modeLine()}</p>
-    <span class="modebadge">${isReq()?'Booking mode: Request to book + deposit':'Booking mode: Instant book'}</span>
-    <div class="steps">
-      <span class="pill ${step>=1?'on':''}">1 · Choose</span>
-      <span class="pill ${step>=2?'on':''}">2 · Pick a space</span>
-      <span class="pill ${step>=3?'on':''}">3 · ${isReq()?'Time & request':'Time & pay'}</span>
-      <span class="pill ${step>=4?'on':''}">4 · ${isReq()?'Requested':'Confirmed'}</span>
-    </div></div>`;
-
+  h+=`<div class="hero"><h1>Book ${o.name}</h1><p>${modeLine()} Branded as the operator${member?', with your member rate applied':''}.</p>
+    <span class="modebadge">${isReq()?'Booking mode: Request to book + deposit':'Booking mode: Instant book'}${o.min>1?' · '+o.min+'-hour minimum':''}</span>
+    <div class="steps"><span class="pill ${step>=1?'on':''}">1 · Choose</span><span class="pill ${step>=2?'on':''}">2 · Pick a space</span><span class="pill ${step>=3?'on':''}">3 · ${isReq()?'Time & request':'Time & pay'}</span><span class="pill ${step>=4?'on':''}">4 · ${isReq()?'Requested':'Confirmed'}</span></div></div>`;
   if(step===1){
-    h+=`<div class="grid">`+o.types.map(t=>`
-      <button type="button" class="card click" onclick="pickType('${t.id}')" aria-label="${t.label}: ${t.sub}">
-        <div class="ph" aria-hidden="true">${t.icon}<span class="cap">${o.city}</span></div>
-        <div class="cbody"><h3>${t.label}</h3><div class="sub">${t.sub}</div>
-        <div class="row"><span class="chip">${o.spaces.filter(s=>s.type===t.id).length} space(s)</span><span class="btn sm">Browse →</span></div></div>
-      </button>`).join('')+`</div>`;
+    h+=`<div class="grid">`+o.types.map(t=>`<button type="button" class="card click" onclick="pickType('${t.id}')" aria-label="${t.label}: ${t.sub}">
+      <div class="ph" aria-hidden="true">${t.icon}<span class="cap">${o.city}</span></div>
+      <div class="cbody"><h3>${t.label}</h3><div class="sub">${t.sub}</div><div class="row"><span class="chip">${o.spaces.filter(s=>s.type===t.id).length} space(s)</span><span class="btn sm">Browse →</span></div></div></button>`).join('')+`</div>`;
   }
-
   if(step===2){
-    const list=o.spaces.filter(s=>s.type===selType);
-    const fitList=list.filter(s=>s.cap>=partySize);
+    let list=o.spaces.filter(s=>s.type===selType);
+    const allAmen=[...new Set(list.flatMap(s=>s.amen))];
+    let view=list.filter(s=>s.cap>=partySize).filter(s=>!amen||s.amen.includes(amen));
+    if(sortBy==='lo')view=[...view].sort((a,b)=>a.rate-b.rate);
+    if(sortBy==='hi')view=[...view].sort((a,b)=>b.rate-a.rate);
     h+=`<button class="back" onclick="step=1;render()">← Back to space types</button>`;
-    h+=`<div class="filters">
+    h+=`<div class="toolbar">
       <div class="field"><label for="f-date">Date</label><select id="f-date" onchange="day=this.value"><option ${day==='Today'?'selected':''}>Today</option><option ${day==='Tomorrow'?'selected':''}>Tomorrow</option><option>Thu, Jun 18</option></select></div>
-      <div class="field"><label for="f-ppl">People</label><select id="f-ppl" onchange="partySize=+this.value;render()">${[1,2,4,6,12,20,40].map(n=>`<option ${n===partySize?'selected':''}>${n}</option>`).join('')}</select></div>
-      <div class="field"><span class="chip">Times shown in ${o.tz}</span></div>
+      <div class="field"><label for="f-ppl">People</label><select id="f-ppl" onchange="partySize=+this.value;render()">${[1,2,4,6,8,12,20,40].map(n=>`<option ${n===partySize?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="field"><label for="f-sort">Sort</label><select id="f-sort" onchange="sortBy=this.value;render()"><option value="rec" ${sortBy==='rec'?'selected':''}>Recommended</option><option value="lo" ${sortBy==='lo'?'selected':''}>Price: low to high</option><option value="hi" ${sortBy==='hi'?'selected':''}>Price: high to low</option></select></div>
+      <div class="field" style="flex:1"><label>Amenities</label><div class="chips">${allAmen.map(a=>`<button class="amchip ${amen===a?'on':''}" onclick="amen=amen==='${a}'?null:'${a}';render()">${a}</button>`).join('')}</div></div>
+      <div class="field"><span class="chip">Times in ${o.tz}</span></div>
     </div>`;
-    if(fitList.length===0){
-      h+=`<div class="empty"><b>No ${o.types.find(t=>t.id===selType).label.toLowerCase()} fits ${partySize} people right now.</b><br>Try a smaller party size or another space type.</div>`;
-    }else{
-      h+=`<div class="grid">`+list.map(s=>{
-        const free=HOURS.filter(x=>!(BOOKED[s.id]||[]).includes(x)).length;
-        const fits=s.cap>=partySize;
-        const soldout=free===0;
-        return `<button type="button" class="card click" ${(!fits||soldout)?'disabled':''} onclick="pickSpace(${s.id})" aria-label="${s.name}, seats ${s.cap}, $${s.rate} per ${s.unit}">
-          <div class="ph" aria-hidden="true">${o.types.find(t=>t.id===s.type).icon}<span class="cap">Seats ${s.cap}</span></div>
-          <div class="cbody"><h3>${s.name}</h3><div class="sub">${soldout?'Fully booked today':free+' of '+HOURS.length+' hours open today'}</div>
-          <div class="chips">${s.amen.map(a=>`<span class="chip">${a}</span>`).join('')}</div>
-          <div class="row"><span class="price">$${s.rate}<small>/${s.unit}</small></span><span class="btn sm">${soldout?'Sold out':(fits?'Select →':'Too small')}</span></div></div>
-        </button>`;}).join('')+`</div>`;
-    }
+    if(view.length===0){h+=`<div class="empty"><b>No ${o.types.find(t=>t.id===selType).label.toLowerCase()} matches those filters.</b><br>Try a smaller party size, clear amenity filters, or another space type.</div>`;}
+    else{h+=`<div class="grid">`+view.map(s=>{const free=HOURS.filter(x=>!(BOOKED[s.id]||[]).includes(x)).length;const soldout=free===0;const r=rateOf(s);
+      return `<button type="button" class="card click" ${soldout?'disabled':''} onclick="pickSpace(${s.id})" aria-label="${s.name}, seats ${s.cap}, $${r} per ${s.unit}">
+        <div class="ph" aria-hidden="true">${o.types.find(t=>t.id===s.type).icon}<span class="cap">Seats ${s.cap}</span></div>
+        <div class="cbody"><h3>${s.name}</h3><div class="sub">${soldout?'Fully booked today':free+' of '+HOURS.length+' hours open today'}</div>
+        <div class="chips">${s.amen.map(a=>`<span class="chip">${a}</span>`).join('')}</div>
+        <div class="row"><span class="price">${member?'<s>$'+s.rate+'</s>':''}$${r}<small>/${s.unit}</small></span><span class="btn sm">${soldout?'Sold out':'Select →'}</span></div></div></button>`;}).join('')+`</div>`;}
   }
-
-  if(step===3){
-    const s=selSpace;
-    h+=`<button class="back" onclick="step=2;selSlots=[];render()">← Back to spaces</button>`;
-    h+=`<div class="twocol"><div class="panel">
-      <h3 style="margin:0 0 2px">${s.name}</h3><div class="sub" style="color:var(--muted);margin-bottom:14px">${cur().city} · seats ${s.cap} · $${s.rate}/${s.unit} · times in ${cur().tz}</div>`;
-    if(s.unit==='day'){
-      h+=`<p>Day pass for <b>${day}</b> — full-day access during open hours.</p>`;
-    }else{
-      h+=`<div class="sectitle" style="margin-top:0">Pick your hours · ${day}</div><div class="slots" role="group" aria-label="Available hours">`+
-        HOURS.map(x=>{const bk=(BOOKED[s.id]||[]).includes(x);const sel=selSlots.includes(x);
-          return `<button type="button" class="slot ${sel?'sel':''}" ${bk?'disabled':''} aria-pressed="${sel}" onclick="toggleSlot(${x})">${fmtH(x)}</button>`;}).join('')+`</div>
-        <div class="legend"><span><span class="dot" style="background:var(--accent)"></span>Selected</span><span><span class="dot" style="background:#fff;border:1px solid var(--line)"></span>Available</span><span><span class="dot" style="background:#f1f1f1"></span>Booked</span></div>`;
-    }
-    const qty=s.unit==='day'?1:selSlots.length;
-    const sub=s.rate*qty, fee=Math.round(sub*0.05*100)/100, tot=sub+fee;
-    const dep=Math.round(tot*0.3*100)/100;
-    const hoursLabel=s.unit==='day'?day:(qty?qty+' hour'+(qty>1?'s':'')+' · '+day:'Select hours');
+  if(step===3){const s=selSpace,o=cur();h+=`<button class="back" onclick="step=2;selSlots=[];picked=[];render()">← Back to spaces</button>`;
+    h+=`<div class="twocol"><div class="panel"><h3 style="margin:0 0 2px">${s.name}</h3><div class="sub" style="color:var(--muted);margin-bottom:14px">${o.city} · seats ${s.cap} · $${rateOf(s)}/${s.unit} · times in ${o.tz}</div>`;
+    if(s.unit==='day'){h+=`<p>Day pass for <b>${day}</b> — full-day access during open hours.</p>`;}
+    else{h+=`<div class="sectitle" style="margin-top:0">Pick your hours · ${day}</div><div class="slots" role="group" aria-label="Available hours">`+
+      HOURS.map(x=>{const bk=(BOOKED[s.id]||[]).includes(x);const sel=selSlots.includes(x);return `<button type="button" class="slot ${sel?'sel':''}" ${bk?'disabled':''} aria-pressed="${sel}" onclick="toggleSlot(${x})">${fmtH(x)}</button>`;}).join('')+`</div>
+      <div class="legend"><span><span class="dot" style="background:var(--accent)"></span>Selected</span><span><span class="dot" style="background:#fff;border:1px solid var(--line)"></span>Available</span><span><span class="dot" style="background:#f1f1f1"></span>Booked</span></div>
+      <div class="note" id="hint">${o.min>1?o.min+'-hour minimum. ':''}Consecutive hours only. A 30-min turnover buffer is auto-added after your booking.</div>`;}
+    if(s.addons&&s.addons.length){h+=`<div class="sectitle">Add-ons</div><div class="addons">`+s.addons.map(a=>`<label class="addon"><input type="checkbox" ${picked.includes(a.id)?'checked':''} onchange="toggleAddon('${a.id}')"> ${a.label} <span class="ap">+$${a.price}${a.per==='guest'?'/guest':''}</span></label>`).join('')+`</div>`;}
+    const calc=quote();
     h+=`</div><div class="panel summary"><h3 style="margin:0 0 10px">Your ${isReq()?'request':'booking'}</h3>
-      <div class="lineitem"><span>${s.name}</span><span>$${s.rate}/${s.unit}</span></div>
-      <div class="lineitem"><span>${hoursLabel}</span><span>${qty?'$'+sub.toFixed(2):'—'}</span></div>
-      <div class="lineitem"><span>Service fee</span><span>${qty?'$'+fee.toFixed(2):'—'}</span></div>
-      <div class="total"><span>${isReq()?'Estimated total':'Total'}</span><span>${qty?'$'+tot.toFixed(2):'$0.00'}</span></div>`;
-    if(isReq()) h+=`<div class="lineitem" style="margin-top:6px"><span>Deposit on approval (30%)</span><span>${qty?'$'+dep.toFixed(2):'—'}</span></div>`;
-    h+=`<button class="btn" style="width:100%;margin-top:14px" ${qty?'':'disabled'} onclick="openCheckout(${tot.toFixed(2)})">${isReq()?'Request to book':'Book & pay'}</button>
-      <div class="stripe">${isReq()?'No charge now — you approve the deposit after the venue confirms':'🔒 Secure checkout · powered by Stripe (demo)'}</div>
-    </div></div>`;
+      <div class="lineitem"><span>${s.name}</span><span>${calc.qty?'$'+calc.base.toFixed(2):'—'}</span></div>`;
+    calc.addLines.forEach(l=>h+=`<div class="lineitem dim"><span>+ ${l.label}</span><span>$${l.amt.toFixed(2)}</span></div>`);
+    if(member)h+=`<div class="lineitem dim"><span>Member rate</span><span>−10%</span></div>`;
+    h+=`<div class="lineitem dim"><span>Service fee</span><span>${calc.qty?'$'+calc.fee.toFixed(2):'—'}</span></div>
+      <div class="total"><span>${isReq()?'Estimated total':'Total'}</span><span>${calc.qty?'$'+calc.total.toFixed(2):'$0.00'}</span></div>`;
+    if(isReq())h+=`<div class="lineitem" style="margin-top:6px"><span>Deposit on approval (30%)</span><span>${calc.qty?'$'+(calc.total*0.3).toFixed(2):'—'}</span></div>`;
+    h+=`<button class="btn" style="width:100%;margin-top:14px" ${calc.ok?'':'disabled'} onclick="openCheckout(${calc.total.toFixed(2)})">${isReq()?'Request to book':'Book & pay'}</button>
+      <div class="note" id="warn"></div>
+      <div class="stripe">${isReq()?'No charge now — you approve the deposit after the venue confirms':'🔒 Secure checkout · Stripe (demo) · free cancellation up to 24h'}</div></div></div>`;
   }
   document.getElementById('view').innerHTML=h;
+  if(step===3){const w=warnMsg();if(w&&document.getElementById('warn'))document.getElementById('warn').textContent=w;}
 }
-
-function pickType(t){selType=t;step=2;render();}
-function pickSpace(id){selSpace=cur().spaces.find(s=>s.id===id);selSlots=[];step=3;render();}
+function contiguous(){if(selSlots.length<2)return true;for(let i=1;i<selSlots.length;i++)if(selSlots[i]!==selSlots[i-1]+1)return false;return true;}
+function warnMsg(){const o=cur();if(selSpace.unit==='day')return'';if(selSlots.length&&!contiguous())return'Please pick consecutive hours only.';if(selSlots.length&&selSlots.length<o.min)return o.min+'-hour minimum for this space.';return'';}
+function quote(){const s=selSpace,o=cur();const qty=s.unit==='day'?1:selSlots.length;let base=rateOf(s)*qty;let addLines=[];(s.addons||[]).forEach(a=>{if(picked.includes(a.id)){const amt=a.per==='guest'?a.price*partySize:a.price;addLines.push({label:a.label,amt});base+=amt;}});const fee=Math.round(base*0.05*100)/100;const total=base+fee;const ok=qty>0&&contiguous()&&(s.unit==='day'||selSlots.length>=o.min);return{qty,base,addLines,fee,total,ok};}
+function pickType(t){selType=t;step=2;amen=null;render();}
+function pickSpace(id){selSpace=cur().spaces.find(s=>s.id===id);selSlots=[];picked=[];step=3;render();}
 function toggleSlot(x){const i=selSlots.indexOf(x);if(i>=0)selSlots.splice(i,1);else selSlots.push(x);selSlots.sort((a,b)=>a-b);render();}
+function toggleAddon(id){const i=picked.indexOf(id);if(i>=0)picked.splice(i,1);else picked.push(id);render();}
 
-function openModal(){lastFocus=document.activeElement;const m=document.getElementById('modal');m.classList.add('show');
-  const first=m.querySelector('input,button,select,textarea');(first||document.getElementById('modalcontent')).focus();}
+function openModal(){lastFocus=document.activeElement;const m=document.getElementById('modal');m.classList.add('show');const f=m.querySelector('input,button,select,textarea');(f||document.getElementById('modalcontent')).focus();}
 function closeModal(){document.getElementById('modal').classList.remove('show');if(lastFocus&&lastFocus.focus)lastFocus.focus();}
-document.addEventListener('keydown',e=>{
-  const m=document.getElementById('modal');if(!m.classList.contains('show'))return;
-  if(e.key==='Escape'){closeModal();return;}
-  if(e.key==='Tab'){const f=m.querySelectorAll('input,button,select,textarea,[tabindex]');if(!f.length)return;
-    const first=f[0],last=f[f.length-1];
-    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
-    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
-});
+document.addEventListener('keydown',e=>{const m=document.getElementById('modal');if(!m.classList.contains('show'))return;if(e.key==='Escape'){closeModal();return;}if(e.key==='Tab'){const f=m.querySelectorAll('input,button,select,textarea,[tabindex]');if(!f.length)return;const first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 
-function openCheckout(total){
-  const reqMode=isReq();
-  document.getElementById('modalcontent').innerHTML=`
-    <button class="x" aria-label="Close" onclick="closeModal()">✕</button>
+function openSignIn(){document.getElementById('modalcontent').innerHTML=`<button class="x" aria-label="Close" onclick="closeModal()">✕</button>
+  <h3 id="modalTitle">Sign in</h3><p class="mut">Members get 10% off and faster checkout. (Demo — any details work.)</p>
+  <label class="lbl" for="si-name">Full name</label><input class="inp" id="si-name" value="Alex Rivera">
+  <label class="lbl" for="si-email">Email</label><input class="inp" id="si-email" type="email" value="alex@example.com">
+  <button class="btn" style="width:100%" onclick="doSignIn()">Sign in</button>`;openModal();}
+function doSignIn(){const n=(document.getElementById('si-name')||{}).value||'Member';const e=(document.getElementById('si-email')||{}).value||'';member={name:n,email:e};closeModal();applyTheme();render();renderSugg();}
+function signOut(){member=null;applyTheme();render();}
+
+function openCheckout(total){const reqMode=isReq(),m=member;
+  document.getElementById('modalcontent').innerHTML=`<button class="x" aria-label="Close" onclick="closeModal()">✕</button>
     <h3 id="modalTitle">${reqMode?'Request to book':'Checkout'}</h3><p class="mut">${selSpace.name} · ${cur().name}</p>
-    <label class="lbl" for="ck-name">Full name</label>
-    <input class="inp" id="ck-name" autocomplete="name">
-    <label class="lbl" for="ck-email">Email</label>
-    <input class="inp" id="ck-email" type="email" autocomplete="email" aria-describedby="ck-email-err">
+    <label class="lbl" for="ck-name">Full name</label><input class="inp" id="ck-name" autocomplete="name" value="${m?m.name:''}">
+    <label class="lbl" for="ck-email">Email</label><input class="inp" id="ck-email" type="email" autocomplete="email" value="${m?m.email:''}" aria-describedby="ck-email-err">
     <div class="errmsg" id="ck-email-err" style="display:none">Enter the email we'll send your ${reqMode?'request update':'booking'} to.</div>
-    ${reqMode?`
-      <label class="lbl" for="ck-head">Headcount</label>
-      <input class="inp" id="ck-head" type="number" min="1" value="${partySize}">
-      <label class="lbl" for="ck-note">What's the event? (optional)</label>
-      <input class="inp" id="ck-note" placeholder="e.g. team dinner, product launch">
+    ${reqMode?`<label class="lbl" for="ck-head">Headcount</label><input class="inp" id="ck-head" type="number" min="1" value="${partySize}">
+      <label class="lbl" for="ck-note">What's the event? (optional)</label><input class="inp" id="ck-note" placeholder="e.g. team dinner, product launch">
       <button class="btn" style="width:100%" onclick="confirmBooking(${total})">Send request</button>
       <div class="stripe">No card needed yet — the venue confirms availability first.</div>`
-    :`
-      <label class="lbl" for="ck-card">Card number</label>
-      <input class="inp" id="ck-card" inputmode="numeric" value="4242 4242 4242 4242">
+    :`<label class="lbl" for="ck-card">Card number</label><input class="inp" id="ck-card" inputmode="numeric" value="4242 4242 4242 4242">
       <div class="cardrow"><div style="flex:1"><label class="lbl" for="ck-exp">Expiry</label><input class="inp" id="ck-exp" value="12/28"></div><div style="flex:1"><label class="lbl" for="ck-cvc">CVC</label><input class="inp" id="ck-cvc" value="123"></div></div>
       <button class="btn" style="width:100%" onclick="confirmBooking(${total})">Pay $${total}</button>
-      <div class="stripe">🔒 Demo only — no card is charged</div>`}`;
-  openModal();
-}
+      <div class="stripe">🔒 Demo only — no card is charged · free cancellation up to 24h</div>`}`;
+  openModal();}
 function validEmail(){const v=(document.getElementById('ck-email')||{}).value||'';return /.+@.+\..+/.test(v.trim());}
+function whenLabel(){const qty=selSpace.unit==='day'?1:selSlots.length;return selSpace.unit==='day'?day+' · all day':(qty?qty+' hour'+(qty>1?'s':'')+' · '+day:day);}
 function confirmBooking(total){
   if(!validEmail()){const i=document.getElementById('ck-email'),e=document.getElementById('ck-email-err');if(i){i.classList.add('err');i.focus();}if(e)e.style.display='block';return;}
-  const ref=(isReq()?'REQ-':'KB-')+Math.random().toString(36).slice(2,7).toUpperCase();
-  const qty=selSpace.unit==='day'?1:selSlots.length;
-  const when=selSpace.unit==='day'?day+' · all day':(qty?qty+' hour'+(qty>1?'s':'')+' · '+day:day);
-  if(isReq()){
-    const dep=Math.round(total*0.3*100)/100;
-    document.getElementById('modalcontent').innerHTML=`
-      <button class="x" aria-label="Close" onclick="closeModal()">✕</button>
-      <div class="check req">✓</div>
-      <h3 id="modalTitle" style="text-align:center">Request received</h3>
-      <p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
-      <div class="lineitem"><span>Request ref</span><span>${ref}</span></div>
-      <div class="lineitem"><span>Estimated total</span><span>$${total}</span></div>
-      <div class="lineitem"><span>Deposit on approval</span><span>$${dep.toFixed(2)}</span></div>
-      <p class="mut" style="margin-top:12px">The ${cur().name} team will confirm availability and send a deposit invoice, usually within a few hours. You approve the deposit to lock it in.</p>
+  const ref=(isReq()?'REQ-':'KB-')+Math.random().toString(36).slice(2,7).toUpperCase();const when=whenLabel();
+  myBookings.unshift({ref,op:cur().name,city:cur().city,space:selSpace.name,when,total,status:isReq()?'Requested':'Confirmed',mode:cur().mode});
+  if(isReq()){const dep=(total*0.3).toFixed(2);
+    document.getElementById('modalcontent').innerHTML=`<button class="x" aria-label="Close" onclick="closeModal()">✕</button><div class="check req">✓</div>
+      <h3 id="modalTitle" style="text-align:center">Request received</h3><p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
+      <div class="lineitem"><span>Request ref</span><span>${ref}</span></div><div class="lineitem"><span>Estimated total</span><span>$${total}</span></div><div class="lineitem"><span>Deposit on approval</span><span>$${dep}</span></div>
+      <p class="mut" style="margin-top:12px">The ${cur().name} team will confirm availability and send a deposit invoice, usually within a few hours.</p>
       <button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal();step=4;render()">Done</button>`;
-  }else{
-    const code=Math.floor(1000+Math.random()*9000);
-    document.getElementById('modalcontent').innerHTML=`
-      <button class="x" aria-label="Close" onclick="closeModal()">✕</button>
-      <div class="check">✓</div>
-      <h3 id="modalTitle" style="text-align:center">You're booked</h3>
-      <p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
+  }else{const code=Math.floor(1000+Math.random()*9000);
+    document.getElementById('modalcontent').innerHTML=`<button class="x" aria-label="Close" onclick="closeModal()">✕</button><div class="check">✓</div>
+      <h3 id="modalTitle" style="text-align:center">You're booked</h3><p class="mut" style="text-align:center">${selSpace.name} · ${when}</p>
       <div class="codebox"><div style="font-size:12px;color:var(--muted)">Smart-lock door code</div><div class="c">${code}</div></div>
-      <div class="lineitem"><span>Booking ref</span><span>${ref}</span></div>
-      <div class="lineitem"><span>Paid</span><span>$${total}</span></div>
-      <div class="lineitem"><span>Location</span><span>${cur().city}</span></div>
+      <div class="lineitem"><span>Booking ref</span><span>${ref}</span></div><div class="lineitem"><span>Paid</span><span>$${total}</span></div><div class="lineitem"><span>Location</span><span>${cur().city}</span></div>
       <button class="btn" style="width:100%;margin-top:12px" onclick="addCal('${ref}','${when}')">Add to calendar</button>
       <button class="btn ghost" style="width:100%;margin-top:8px" onclick="closeModal();step=4;render()">Done</button>
-      <div class="stripe">A confirmation email + arrival instructions were “sent” (demo)</div>`;
-  }
-  document.getElementById('modalcontent').focus();
-}
-function addCal(ref,when){
-  const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${selSpace.name} — ${cur().name}\nDESCRIPTION:Booking ${ref} (${when}). Demo booking.\nLOCATION:${cur().city}\nEND:VEVENT\nEND:VCALENDAR`;
-  const a=document.createElement('a');a.href='data:text/calendar;charset=utf8,'+encodeURIComponent(ics);a.download='booking-'+ref+'.ics';a.click();
-}
+      <div class="stripe">A confirmation email + arrival instructions were “sent” (demo)</div>`;}
+  document.getElementById('modalcontent').focus();}
+function addCal(ref,when){const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${selSpace.name} — ${cur().name}\nDESCRIPTION:Booking ${ref} (${when}). Demo booking.\nLOCATION:${cur().city}\nEND:VEVENT\nEND:VCALENDAR`;const a=document.createElement('a');a.href='data:text/calendar;charset=utf8,'+encodeURIComponent(ics);a.download='booking-'+ref+'.ics';a.click();}
 
 const _rb=renderBook;
-renderBook=function(){
-  if(step===4){
-    const reqMode=isReq();
-    document.getElementById('view').innerHTML=`<div class="hero"><h1>${reqMode?'Request sent — nice work 👋':'Thanks — see you soon 👋'}</h1><p>${reqMode?'That’s the venue journey: choose → pick → request → the operator approves and invoices a deposit. Different from instant-book, same platform.':'That’s the full guest journey: choose → pick → pay → instant door code, all self-serve. The operator never touched email.'} Flip to the <b>Operator dashboard</b> tab, or switch city and operator (top right) to compare instant vs request booking across markets.</p></div>
-    <div class="panel" style="text-align:center"><p style="margin:0 0 12px">Run the flow again?</p><button class="btn" onclick="step=1;selType=null;selSpace=null;selSlots=[];render()">Start over</button></div>`;
-    return;
-  }
-  _rb();
-};
+renderBook=function(){if(step===4){const reqMode=isReq();
+  document.getElementById('view').innerHTML=`<div class="hero"><h1>${reqMode?'Request sent — nice work 👋':'Thanks — see you soon 👋'}</h1><p>${reqMode?'That’s the venue journey: choose → pick → request → the operator approves and invoices a deposit.':'That’s the full guest journey: choose → pick → pay → instant door code.'} It’s now in <b>My bookings</b>. Switch city/operator (top right) to compare instant, request, and studio flows, or open the <b>Operator dashboard</b>.</p></div>
+  <div class="panel" style="text-align:center"><p style="margin:0 0 12px">Run the flow again?</p><button class="btn" onclick="step=1;selType=null;selSpace=null;selSlots=[];picked=[];render()">Start over</button></div>`;return;}_rb();};
 
-function renderOps(){
-  const o=cur();
-  let bookedHrs=0, capacityHrs=0, rev=0;
-  o.spaces.forEach(s=>{const b=(BOOKED[s.id]||[]).filter(x=>HOURS.includes(x));bookedHrs+=b.length;capacityHrs+=HOURS.length;rev+=b.length*(s.unit==='day'?s.rate/HOURS.length:s.rate);});
-  const occ=Math.round(bookedHrs/capacityHrs*100);
-  const idle=capacityHrs-bookedHrs;
-  const byHour=HOURS.map(x=>{let c=0;o.spaces.forEach(s=>{if((BOOKED[s.id]||[]).includes(x))c++;});return c;});
-  const spacesN=o.spaces.length;
-  let h=`<div class="hero"><h1>${o.name} — today</h1><p>What the operator sees: idle space turned into tracked, paid bookings. The whole pitch is recovering those empty hours.</p></div>`;
-  h+=`<div class="kpis">
-    <div class="kpi"><div class="v">$${rev.toFixed(0)}</div><div class="l">Booked revenue today</div><div class="d up">▲ on-demand, was $0 on email</div></div>
+function renderMine(){
+  let h=`<div class="hero"><h1>My bookings</h1><p>${member?'Signed in as '+member.name+'. ':''}Everything you booked or requested in this session.</p></div>`;
+  if(!myBookings.length){h+=`<div class="empty"><b>No bookings yet.</b><br>Head to <b>Book a space</b> and run a flow — it’ll show up here.</div>`;}
+  else{h+=`<div class="panel"><table><thead><tr><th>Ref</th><th>Space</th><th>Operator</th><th>When</th><th>Total</th><th>Status</th></tr></thead><tbody>`+
+    myBookings.map(b=>`<tr><td>${b.ref}</td><td>${b.space}</td><td>${b.op} · ${b.city}</td><td>${b.when}</td><td>$${b.total}</td><td><span class="tag ${b.status==='Confirmed'?'paid':'hold'}">${b.status}</span></td></tr>`).join('')+`</tbody></table></div>`;}
+  document.getElementById('view').innerHTML=h;}
+
+function renderOps(){const o=cur();
+  let bookedHrs=0,capacityHrs=0,rev=0;o.spaces.forEach(s=>{const b=(BOOKED[s.id]||[]).filter(x=>HOURS.includes(x));bookedHrs+=b.length;capacityHrs+=HOURS.length;rev+=b.length*(s.unit==='day'?s.rate/HOURS.length:s.rate);});
+  const occ=Math.round(bookedHrs/capacityHrs*100),idle=capacityHrs-bookedHrs;
+  const byHour=HOURS.map(x=>{let c=0;o.spaces.forEach(s=>{if((BOOKED[s.id]||[]).includes(x))c++;});return c;});const spacesN=o.spaces.length;
+  let h=`<div class="hero"><h1>${o.name} — today</h1><p>What the operator sees: idle space turned into tracked, paid bookings. The pitch is recovering those empty hours.</p></div>`;
+  h+=`<div class="kpis"><div class="kpi"><div class="v">$${rev.toFixed(0)}</div><div class="l">Booked revenue today</div><div class="d up">▲ on-demand, was $0 on email</div></div>
     <div class="kpi"><div class="v">${occ}%</div><div class="l">Occupancy (booked hours)</div><div class="d up">▲ 9 pts vs last wk</div></div>
     <div class="kpi"><div class="v">${bookedHrs}</div><div class="l">Hours booked</div><div class="d flat">across ${spacesN} spaces</div></div>
-    <div class="kpi"><div class="v">${idle}</div><div class="l">Idle hours left to sell</div><div class="d up">the upside</div></div>
-  </div>`;
-  h+=`<div class="panel"><div class="sectitle" style="margin-top:0">Utilization by hour (all spaces)</div>
-    <div class="bars">`+byHour.map((c,i)=>`<div class="bar" style="height:${Math.round(c/spacesN*100)}%"><b>${c}/${spacesN}</b><span>${fmtH(HOURS[i])}</span></div>`).join('')+`</div></div>`;
-  h+=`<div class="sectitle">Today's ${isReq()?'requests & bookings':'bookings'}</div><div class="panel"><table><thead><tr><th>Space</th><th>Time</th><th>Guest</th><th>Amount</th><th>Status</th></tr></thead><tbody>`;
-  const names=["A. Patel","Lena Ortiz","Mike Doyle","S. Kim","Jordan W.","Priya R.","Tom B."];let r=0;
-  o.spaces.forEach(s=>{(BOOKED[s.id]||[]).filter(x=>HOURS.includes(x)).forEach((x,j)=>{const amt=s.rate;const pending=isReq()&&j%3===0;h+=`<tr><td>${s.name}</td><td>${fmtH(x)}–${fmtH(x+1)}</td><td>${names[r%names.length]}</td><td>$${amt}</td><td><span class="tag ${pending?'hold':'paid'}">${pending?'Awaiting approval':'Paid'}</span></td></tr>`;r++;});});
-  h+=`</tbody></table></div>`;
-  document.getElementById('view').innerHTML=h;
-}
+    <div class="kpi"><div class="v">${idle}</div><div class="l">Idle hours left to sell</div><div class="d up">the upside</div></div></div>`;
+  if(isReq()){const q=[{k:'q1',who:'Priya R.',sp:o.spaces[0].name,when:'Fri · 6–9pm',amt:o.spaces[0].rate*3},{k:'q2',who:'Marcus B.',sp:o.spaces[1]?o.spaces[1].name:o.spaces[0].name,when:'Sat · 5–11pm',amt:(o.spaces[1]?o.spaces[1].rate:o.spaces[0].rate)*6},{k:'q3',who:'Dana L.',sp:o.spaces[0].name,when:'Sun · 12–3pm',amt:o.spaces[0].rate*3}];
+    h+=`<div class="sectitle">Requests awaiting approval</div>`;let any=false;
+    q.forEach(r=>{const st=approvals[r.k];if(st==='declined')return;any=true;
+      h+=`<div class="qcard"><div class="qmain"><b>${r.sp}</b> · ${r.when}<br><span style="color:var(--muted);font-size:13px">${r.who} · est. $${r.amt} · 30% deposit $${Math.round(r.amt*0.3)}</span></div>
+      <div class="qa">${st==='approved'?'<span class="tag paid">Approved · invoice sent</span>':`<button class="btn tiny" onclick="approvals['${r.k}']='approved';render()">Approve & invoice</button><button class="btn tiny danger" onclick="approvals['${r.k}']='declined';render()">Decline</button>`}</div></div>`;});
+    if(!any)h+=`<div class="empty">All caught up — no pending requests.</div>`;}
+  h+=`<div class="panel"><div class="sectitle" style="margin-top:0">Utilization by hour (all spaces)</div><div class="bars">`+byHour.map((c,i)=>`<div class="bar" style="height:${Math.round(c/spacesN*100)}%"><b>${c}/${spacesN}</b><span>${fmtH(HOURS[i])}</span></div>`).join('')+`</div></div>`;
+  h+=`<div class="sectitle">Performance by space</div><div class="panel"><table><thead><tr><th>Space</th><th>Cap</th><th>Rate</th><th>Hrs booked</th><th>Revenue</th></tr></thead><tbody>`+
+    o.spaces.map(s=>{const b=(BOOKED[s.id]||[]).filter(x=>HOURS.includes(x)).length;const rv=s.unit==='day'?(b?s.rate:0):b*s.rate;return `<tr><td>${s.name}</td><td>${s.cap}</td><td>$${s.rate}/${s.unit}</td><td>${b}</td><td>$${rv}</td></tr>`;}).join('')+`</tbody></table></div>`;
+  document.getElementById('view').innerHTML=h;}
 
 function toggleChat(){document.getElementById('chat').classList.toggle('show');}
 function renderSugg(){const o=cur();document.getElementById('sugg').innerHTML=o.types.map(t=>`<button onclick="concierge('Find a ${t.label.toLowerCase()}','${t.id}')">Find a ${t.label.toLowerCase()}</button>`).join('');}
-function concierge(text,type){
-  const body=document.getElementById('chatbody');
-  body.innerHTML+=`<div class="msg me"><span class="b">${text}</span></div>`;
-  const t=cur().types.find(x=>x.id===type);
-  const n=cur().spaces.filter(s=>s.type===type).length;
-  body.innerHTML+=`<div class="msg ai"><span class="b">Found ${n} ${t.label.toLowerCase()} option(s) at ${cur().name}. Opening them for you →</span></div>`;
-  body.scrollTop=body.scrollHeight;
-  setTab('book');selType=type;step=2;render();
-  setTimeout(()=>document.getElementById('chat').classList.remove('show'),700);
-}
+function concierge(text,type){const body=document.getElementById('chatbody');body.innerHTML+=`<div class="msg me"><span class="b">${text}</span></div>`;const t=cur().types.find(x=>x.id===type);const n=cur().spaces.filter(s=>s.type===type).length;body.innerHTML+=`<div class="msg ai"><span class="b">Found ${n} ${t.label.toLowerCase()} option(s) at ${cur().name}. Opening them for you →</span></div>`;body.scrollTop=body.scrollHeight;setTab('book');selType=type;step=2;render();setTimeout(()=>document.getElementById('chat').classList.remove('show'),700);}
 
 applyTheme();renderOpSelect();render();renderSugg();
 </script>
