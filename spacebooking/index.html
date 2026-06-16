@@ -19,7 +19,7 @@
   .demo-flag{background:#15211f;color:#cfe9e7;font-size:12.5px;text-align:center;padding:7px 10px;letter-spacing:.02em}
   .demo-flag b{color:#fff}
   header.bar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
-  .bar-in{display:flex;align-items:center;gap:14px;height:64px}
+  .bar-in{display:flex;align-items:center;gap:14px;height:64px;flex-wrap:wrap}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
   .logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800}
   .brand small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
@@ -27,7 +27,7 @@
   .navtabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:11px}
   .navtabs button{border:0;background:transparent;padding:8px 14px;border-radius:8px;font-weight:600;font-size:13.5px;color:var(--muted);cursor:pointer}
   .navtabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.06)}
-  .wl{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  .wl{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
   .wl select{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
   .hero{padding:30px 0 8px}
   .hero h1{font-size:30px;margin:0 0 6px;letter-spacing:-.02em}
@@ -123,21 +123,23 @@
 </style>
 </head>
 <body>
-<div class="demo-flag">Reference demo · <b>sample data, no real payments</b> · built by Kingbird Solutions to show what an operator-branded on-demand booking system looks like</div>
+<div class="demo-flag">Reference demo · <b>real local operators shown as illustrative examples</b> · sample availability & pricing, no real payments · these businesses are not customers of or affiliated with Kingbird Solutions</div>
 
 <header class="bar"><div class="wrap bar-in">
-  <div class="brand"><span class="logo" id="logo">C</span><span><span id="bname">Cactus Co. Workspace</span><small id="btag">Phoenix · Powered by Kingbird</small></span></div>
+  <div class="brand"><span class="logo" id="logo">P</span><span><span id="bname">Perimeter83</span><small id="btag">Tempe, AZ · Powered by Kingbird</small></span></div>
   <div class="spacer"></div>
   <div class="navtabs" role="tablist" aria-label="View">
     <button id="tab-book" class="on" role="tab" aria-selected="true" onclick="setTab('book')">Book a space</button>
     <button id="tab-ops" role="tab" aria-selected="false" onclick="setTab('ops')">Operator dashboard</button>
   </div>
-  <div class="wl" title="White-label: same platform, the operator's own brand">
-    <label for="opsel">Demo operator:</label>
-    <select id="opsel" onchange="switchOperator(this.value)">
-      <option value="a">Cactus Co. Workspace (coworking)</option>
-      <option value="b">The Mill House (event venue)</option>
+  <div class="wl" title="White-label: same platform, each operator's own brand">
+    <label for="citysel">City:</label>
+    <select id="citysel" onchange="switchCity(this.value)">
+      <option value="phx">Phoenix metro</option>
+      <option value="oc">Orange County, CA</option>
     </select>
+    <label for="opsel">Operator:</label>
+    <select id="opsel" onchange="switchOp(+this.value)"></select>
   </div>
 </div></header>
 
@@ -159,47 +161,58 @@
 <div class="foot">On-Demand Space Booking — Kingbird Solutions reference demo. Stack: Next.js · Supabase · Stripe Connect · smart-lock APIs. Sample data only.</div>
 
 <script>
-const OPS = {
-  a:{ name:"Cactus Co. Workspace", tag:"Phoenix · Powered by Kingbird", letter:"C",
-      accent:"#0E7C7B", accentD:"#0a5c5b", city:"Phoenix, AZ", tz:"MST", mode:"instant",
-      types:[
-        {id:"day", icon:"🪑", label:"Day Pass", sub:"A seat in the lounge, all day"},
-        {id:"meet", icon:"📽️", label:"Meeting Room", sub:"By the hour, A/V ready"},
-        {id:"office", icon:"🚪", label:"Hourly Office", sub:"Private focus, by the hour"}
-      ],
+const CITIES={
+  phx:{label:"Phoenix metro", ops:[
+    { name:"Perimeter83", city:"Tempe, AZ", letter:"P", accent:"#0E7C7B", accentD:"#0a5c5b", tz:"MST", mode:"instant",
+      types:[{id:"day",icon:"🪑",label:"Day Pass",sub:"A seat in the lounge, all day"},{id:"meet",icon:"📽️",label:"Meeting Room",sub:"By the hour, A/V ready"},{id:"office",icon:"🚪",label:"Hourly Office",sub:"Private focus, by the hour"}],
       spaces:[
-        {id:1,type:"day",name:"Lounge Day Pass",cap:1,rate:29,unit:"day",amen:["Wi-Fi","Coffee & snacks","Phone booths"]},
-        {id:2,type:"meet",name:"Saguaro Room",cap:6,rate:45,unit:"hr",amen:["4K display","Whiteboard","Wi-Fi","Coffee"]},
-        {id:3,type:"meet",name:"Mesa Boardroom",cap:12,rate:75,unit:"hr",amen:["Video conf","Catering option","Whiteboard","Parking"]},
-        {id:4,type:"office",name:"Focus Suite",cap:2,rate:25,unit:"hr",amen:["Door lock","Standing desk","Wi-Fi"]}
+        {id:1,type:"day",name:"Lounge Day Pass",cap:1,rate:25,unit:"day",amen:["Wi-Fi","Coffee","Free parking"]},
+        {id:2,type:"meet",name:"Tempe Conference Room",cap:8,rate:40,unit:"hr",amen:["4K display","Whiteboard","Wi-Fi"]},
+        {id:3,type:"meet",name:"Mill Ave Boardroom",cap:12,rate:55,unit:"hr",amen:["Video conf","Whiteboard","Parking"]},
+        {id:4,type:"office",name:"Focus Office",cap:2,rate:20,unit:"hr",amen:["Door lock","Standing desk","Wi-Fi"]}
       ]},
-  b:{ name:"The Mill House", tag:"Tempe · Powered by Kingbird", letter:"M",
-      accent:"#B4531F", accentD:"#8c3f17", city:"Tempe, AZ", tz:"MST", mode:"request",
-      types:[
-        {id:"meet", icon:"🍽️", label:"Private Room", sub:"Dining & meetings by the hour"},
-        {id:"event", icon:"✨", label:"Event Space", sub:"Loft & studio, by the hour"},
-        {id:"office", icon:"💼", label:"Meeting Nook", sub:"Small huddles, by the hour"}
-      ],
+    { name:"The Mission", city:"Old Town Scottsdale, AZ", letter:"M", accent:"#B4531F", accentD:"#8c3f17", tz:"MST", mode:"request",
+      types:[{id:"room",icon:"🍽️",label:"Private Room",sub:"Plated dining & meetings"},{id:"patio",icon:"🌿",label:"Patio",sub:"Open-air events"},{id:"buyout",icon:"✨",label:"Full Buyout",sub:"The whole venue"}],
       spaces:[
-        {id:5,type:"meet",name:"Private Dining Room",cap:20,rate:120,unit:"hr",amen:["Catering","A/V","Sound system","Parking"]},
-        {id:6,type:"event",name:"Studio Loft",cap:40,rate:200,unit:"hr",amen:["Stage","Sound","Bar","Street level"]},
-        {id:7,type:"event",name:"Garden Patio",cap:30,rate:160,unit:"hr",amen:["Outdoor","Heaters","Lighting","Bar"]},
-        {id:8,type:"office",name:"Meeting Nook",cap:4,rate:35,unit:"hr",amen:["Display","Wi-Fi","Whiteboard"]}
+        {id:5,type:"room",name:"Agave Private Room",cap:40,rate:150,unit:"hr",amen:["Catering","A/V","Sommelier","Parking"]},
+        {id:6,type:"patio",name:"Courtyard Patio",cap:60,rate:200,unit:"hr",amen:["Outdoor","Full bar","Heaters"]},
+        {id:7,type:"buyout",name:"Full Venue Buyout",cap:120,rate:400,unit:"hr",amen:["Whole venue","Dedicated staff","A/V"]}
       ]}
+  ]},
+  oc:{label:"Orange County, CA", ops:[
+    { name:"FLDWRK", city:"Costa Mesa, CA", letter:"F", accent:"#3a4cb8", accentD:"#2c3a8f", tz:"PST", mode:"instant",
+      types:[{id:"day",icon:"🪑",label:"Day Pass",sub:"A hot desk for the day"},{id:"meet",icon:"📽️",label:"Meeting Room",sub:"By the hour, A/V ready"},{id:"office",icon:"🚪",label:"Hourly Office",sub:"Private focus, by the hour"}],
+      spaces:[
+        {id:8,type:"day",name:"Hot Desk Day Pass",cap:1,rate:35,unit:"day",amen:["Wi-Fi","Coffee bar","Community"]},
+        {id:9,type:"meet",name:"Conference Room",cap:10,rate:70,unit:"hr",amen:["Display","Whiteboard","Wi-Fi"]},
+        {id:10,type:"meet",name:"Huddle Room",cap:4,rate:45,unit:"hr",amen:["Display","Wi-Fi"]},
+        {id:11,type:"office",name:"Private Day Office",cap:3,rate:30,unit:"hr",amen:["Door lock","Monitor","Wi-Fi"]}
+      ]},
+    { name:"Zov's", city:"Tustin, CA", letter:"Z", accent:"#7d2e46", accentD:"#5e2034", tz:"PST", mode:"request",
+      types:[{id:"room",icon:"🍽️",label:"Private Room",sub:"Plated dining"},{id:"garden",icon:"🌿",label:"Garden",sub:"Outdoor events"},{id:"buyout",icon:"✨",label:"Full Buyout",sub:"The whole restaurant"}],
+      spaces:[
+        {id:12,type:"room",name:"Garden Room",cap:14,rate:120,unit:"hr",amen:["Catering","A/V","Plated menu"]},
+        {id:13,type:"room",name:"Banquet Room",cap:50,rate:180,unit:"hr",amen:["Catering","Stage","A/V"]},
+        {id:14,type:"garden",name:"Courtyard",cap:40,rate:150,unit:"hr",amen:["Outdoor","Bar","Heaters"]},
+        {id:15,type:"buyout",name:"Full Buyout",cap:80,rate:350,unit:"hr",amen:["Whole venue","Staffing","A/V"]}
+      ]}
+  ]}
 };
 const HOURS=[8,9,10,11,12,13,14,15,16,17];
-const BOOKED={1:[],2:[9,10,14],3:[11,12,13],4:[8,15,16],5:[18,19],6:[15,16,17],7:[],8:[9,13]};
+const BOOKED={1:[],2:[9,10,14],3:[11,12],4:[8,15,16],5:[12,13],6:[16,17],7:[],8:[],9:[10,11,15],10:[13],11:[9,14],12:[12],13:[10],14:[16,17],15:[]};
 const fmtH=h=>{const ap=h<12?"am":"pm";let hh=h%12;if(hh===0)hh=12;return hh+ap;};
 
-let op="a", tab="book";
+let cityKey="phx", opIdx=0, tab="book";
 let step=1, selType=null, selSpace=null, selSlots=[], partySize=2, day="Today", lastFocus=null;
 
-function cur(){return OPS[op];}
+function cur(){return CITIES[cityKey].ops[opIdx];}
 function isReq(){return cur().mode==='request';}
 function applyTheme(){const o=cur();document.documentElement.style.setProperty('--accent',o.accent);document.documentElement.style.setProperty('--accent-d',o.accentD);
-  document.getElementById('logo').textContent=o.letter;document.getElementById('bname').textContent=o.name;document.getElementById('btag').textContent=o.tag;}
-
-function switchOperator(v){op=v;step=1;selType=null;selSpace=null;selSlots=[];applyTheme();render();renderSugg();}
+  document.getElementById('logo').textContent=o.letter;document.getElementById('bname').textContent=o.name;document.getElementById('btag').textContent=o.city+' · Powered by Kingbird';}
+function resetSel(){step=1;selType=null;selSpace=null;selSlots=[];}
+function renderOpSelect(){document.getElementById('opsel').innerHTML=CITIES[cityKey].ops.map((o,i)=>`<option value="${i}" ${i===opIdx?'selected':''}>${o.name} (${o.mode==='request'?'venue':'coworking'})</option>`).join('');}
+function switchCity(v){cityKey=v;opIdx=0;resetSel();renderOpSelect();applyTheme();render();renderSugg();}
+function switchOp(i){opIdx=i;resetSel();applyTheme();render();renderSugg();}
 function setTab(t){tab=t;
   const b=document.getElementById('tab-book'),o=document.getElementById('tab-ops');
   b.classList.toggle('on',t==='book');o.classList.toggle('on',t==='ops');
@@ -262,7 +275,7 @@ function renderBook(){
     h+=`<div class="twocol"><div class="panel">
       <h3 style="margin:0 0 2px">${s.name}</h3><div class="sub" style="color:var(--muted);margin-bottom:14px">${cur().city} · seats ${s.cap} · $${s.rate}/${s.unit} · times in ${cur().tz}</div>`;
     if(s.unit==='day'){
-      h+=`<p>Day pass for <b>${day}</b> — full-day access to the lounge during open hours.</p>`;
+      h+=`<p>Day pass for <b>${day}</b> — full-day access during open hours.</p>`;
     }else{
       h+=`<div class="sectitle" style="margin-top:0">Pick your hours · ${day}</div><div class="slots" role="group" aria-label="Available hours">`+
         HOURS.map(x=>{const bk=(BOOKED[s.id]||[]).includes(x);const sel=selSlots.includes(x);
@@ -371,7 +384,7 @@ const _rb=renderBook;
 renderBook=function(){
   if(step===4){
     const reqMode=isReq();
-    document.getElementById('view').innerHTML=`<div class="hero"><h1>${reqMode?'Request sent — nice work 👋':'Thanks — see you soon 👋'}</h1><p>${reqMode?'That’s the venue journey: choose → pick → request → the operator approves and invoices a deposit. Different from the instant-book flow, same platform.':'That’s the full guest journey: choose → pick → pay → instant door code, all self-serve. The operator never touched email.'} Flip to the <b>Operator dashboard</b> tab to see what they see, or switch operators (top right) to compare instant vs request booking.</p></div>
+    document.getElementById('view').innerHTML=`<div class="hero"><h1>${reqMode?'Request sent — nice work 👋':'Thanks — see you soon 👋'}</h1><p>${reqMode?'That’s the venue journey: choose → pick → request → the operator approves and invoices a deposit. Different from instant-book, same platform.':'That’s the full guest journey: choose → pick → pay → instant door code, all self-serve. The operator never touched email.'} Flip to the <b>Operator dashboard</b> tab, or switch city and operator (top right) to compare instant vs request booking across markets.</p></div>
     <div class="panel" style="text-align:center"><p style="margin:0 0 12px">Run the flow again?</p><button class="btn" onclick="step=1;selType=null;selSpace=null;selSlots=[];render()">Start over</button></div>`;
     return;
   }
@@ -403,12 +416,7 @@ function renderOps(){
 }
 
 function toggleChat(){document.getElementById('chat').classList.toggle('show');}
-function renderSugg(){
-  const opts = op==='a'
-    ? [["Room for 4 this afternoon","meet"],["Just a desk for today","day"],["Quiet office for 2 hours","office"]]
-    : [["Dinner room for 20","meet"],["Event space for 40","event"],["Small huddle for 4","office"]];
-  document.getElementById('sugg').innerHTML=opts.map(o=>`<button onclick="concierge('${o[0].replace(/'/g,'')}','${o[1]}')">${o[0]}</button>`).join('');
-}
+function renderSugg(){const o=cur();document.getElementById('sugg').innerHTML=o.types.map(t=>`<button onclick="concierge('Find a ${t.label.toLowerCase()}','${t.id}')">Find a ${t.label.toLowerCase()}</button>`).join('');}
 function concierge(text,type){
   const body=document.getElementById('chatbody');
   body.innerHTML+=`<div class="msg me"><span class="b">${text}</span></div>`;
@@ -420,7 +428,7 @@ function concierge(text,type){
   setTimeout(()=>document.getElementById('chat').classList.remove('show'),700);
 }
 
-applyTheme();render();renderSugg();
+applyTheme();renderOpSelect();render();renderSugg();
 </script>
 </body>
 </html>
